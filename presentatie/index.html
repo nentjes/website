@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presentatie: Ontdek de Patronen — Roel Nentjes</title>
+    <meta name="description" content="Interactieve AI-lezing 'Ontdek de Patronen' — Van Plato tot ChatGPT met 4 live demonstraties. Boek Roel Nentjes als spreker.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0A0E17;
+            --bg-secondary: #111827;
+            --bg-card: #1A2235;
+            --bg-card-hover: #1F2A40;
+            --text-primary: #F1F5F9;
+            --text-secondary: #94A3B8;
+            --text-muted: #64748B;
+            --accent: #E8871E;
+            --accent-glow: rgba(232, 135, 30, 0.15);
+            --accent-light: #F5A623;
+            --blue: #5FA8D3;
+            --blue-dark: #1B4965;
+            --border: rgba(255,255,255,0.06);
+            --font-display: 'DM Serif Display', Georgia, serif;
+            --font-body: 'DM Sans', -apple-system, sans-serif;
+        }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body { font-family: var(--font-body); background: var(--bg-primary); color: var(--text-primary); line-height: 1.7; overflow-x: hidden; }
+        body::before {
+            content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none; z-index: 9999;
+        }
+
+        nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 1.2rem 2rem; display: flex; justify-content: space-between; align-items: center; backdrop-filter: blur(20px); background: rgba(10, 14, 23, 0.85); border-bottom: 1px solid var(--border); }
+        .nav-logo { font-family: var(--font-display); font-size: 1.3rem; color: var(--text-primary); text-decoration: none; }
+        .nav-logo span { color: var(--accent); }
+        .nav-links { display: flex; gap: 2rem; align-items: center; }
+        .nav-links a { color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: color 0.3s; }
+        .nav-links a:hover { color: var(--text-primary); }
+        .nav-links a.active { color: var(--accent); }
+        .nav-links a.cta-nav { background: var(--accent); color: var(--bg-primary); padding: 0.5rem 1.2rem; border-radius: 6px; font-weight: 700; }
+        .nav-links a.cta-nav:hover { background: var(--accent-light); color: var(--bg-primary); }
+        .nav-toggle { display: none; background: none; border: none; cursor: pointer; padding: 0.5rem; }
+        .nav-toggle span { display: block; width: 24px; height: 2px; background: var(--text-primary); margin: 5px 0; }
+
+        .page-hero { padding: 10rem 2rem 5rem; position: relative; overflow: hidden; }
+        .page-hero::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(135deg, var(--bg-primary) 0%, rgba(232, 135, 30, 0.08) 50%, var(--bg-primary) 100%); }
+        .page-hero .container { position: relative; z-index: 2; max-width: 900px; margin: 0 auto; }
+        .breadcrumb { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.5rem; }
+        .breadcrumb a { color: var(--text-secondary); text-decoration: none; }
+        .breadcrumb a:hover { color: var(--accent); }
+        .page-hero h1 { font-family: var(--font-display); font-size: clamp(2.2rem, 5vw, 3.5rem); line-height: 1.15; margin-bottom: 1rem; animation: fadeUp 0.8s ease forwards; }
+        .page-hero h1 em { font-style: normal; color: var(--accent); }
+        .page-hero .subtitle { font-size: 1.2rem; color: var(--text-secondary); max-width: 650px; margin-bottom: 2rem; animation: fadeUp 0.8s ease forwards 0.2s; opacity: 0; }
+        .meta { display: flex; gap: 2rem; flex-wrap: wrap; animation: fadeUp 0.8s ease forwards 0.4s; opacity: 0; }
+        .meta-item { display: flex; align-items: center; gap: 0.5rem; color: var(--text-secondary); font-size: 0.9rem; }
+        .meta-item strong { color: var(--text-primary); }
+
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+
+        section { padding: 5rem 2rem; }
+        .container { max-width: 900px; margin: 0 auto; }
+        .section-label { color: var(--accent); font-size: 0.8rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 1rem; }
+        .section-title { font-family: var(--font-display); font-size: clamp(1.6rem, 3.5vw, 2.2rem); line-height: 1.25; margin-bottom: 1.5rem; }
+        .divider { height: 1px; background: linear-gradient(90deg, transparent, var(--border), transparent); margin: 0 2rem; }
+
+        .btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.9rem 2rem; border-radius: 8px; font-family: var(--font-body); font-size: 0.95rem; font-weight: 600; text-decoration: none; transition: all 0.3s ease; border: none; cursor: pointer; }
+        .btn-primary { background: var(--accent); color: var(--bg-primary); }
+        .btn-primary:hover { background: var(--accent-light); transform: translateY(-2px); box-shadow: 0 8px 30px var(--accent-glow); }
+        .btn-outline { background: transparent; color: var(--text-primary); border: 1px solid rgba(255,255,255,0.15); }
+        .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+
+        /* DE REIS */
+        .reis { background: var(--bg-secondary); }
+        .reis-stap { margin-bottom: 2.5rem; padding-bottom: 2.5rem; border-bottom: 1px solid var(--border); }
+        .reis-stap:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .reis-stap h3 { font-family: var(--font-display); font-size: 1.2rem; margin-bottom: 0.5rem; }
+        .reis-stap p { color: var(--text-secondary); font-size: 0.95rem; max-width: 700px; }
+
+        /* HOOGTEPUNTEN */
+        .hoogtepunten { background: var(--bg-primary); }
+        .demo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+        .demo-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 2rem; transition: all 0.4s; }
+        .demo-card:hover { border-color: rgba(232, 135, 30, 0.2); transform: translateY(-3px); }
+        .demo-number { font-family: var(--font-display); font-size: 2.5rem; color: var(--accent); opacity: 0.3; line-height: 1; margin-bottom: 0.5rem; }
+        .demo-card h3 { font-size: 1rem; margin-bottom: 0.5rem; }
+        .demo-card p { color: var(--text-secondary); font-size: 0.9rem; }
+
+        /* FORMATS */
+        .formats { background: var(--bg-secondary); }
+        .format-list { display: grid; gap: 1.2rem; }
+        .format-item { display: flex; align-items: flex-start; gap: 1.5rem; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem 2rem; }
+        .format-tijd { font-family: var(--font-display); font-size: 1.8rem; color: var(--accent); min-width: 4rem; line-height: 1.1; }
+        .format-item h4 { font-size: 1rem; margin-bottom: 0.3rem; }
+        .format-item p { color: var(--text-secondary); font-size: 0.9rem; }
+
+        /* PRAKTISCH */
+        .praktisch { background: var(--bg-primary); }
+        .specs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+        .spec { display: flex; align-items: flex-start; gap: 1rem; padding: 1.2rem 1.5rem; background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; }
+        .spec-icon { font-size: 1.4rem; flex-shrink: 0; }
+        .spec-label { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; }
+        .spec-value { font-weight: 600; font-size: 0.95rem; }
+
+        .cta-section { padding: 5rem 2rem; text-align: center; background: linear-gradient(to bottom, var(--bg-primary), var(--bg-secondary)); }
+        .cta-section h2 { font-family: var(--font-display); font-size: clamp(1.6rem, 3.5vw, 2.4rem); margin-bottom: 1rem; }
+        .cta-section p { color: var(--text-secondary); margin-bottom: 2rem; max-width: 500px; margin-left: auto; margin-right: auto; }
+        .cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+        footer { padding: 2rem; text-align: center; color: var(--text-muted); font-size: 0.85rem; border-top: 1px solid var(--border); }
+        footer a { color: var(--accent); text-decoration: none; }
+
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.7s ease; }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; position: absolute; top: 100%; left: 0; right: 0; background: var(--bg-secondary); flex-direction: column; padding: 1.5rem; gap: 1rem; border-bottom: 1px solid var(--border); }
+            .nav-links.open { display: flex; }
+            .nav-toggle { display: block; }
+            .page-hero { padding: 7rem 1.5rem 3rem; }
+            .meta { flex-direction: column; gap: 0.8rem; }
+            section { padding: 3.5rem 1.5rem; }
+            .demo-grid { grid-template-columns: 1fr; }
+            .specs-grid { grid-template-columns: 1fr; }
+            .format-item { flex-direction: column; gap: 0.5rem; }
+            .cta-buttons { flex-direction: column; }
+            .btn { width: 100%; justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="../index.html" class="nav-logo">Roel <span>Nentjes</span></a>
+    <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Menu">
+        <span></span><span></span><span></span>
+    </button>
+    <div class="nav-links">
+        <a href="../index.html#over">Over mij</a>
+        <a href="../index.html#aanbod">Aanbod</a>
+        <a href="../presentatie/index.html" class="active">Presentatie</a>
+        <a href="../workshop/index.html">Workshop</a>
+        <a href="../index.html#contact" class="cta-nav">Contact</a>
+    </div>
+</nav>
+
+<!-- HERO -->
+<section class="page-hero">
+    <div class="container">
+        <div class="breadcrumb"><a href="../index.html">Home</a> / Presentatie</div>
+        <h1>Ontdek de <em>Patronen</em></h1>
+        <p class="subtitle">Een meeslepende reis van Plato's grot tot ChatGPT — met vier live demonstraties die AI tastbaar maken voor iedereen.</p>
+        <div class="meta">
+            <div class="meta-item">⏱️ <strong>45 – 90 min</strong></div>
+            <div class="meta-item">👥 <strong>10 – 200 personen</strong></div>
+            <div class="meta-item">🎓 <strong>Geen voorkennis nodig</strong></div>
+            <div class="meta-item">🌍 <strong>NL of EN</strong></div>
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- DE REIS -->
+<section class="reis">
+    <div class="container">
+        <div class="section-label reveal">De reis</div>
+        <h2 class="section-title reveal">Van filosofie naar technologie in 60 minuten</h2>
+        <p class="reveal" style="color: var(--text-secondary); margin-bottom: 2.5rem; max-width: 600px;">Het verhaal van AI verteld als een reis door de tijd — van oude filosofie tot de modellen van vandaag.</p>
+
+        <div class="reveal">
+            <div class="reis-stap">
+                <h3>De zot in de grot</h3>
+                <p>We starten bij Plato's beroemde grotmetafoor. Wat als alles wat we zien slechts schaduwen zijn? Een verrassend actueel vertrekpunt voor het begrijpen van hoe AI "kijkt" naar de wereld.</p>
+            </div>
+            <div class="reis-stap">
+                <h3>De Turing-test</h3>
+                <p>Alan Turing stelde in 1950 de vraag: "Kunnen machines denken?" Zijn imitation game is de basis van alles wat volgde — en is nog steeds relevant vandaag.</p>
+            </div>
+            <div class="reis-stap">
+                <h3>Exponentiële groei</h3>
+                <p>Van de Analytical Engine tot de iPhone — hoe de explosie van rekenkracht en data de weg vrijmaakte voor kunstmatige intelligentie.</p>
+            </div>
+            <div class="reis-stap">
+                <h3>Machine Learning &amp; Deep Learning</h3>
+                <p>DeepBlue verslaat Kasparov bij schaken. AlphaGo wint van de wereldkampioen Go. De machine leert patronen zien die mensen missen.</p>
+            </div>
+            <div class="reis-stap">
+                <h3>Transformers &amp; Generatieve AI</h3>
+                <p>De doorbraak die alles veranderde. Hoe het Transformer-model leidde tot ChatGPT, Midjourney en een nieuwe wereld van mogelijkheden.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- HOOGTEPUNTEN -->
+<section class="hoogtepunten">
+    <div class="container">
+        <div class="section-label reveal">Hoogtepunten</div>
+        <h2 class="section-title reveal">4 live demonstraties</h2>
+        <p class="reveal" style="color: var(--text-secondary); margin-bottom: 2.5rem; max-width: 600px;">Geen slides, maar live AI in actie. Uw publiek ervaart zelf wat kunstmatige intelligentie kan — en stelt de vragen.</p>
+
+        <div class="demo-grid">
+            <div class="demo-card reveal">
+                <div class="demo-number">01</div>
+                <h3>Gesprek met AI</h3>
+                <p>Het publiek gaat live in gesprek met een AI-model. Stel elke vraag — en ervaar hoe de machine reageert, redeneert en verrast.</p>
+            </div>
+            <div class="demo-card reveal">
+                <div class="demo-number">02</div>
+                <h3>AI-muziek</h3>
+                <p>Ter plekke wordt een uniek muziekstuk gecomponeerd op basis van input van het publiek. Van klassiek tot pop — AI als creatieve partner.</p>
+            </div>
+            <div class="demo-card reveal">
+                <div class="demo-number">03</div>
+                <h3>Grondig onderzoek</h3>
+                <p>Een complexe onderzoeksvraag wordt in seconden uitgediept. Zie hoe AI analyseert, vergelijkt en conclusies trekt — met bronvermelding.</p>
+            </div>
+            <div class="demo-card reveal">
+                <div class="demo-number">04</div>
+                <h3>AI-podcast</h3>
+                <p>Live wordt een complete podcast gegenereerd over een onderwerp naar keuze. Twee AI-stemmen bespreken het thema alsof het echt is.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- FORMATS -->
+<section class="formats">
+    <div class="container">
+        <div class="section-label reveal">Formats</div>
+        <h2 class="section-title reveal">Kies het format dat past</h2>
+
+        <div class="format-list reveal">
+            <div class="format-item">
+                <div class="format-tijd">45'</div>
+                <div>
+                    <h4>Lunchlezing</h4>
+                    <p>Compact en to-the-point. De complete reis door AI-geschiedenis met twee live demo's. Ideaal voor bedrijfslunches en korte programma's.</p>
+                </div>
+            </div>
+            <div class="format-item">
+                <div class="format-tijd">60'</div>
+                <div>
+                    <h4>Standaard presentatie</h4>
+                    <p>Het volledige verhaal met alle vier de live demonstraties. De meest geboekte variant voor netwerkclubs, bibliotheken en evenementen.</p>
+                </div>
+            </div>
+            <div class="format-item">
+                <div class="format-tijd">90'</div>
+                <div>
+                    <h4>Uitgebreide sessie</h4>
+                    <p>Presentatie plus interactief gedeelte waarin het publiek zelf aan de slag gaat. Inclusief Q&amp;A en verdiepende discussie over de impact van AI.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PRAKTISCH -->
+<section class="praktisch">
+    <div class="container">
+        <div class="section-label reveal">Praktisch</div>
+        <h2 class="section-title reveal">Wat heeft u nodig?</h2>
+
+        <div class="specs-grid reveal">
+            <div class="spec">
+                <div class="spec-icon">📽️</div>
+                <div>
+                    <div class="spec-label">Benodigdheden</div>
+                    <div class="spec-value">Beamer, geluid &amp; wifi</div>
+                </div>
+            </div>
+            <div class="spec">
+                <div class="spec-icon">👥</div>
+                <div>
+                    <div class="spec-label">Groepsgrootte</div>
+                    <div class="spec-value">10 tot 200 personen</div>
+                </div>
+            </div>
+            <div class="spec">
+                <div class="spec-icon">💰</div>
+                <div>
+                    <div class="spec-label">Tarief</div>
+                    <div class="spec-value">€ 300 – € 750 excl. btw</div>
+                </div>
+            </div>
+            <div class="spec">
+                <div class="spec-icon">🚗</div>
+                <div>
+                    <div class="spec-label">Regio</div>
+                    <div class="spec-value">Heel Nederland (vanuit Bilthoven)</div>
+                </div>
+            </div>
+            <div class="spec">
+                <div class="spec-icon">🗣️</div>
+                <div>
+                    <div class="spec-label">Taal</div>
+                    <div class="spec-value">Nederlands of Engels</div>
+                </div>
+            </div>
+            <div class="spec">
+                <div class="spec-icon">🎯</div>
+                <div>
+                    <div class="spec-label">Doelgroep</div>
+                    <div class="spec-value">Geen technische voorkennis nodig</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CTA -->
+<section class="cta-section">
+    <h2>Interesse in deze presentatie?</h2>
+    <p>Laten we bespreken hoe "Ontdek de Patronen" past bij uw publiek en evenement.</p>
+    <div class="cta-buttons">
+        <a href="mailto:roel@nentjes.nl" class="btn btn-primary">✉️ Mail mij</a>
+        <a href="tel:+31683660830" class="btn btn-outline">📱 Bel mij</a>
+    </div>
+</section>
+
+<footer>
+    <p>&copy; 2026 Roel Nentjes &middot; <a href="../index.html">Home</a> &middot; <a href="../workshop/index.html">Workshop</a> &middot; <a href="../index.html#contact">Contact</a></p>
+</footer>
+
+<script>
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('visible');
+    });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>

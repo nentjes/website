@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roel Nentjes — AI Spreker & Adviseur</title>
+    <meta name="description" content="Roel Nentjes — Interactieve AI-presentaties en workshops. Van Plato tot ChatGPT, met live demonstraties die AI tastbaar maken.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0A0E17;
+            --bg-secondary: #111827;
+            --bg-card: #1A2235;
+            --bg-card-hover: #1F2A40;
+            --text-primary: #F1F5F9;
+            --text-secondary: #94A3B8;
+            --text-muted: #64748B;
+            --accent: #E8871E;
+            --accent-glow: rgba(232, 135, 30, 0.15);
+            --accent-light: #F5A623;
+            --blue: #5FA8D3;
+            --blue-dark: #1B4965;
+            --border: rgba(255,255,255,0.06);
+            --font-display: 'DM Serif Display', Georgia, serif;
+            --font-body: 'DM Sans', -apple-system, sans-serif;
+        }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body { font-family: var(--font-body); background: var(--bg-primary); color: var(--text-primary); line-height: 1.7; overflow-x: hidden; }
+        body::before {
+            content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none; z-index: 9999;
+        }
+
+        nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 1.2rem 2rem; display: flex; justify-content: space-between; align-items: center; backdrop-filter: blur(20px); background: rgba(10, 14, 23, 0.85); border-bottom: 1px solid var(--border); }
+        .nav-logo { font-family: var(--font-display); font-size: 1.3rem; color: var(--text-primary); text-decoration: none; }
+        .nav-logo span { color: var(--accent); }
+        .nav-links { display: flex; gap: 2rem; align-items: center; }
+        .nav-links a { color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: color 0.3s; }
+        .nav-links a:hover { color: var(--text-primary); }
+        .nav-links a.cta-nav { background: var(--accent); color: var(--bg-primary); padding: 0.5rem 1.2rem; border-radius: 6px; font-weight: 700; }
+        .nav-links a.cta-nav:hover { background: var(--accent-light); color: var(--bg-primary); }
+        .nav-toggle { display: none; background: none; border: none; cursor: pointer; padding: 0.5rem; }
+        .nav-toggle span { display: block; width: 24px; height: 2px; background: var(--text-primary); margin: 5px 0; }
+
+        .hero { min-height: 100vh; display: flex; align-items: center; padding: 8rem 2rem 5rem; position: relative; overflow: hidden; }
+        .hero::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(ellipse at 60% 50%, rgba(232, 135, 30, 0.07) 0%, transparent 70%); }
+        .hero .container { position: relative; z-index: 2; max-width: 900px; margin: 0 auto; }
+        .hero-label { color: var(--accent); font-size: 0.8rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 1.5rem; }
+        .hero h1 { font-family: var(--font-display); font-size: clamp(2.8rem, 6vw, 4.5rem); line-height: 1.1; margin-bottom: 1.5rem; animation: fadeUp 0.8s ease forwards; }
+        .hero h1 em { font-style: normal; color: var(--accent); }
+        .hero-subtitle { font-size: 1.2rem; color: var(--text-secondary); max-width: 600px; margin-bottom: 2.5rem; animation: fadeUp 0.8s ease forwards 0.2s; opacity: 0; }
+        .hero-buttons { display: flex; gap: 1rem; flex-wrap: wrap; animation: fadeUp 0.8s ease forwards 0.4s; opacity: 0; }
+
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+
+        section { padding: 5rem 2rem; }
+        .container { max-width: 900px; margin: 0 auto; }
+        .section-label { color: var(--accent); font-size: 0.8rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 1rem; }
+        .section-title { font-family: var(--font-display); font-size: clamp(1.6rem, 3.5vw, 2.2rem); line-height: 1.25; margin-bottom: 1.5rem; }
+        .divider { height: 1px; background: linear-gradient(90deg, transparent, var(--border), transparent); margin: 0 2rem; }
+
+        .btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.9rem 2rem; border-radius: 8px; font-family: var(--font-body); font-size: 0.95rem; font-weight: 600; text-decoration: none; transition: all 0.3s ease; border: none; cursor: pointer; }
+        .btn-primary { background: var(--accent); color: var(--bg-primary); }
+        .btn-primary:hover { background: var(--accent-light); transform: translateY(-2px); box-shadow: 0 8px 30px var(--accent-glow); }
+        .btn-outline { background: transparent; color: var(--text-primary); border: 1px solid rgba(255,255,255,0.15); }
+        .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+
+        .over { background: var(--bg-secondary); }
+        .over-text { color: var(--text-secondary); font-size: 1.05rem; max-width: 700px; margin-bottom: 1.2rem; }
+        .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 3rem; }
+        .stat { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; text-align: center; }
+        .stat-number { font-family: var(--font-display); font-size: 2.5rem; color: var(--accent); line-height: 1; margin-bottom: 0.3rem; }
+        .stat-label { color: var(--text-muted); font-size: 0.85rem; }
+
+        .aanbod { background: var(--bg-primary); }
+        .aanbod-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+        .aanbod-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 2rem; transition: all 0.4s; text-decoration: none; color: inherit; display: block; }
+        .aanbod-card:hover { border-color: rgba(232, 135, 30, 0.25); transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0,0,0,0.3); }
+        .aanbod-icon { font-size: 2rem; margin-bottom: 1rem; }
+        .aanbod-card h3 { font-family: var(--font-display); font-size: 1.2rem; margin-bottom: 0.5rem; }
+        .aanbod-card p { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1rem; }
+        .aanbod-link { color: var(--accent); font-size: 0.9rem; font-weight: 600; }
+
+        .contact-sectie { background: var(--bg-secondary); }
+        .contact-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 2rem; }
+        .contact-item { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; text-align: center; text-decoration: none; color: inherit; transition: all 0.3s; }
+        .contact-item:hover { border-color: rgba(232, 135, 30, 0.25); transform: translateY(-2px); }
+        .contact-icon { font-size: 2rem; margin-bottom: 0.8rem; }
+        .contact-label { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.3rem; }
+        .contact-value { font-size: 0.9rem; color: var(--text-secondary); }
+        .contact-form { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 2rem; }
+        .contact-form h3 { font-family: var(--font-display); font-size: 1.1rem; color: var(--text-primary); margin-bottom: 1.5rem; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; font-size: 0.82rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 0.4rem; letter-spacing: 0.04em; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; background: var(--bg-primary); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 0.75rem 1rem; color: var(--text-primary); font-family: var(--font-body); font-size: 0.95rem; transition: border-color 0.2s; outline: none; }
+        .form-group input::placeholder, .form-group textarea::placeholder { color: var(--text-muted); }
+        .form-group input:focus, .form-group select, .form-group textarea:focus { border-color: var(--accent); }
+        .form-group select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2364748B' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 1rem center; cursor: pointer; color: var(--text-primary); }
+        .form-group select option { background: var(--bg-secondary); }
+        .form-group textarea { resize: vertical; min-height: 120px; }
+        .form-success { display: none; background: rgba(95, 168, 211, 0.1); border: 1px solid rgba(95, 168, 211, 0.3); border-radius: 8px; padding: 1rem 1.5rem; color: var(--blue); font-size: 0.95rem; margin-top: 1rem; }
+        @media (max-width: 768px) { .form-row { grid-template-columns: 1fr; } }
+
+        footer { padding: 2rem; text-align: center; color: var(--text-muted); font-size: 0.85rem; border-top: 1px solid var(--border); }
+        footer a { color: var(--accent); text-decoration: none; }
+
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.7s ease; }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; position: absolute; top: 100%; left: 0; right: 0; background: var(--bg-secondary); flex-direction: column; padding: 1.5rem; gap: 1rem; border-bottom: 1px solid var(--border); }
+            .nav-links.open { display: flex; }
+            .nav-toggle { display: block; }
+            .hero { padding: 7rem 1.5rem 3rem; }
+            section { padding: 3.5rem 1.5rem; }
+            .stats { grid-template-columns: 1fr; }
+            .aanbod-grid { grid-template-columns: 1fr; }
+            .contact-grid { grid-template-columns: 1fr; }
+            .hero-buttons { flex-direction: column; }
+            .btn { width: 100%; justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="index.html" class="nav-logo">Roel <span>Nentjes</span></a>
+    <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Menu">
+        <span></span><span></span><span></span>
+    </button>
+    <div class="nav-links">
+        <a href="#over">Over mij</a>
+        <a href="#aanbod">Aanbod</a>
+        <a href="presentatie/index.html">Presentatie</a>
+        <a href="workshop/index.html">Workshop</a>
+        <a href="#contact" class="cta-nav">Contact</a>
+    </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+    <div class="container">
+        <div class="hero-label">AI Spreker &amp; Adviseur</div>
+        <h1>Ik maak kunstmatige<br>intelligentie <em>begrijpelijk</em></h1>
+        <p class="hero-subtitle">Interactieve presentaties en workshops die AI tastbaar maken — met live demonstraties die uw publiek niet snel vergeet.</p>
+        <div class="hero-buttons">
+            <a href="presentatie/index.html" class="btn btn-primary">Bekijk de presentatie →</a>
+            <a href="#contact" class="btn btn-outline">Neem contact op</a>
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- OVER MIJ -->
+<section class="over" id="over">
+    <div class="container">
+        <div class="section-label reveal">Over mij</div>
+        <h2 class="section-title reveal">Ik sla de brug tussen technologie en mens</h2>
+        <p class="over-text reveal">Als ICT Manager werk ik dagelijks met AI — AI notuleert mijn vergaderingen en houdt mijn actiepunten bij, AI maakt mijn presentaties en vat deze samen in een duidelijke infogram. Daarnaast helpt AI mij bij het bouwen van iOS-apps en VR-projecten tot blockchain-technologie. Ik praat niet alleen over kunstmatige intelligentie, ik bouw ermee.</p>
+        <p class="over-text reveal">Die praktijkervaring maakt mijn presentaties anders. Geen droge theorie, maar een meeslepend verhaal van Plato's grotmetafoor tot de generatieve AI van vandaag — met live demonstraties die de technologie tastbaar maken voor iedereen.</p>
+        <p class="over-text reveal">Of het nu gaat om een netwerkclub, een bibliotheekpubliek of uw complete organisatie: ik zorg dat uw publiek naar huis gaat met inzicht én verwondering.</p>
+
+        <div class="stats reveal">
+            <div class="stat">
+                <div class="stat-number">4</div>
+                <div class="stat-label">Live demo's per sessie</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">45–90</div>
+                <div class="stat-label">Minuten, naar wens</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">0</div>
+                <div class="stat-label">Technische voorkennis nodig</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- AANBOD -->
+<section class="aanbod" id="aanbod">
+    <div class="container">
+        <div class="section-label reveal">Aanbod</div>
+        <h2 class="section-title reveal">Kies wat past bij uw publiek</h2>
+        <p class="reveal" style="color: var(--text-secondary); margin-bottom: 2.5rem; max-width: 600px;">Van een compacte lezing tot een uitgebreide hands-on workshop — elk format is ontworpen om AI begrijpelijk en boeiend te maken.</p>
+
+        <div class="aanbod-grid">
+            <a href="presentatie/index.html" class="aanbod-card reveal">
+                <div class="aanbod-icon">🎯</div>
+                <h3>Presentatie</h3>
+                <p>De interactieve lezing "Ontdek de Patronen" — van Plato tot werken met AI, met vier live demonstraties. Geschikt voor 10 tot 200 personen.</p>
+                <span class="aanbod-link">Meer informatie →</span>
+            </a>
+            <a href="workshop/index.html" class="aanbod-card reveal">
+                <div class="aanbod-icon">🛠️</div>
+                <h3>Workshop</h3>
+                <p>Hands-on sessie waarin deelnemers zelf aan de slag gaan met AI-tools. Ideaal als verdieping na de presentatie of als zelfstandig programma.</p>
+                <span class="aanbod-link">Meer informatie →</span>
+            </a>
+            <a href="#contact" class="aanbod-card reveal">
+                <div class="aanbod-icon">🏥</div>
+                <h3>Zorg-editie</h3>
+                <p>Speciaal voor zorginstellingen: AI-voorbeelden uit triage, valpreventie en domotica. Inclusief ethische dilemma's en sector-specifieke demo's.</p>
+                <span class="aanbod-link">Informeer naar mogelijkheden →</span>
+            </a>
+            <a href="#contact" class="aanbod-card reveal">
+                <div class="aanbod-icon">📦</div>
+                <h3>Dagprogramma</h3>
+                <p>Combineer presentatie en workshop tot een compleet dagprogramma voor teamdagen, conferenties of thema-evenementen.</p>
+                <span class="aanbod-link">Op maat samengesteld →</span>
+            </a>
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CONTACT -->
+<section class="contact-sectie" id="contact">
+    <div class="container">
+        <div class="section-label reveal">Contact</div>
+        <h2 class="section-title reveal">Laten we kennismaken</h2>
+        <p class="reveal" style="color: var(--text-secondary); margin-bottom: 2.5rem;">Benieuwd wat ik voor uw organisatie kan betekenen? Neem vrijblijvend contact op.</p>
+
+        <div class="contact-grid reveal">
+            <a href="mailto:roel@nentjes.nl" class="contact-item">
+                <div class="contact-icon">✉️</div>
+                <div class="contact-label">E-mail</div>
+                <div class="contact-value">roel@nentjes.nl</div>
+            </a>
+            <a href="tel:+31683660830" class="contact-item">
+                <div class="contact-icon">📱</div>
+                <div class="contact-label">Telefoon</div>
+                <div class="contact-value">06-8366 0830</div>
+            </a>
+            <a href="https://linkedin.com/in/roelnentjes" target="_blank" class="contact-item">
+                <div class="contact-icon">💼</div>
+                <div class="contact-label">LinkedIn</div>
+                <div class="contact-value">linkedin.com/in/roelnentjes</div>
+            </a>
+        </div>
+
+        <div class="contact-form reveal">
+            <h3>Stuur een bericht</h3>
+            <form id="contact-form" action="https://formspree.io/f/xkoqvlbl" method="POST">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="naam">Naam</label>
+                        <input type="text" id="naam" name="naam" placeholder="Jan de Vries" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">E-mailadres</label>
+                        <input type="email" id="email" name="email" placeholder="jan@organisatie.nl" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="organisatie">Organisatie</label>
+                        <input type="text" id="organisatie" name="organisatie" placeholder="Naam van uw organisatie">
+                    </div>
+                    <div class="form-group">
+                        <label for="interesse">Interesse in</label>
+                        <select id="interesse" name="interesse">
+                            <option value="">Selecteer een optie</option>
+                            <option value="presentatie">Presentatie</option>
+                            <option value="workshop">Workshop</option>
+                            <option value="zorg-editie">Zorg-editie</option>
+                            <option value="dagprogramma">Dagprogramma</option>
+                            <option value="anders">Anders / weet ik nog niet</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="bericht">Bericht</label>
+                    <textarea id="bericht" name="bericht" placeholder="Vertel iets over uw evenement, publiek of wat u zoekt..." required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;">Verstuur bericht →</button>
+                <div class="form-success" id="form-success">Bedankt voor uw bericht! Ik neem zo snel mogelijk contact op.</div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <p>&copy; 2026 Roel Nentjes &middot; <a href="presentatie/index.html">Presentatie</a> &middot; <a href="workshop/index.html">Workshop</a> &middot; <a href="#contact">Contact</a></p>
+</footer>
+
+<script>
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('visible');
+    });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+const form = document.getElementById('contact-form');
+form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = form.querySelector('button[type=submit]');
+    btn.textContent = 'Versturen…';
+    btn.disabled = true;
+    const res = await fetch(form.action, { method: 'POST', body: new FormData(form), headers: { Accept: 'application/json' } });
+    if (res.ok) {
+        form.reset();
+        document.getElementById('form-success').style.display = 'block';
+        btn.style.display = 'none';
+    } else {
+        btn.textContent = 'Er ging iets mis — probeer het opnieuw';
+        btn.disabled = false;
+    }
+});
+</script>
+
+</body>
+</html>

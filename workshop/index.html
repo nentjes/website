@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Workshop — Hands-on met AI | Roel Nentjes</title>
+    <meta name="description" content="Hands-on AI workshop: deelnemers gaan zelf aan de slag met AI-tools. Van prompting tot creatieve AI-toepassingen. Boek Roel Nentjes.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0A0E17;
+            --bg-secondary: #111827;
+            --bg-card: #1A2235;
+            --bg-card-hover: #1F2A40;
+            --text-primary: #F1F5F9;
+            --text-secondary: #94A3B8;
+            --text-muted: #64748B;
+            --accent: #E8871E;
+            --accent-glow: rgba(232, 135, 30, 0.15);
+            --accent-light: #F5A623;
+            --blue: #5FA8D3;
+            --blue-dark: #1B4965;
+            --border: rgba(255,255,255,0.06);
+            --font-display: 'DM Serif Display', Georgia, serif;
+            --font-body: 'DM Sans', -apple-system, sans-serif;
+        }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body { font-family: var(--font-body); background: var(--bg-primary); color: var(--text-primary); line-height: 1.7; overflow-x: hidden; }
+        body::before {
+            content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none; z-index: 9999;
+        }
+
+        nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 1.2rem 2rem; display: flex; justify-content: space-between; align-items: center; backdrop-filter: blur(20px); background: rgba(10, 14, 23, 0.85); border-bottom: 1px solid var(--border); }
+        .nav-logo { font-family: var(--font-display); font-size: 1.3rem; color: var(--text-primary); text-decoration: none; }
+        .nav-logo span { color: var(--accent); }
+        .nav-links { display: flex; gap: 2rem; align-items: center; }
+        .nav-links a { color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: color 0.3s; }
+        .nav-links a:hover { color: var(--text-primary); }
+        .nav-links a.active { color: var(--accent); }
+        .nav-links a.cta-nav { background: var(--accent); color: var(--bg-primary); padding: 0.5rem 1.2rem; border-radius: 6px; font-weight: 700; }
+        .nav-links a.cta-nav:hover { background: var(--accent-light); }
+        .nav-toggle { display: none; background: none; border: none; cursor: pointer; padding: 0.5rem; }
+        .nav-toggle span { display: block; width: 24px; height: 2px; background: var(--text-primary); margin: 5px 0; }
+
+        .page-hero { padding: 10rem 2rem 5rem; position: relative; overflow: hidden; }
+        .page-hero::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(135deg, var(--bg-primary) 0%, rgba(232, 135, 30, 0.08) 50%, var(--bg-primary) 100%); }
+        .page-hero .container { position: relative; z-index: 2; max-width: 900px; margin: 0 auto; }
+        .page-hero .breadcrumb { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.5rem; }
+        .page-hero .breadcrumb a { color: var(--text-secondary); text-decoration: none; }
+        .page-hero .breadcrumb a:hover { color: var(--accent); }
+        .page-hero h1 { font-family: var(--font-display); font-size: clamp(2.2rem, 5vw, 3.5rem); line-height: 1.15; margin-bottom: 1rem; animation: fadeUp 0.8s ease forwards; }
+        .page-hero h1 em { font-style: normal; color: var(--accent); }
+        .page-hero .subtitle { font-size: 1.2rem; color: var(--text-secondary); max-width: 650px; margin-bottom: 2rem; animation: fadeUp 0.8s ease forwards 0.2s; opacity: 0; }
+        .page-hero .meta { display: flex; gap: 2rem; flex-wrap: wrap; animation: fadeUp 0.8s ease forwards 0.4s; opacity: 0; }
+        .page-hero .meta-item { display: flex; align-items: center; gap: 0.5rem; color: var(--text-secondary); font-size: 0.9rem; }
+        .page-hero .meta-item strong { color: var(--text-primary); }
+
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+
+        section { padding: 5rem 2rem; }
+        .container { max-width: 900px; margin: 0 auto; }
+        .section-label { color: var(--accent); font-size: 0.8rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 1rem; }
+        .section-title { font-family: var(--font-display); font-size: clamp(1.6rem, 3.5vw, 2.2rem); line-height: 1.25; margin-bottom: 1.5rem; }
+        .divider { height: 1px; background: linear-gradient(90deg, transparent, var(--border), transparent); margin: 0 2rem; }
+
+        .btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.9rem 2rem; border-radius: 8px; font-family: var(--font-body); font-size: 0.95rem; font-weight: 600; text-decoration: none; transition: all 0.3s ease; border: none; cursor: pointer; }
+        .btn-primary { background: var(--accent); color: var(--bg-primary); }
+        .btn-primary:hover { background: var(--accent-light); transform: translateY(-2px); box-shadow: 0 8px 30px var(--accent-glow); }
+        .btn-outline { background: transparent; color: var(--text-primary); border: 1px solid rgba(255,255,255,0.15); }
+        .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+
+        /* MODULES */
+        .modules { background: var(--bg-secondary); }
+        .module-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+        .module-card {
+            background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 2rem;
+            transition: all 0.4s; position: relative; overflow: hidden;
+        }
+        .module-card:hover { border-color: rgba(232, 135, 30, 0.2); transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0,0,0,0.3); }
+        .module-number { font-family: var(--font-display); font-size: 2.5rem; color: var(--accent); opacity: 0.25; line-height: 1; margin-bottom: 0.5rem; }
+        .module-card h3 { font-size: 1.1rem; margin-bottom: 0.5rem; }
+        .module-card p { color: var(--text-secondary); font-size: 0.9rem; }
+        .module-tag { display: inline-block; background: rgba(95, 168, 211, 0.12); color: var(--blue); font-size: 0.75rem; font-weight: 600; padding: 0.2rem 0.6rem; border-radius: 4px; margin-top: 0.8rem; }
+
+        /* WHAT THEY LEARN */
+        .outcomes { background: var(--bg-primary); }
+        .outcome-list { display: grid; gap: 1rem; }
+        .outcome-item {
+            display: flex; align-items: flex-start; gap: 1rem;
+            padding: 1.2rem 1.5rem; background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px;
+        }
+        .outcome-check { color: var(--accent); font-size: 1.2rem; flex-shrink: 0; margin-top: 0.1rem; }
+        .outcome-item p { color: var(--text-secondary); font-size: 0.95rem; }
+        .outcome-item strong { color: var(--text-primary); }
+
+        /* PRACTICAL */
+        .practical { background: var(--bg-secondary); }
+        .specs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+        .spec { display: flex; align-items: flex-start; gap: 1rem; padding: 1.2rem 1.5rem; background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; }
+        .spec-icon { font-size: 1.4rem; flex-shrink: 0; }
+        .spec-label { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; }
+        .spec-value { font-weight: 600; font-size: 0.95rem; }
+
+        .cta-section { padding: 5rem 2rem; text-align: center; background: linear-gradient(to bottom, var(--bg-primary), var(--bg-secondary)); }
+        .cta-section h2 { font-family: var(--font-display); font-size: clamp(1.6rem, 3.5vw, 2.4rem); margin-bottom: 1rem; }
+        .cta-section p { color: var(--text-secondary); margin-bottom: 2rem; max-width: 500px; margin-left: auto; margin-right: auto; }
+        .cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+        /* COMBO BANNER */
+        .combo {
+            background: linear-gradient(135deg, var(--blue-dark), rgba(232, 135, 30, 0.15));
+            border: 1px solid rgba(95, 168, 211, 0.2);
+            border-radius: 16px;
+            padding: 2.5rem;
+            margin-top: 3rem;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+        .combo-icon { font-size: 3rem; flex-shrink: 0; }
+        .combo h3 { font-family: var(--font-display); font-size: 1.3rem; margin-bottom: 0.5rem; }
+        .combo p { color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 1rem; }
+
+        footer { padding: 2rem; text-align: center; color: var(--text-muted); font-size: 0.85rem; border-top: 1px solid var(--border); }
+        footer a { color: var(--accent); text-decoration: none; }
+
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.7s ease; }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; position: absolute; top: 100%; left: 0; right: 0; background: var(--bg-secondary); flex-direction: column; padding: 1.5rem; gap: 1rem; border-bottom: 1px solid var(--border); }
+            .nav-links.open { display: flex; }
+            .nav-toggle { display: block; }
+            .page-hero { padding: 7rem 1.5rem 3rem; }
+            .page-hero .meta { flex-direction: column; gap: 0.8rem; }
+            section { padding: 3.5rem 1.5rem; }
+            .module-grid, .specs-grid { grid-template-columns: 1fr; }
+            .combo { flex-direction: column; text-align: center; }
+            .cta-buttons { flex-direction: column; }
+            .btn { width: 100%; justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="../index.html" class="nav-logo">Roel <span>Nentjes</span></a>
+    <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Menu">
+        <span></span><span></span><span></span>
+    </button>
+    <div class="nav-links">
+        <a href="../index.html#over">Over mij</a>
+        <a href="../index.html#aanbod">Aanbod</a>
+        <a href="../presentatie/index.html">Presentatie</a>
+        <a href="../workshop/index.html" class="active">Workshop</a>
+        <a href="../index.html#contact" class="cta-nav">Contact</a>
+    </div>
+</nav>
+
+<!-- HERO -->
+<section class="page-hero">
+    <div class="container">
+        <div class="breadcrumb"><a href="../index.html">Home</a> / Workshop</div>
+        <h1>Hands-on met <em>AI</em></h1>
+        <p class="subtitle">Deelnemers gaan zelf aan de slag met AI-tools. Ontdek wat werkt, wat niet werkt, en hoe je AI effectief inzet in je dagelijks werk.</p>
+        <div class="meta">
+            <div class="meta-item">⏱️ <strong>2 – 4 uur</strong></div>
+            <div class="meta-item">👥 <strong>8 – 30 personen</strong></div>
+            <div class="meta-item">💻 <strong>Laptop vereist</strong></div>
+            <div class="meta-item">🌍 <strong>NL of EN</strong></div>
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- INTRO -->
+<section style="background: var(--bg-primary);">
+    <div class="container">
+        <div class="reveal">
+            <p style="color: var(--text-secondary); font-size: 1.1rem; max-width: 700px; margin-bottom: 1.5rem;">
+                Na de presentatie "Ontdek de Patronen" weet uw publiek <strong style="color: var(--text-primary);">wat</strong> AI kan. 
+                In de workshop ontdekken ze <strong style="color: var(--text-primary);">hoe</strong> ze het zelf inzetten.
+            </p>
+            <p style="color: var(--text-secondary); font-size: 1.1rem; max-width: 700px;">
+                Deelnemers werken met echte AI-tools aan echte vraagstukken. Geen theorie, maar praktijk — 
+                met directe toepasbaarheid in hun eigen werk en leven.
+            </p>
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- MODULES -->
+<section class="modules">
+    <div class="container">
+        <div class="section-label reveal">Programma</div>
+        <h2 class="section-title reveal">Workshop-modules</h2>
+        <p class="reveal" style="color: var(--text-secondary); margin-bottom: 2.5rem; max-width: 600px;">De workshop is modulair opgebouwd. Kies de modules die passen bij uw doelgroep, of neem het volledige programma.</p>
+
+        <div class="module-grid">
+            <div class="module-card reveal">
+                <div class="module-number">01</div>
+                <h3>Effectief prompting</h3>
+                <p>Leer hoe je de juiste vragen stelt aan AI. Het verschil tussen een matig en een excellent resultaat zit in de prompt. Deelnemers oefenen met concrete opdrachten.</p>
+                <span class="module-tag">Basis</span>
+            </div>
+            <div class="module-card reveal">
+                <div class="module-number">02</div>
+                <h3>AI voor tekst & communicatie</h3>
+                <p>Van e-mails en rapporten tot presentaties en social media. Deelnemers schrijven, herschrijven en verbeteren teksten met AI als co-auteur.</p>
+                <span class="module-tag">Praktisch</span>
+            </div>
+            <div class="module-card reveal">
+                <div class="module-number">03</div>
+                <h3>AI voor analyse & onderzoek</h3>
+                <p>Documenten samenvatten, data analyseren, vergelijkend onderzoek doen. Deelnemers ervaren hoe AI uren werk kan reduceren tot minuten.</p>
+                <span class="module-tag">Verdieping</span>
+            </div>
+            <div class="module-card reveal">
+                <div class="module-number">04</div>
+                <h3>Creatieve AI-toepassingen</h3>
+                <p>Beeldgeneratie, muziek, video en podcasts. Deelnemers creëren hun eigen AI-content en ontdekken de mogelijkheden — en beperkingen.</p>
+                <span class="module-tag">Creatief</span>
+            </div>
+        </div>
+
+        <div class="combo reveal">
+            <div class="combo-icon">🎯</div>
+            <div>
+                <h3>Presentatie + Workshop = Dagprogramma</h3>
+                <p>Combineer de presentatie "Ontdek de Patronen" in de ochtend met een hands-on workshop in de middag voor een complete AI-ervaring. Ideaal voor teamdagen en conferenties.</p>
+                <a href="../index.html#contact" class="btn btn-primary">Vraag een dagprogramma aan</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- WHAT THEY LEARN -->
+<section class="outcomes">
+    <div class="container">
+        <div class="section-label reveal">Resultaat</div>
+        <h2 class="section-title reveal">Na de workshop kunnen deelnemers:</h2>
+
+        <div class="outcome-list reveal">
+            <div class="outcome-item">
+                <div class="outcome-check">✓</div>
+                <p><strong>Effectieve prompts schrijven</strong> die consistente, bruikbare resultaten opleveren</p>
+            </div>
+            <div class="outcome-item">
+                <div class="outcome-check">✓</div>
+                <p><strong>AI-output kritisch beoordelen</strong> — herkennen wat klopt en wat niet</p>
+            </div>
+            <div class="outcome-item">
+                <div class="outcome-check">✓</div>
+                <p><strong>AI inzetten voor hun dagelijks werk</strong> — van mail tot analyse tot creatieve taken</p>
+            </div>
+            <div class="outcome-item">
+                <div class="outcome-check">✓</div>
+                <p><strong>Ethische vraagstukken herkennen</strong> rondom privacy, bias en betrouwbaarheid</p>
+            </div>
+            <div class="outcome-item">
+                <div class="outcome-check">✓</div>
+                <p><strong>Zelfstandig experimenteren</strong> met nieuwe AI-tools en toepassingen</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PRACTICAL -->
+<section class="practical">
+    <div class="container">
+        <div class="section-label reveal">Praktisch</div>
+        <h2 class="section-title reveal">Wat heeft u nodig?</h2>
+
+        <div class="specs-grid reveal">
+            <div class="spec">
+                <div class="spec-icon">💻</div>
+                <div>
+                    <div class="spec-label">Deelnemers</div>
+                    <div class="spec-value">Eigen laptop meenemen</div>
+                </div>
+            </div>
+            <div class="spec">
+                <div class="spec-icon">👥</div>
+                <div>
+                    <div class="spec-label">Groepsgrootte</div>
+                    <div class="spec-value">8 tot 30 personen</div>
+                </div>
+            </div>
+            <div class="spec">
+                <div class="spec-icon">⏱️</div>
+                <div>
+                    <div class="spec-label">Duur</div>
+                    <div class="spec-value">2 tot 4 uur (modulair)</div>
+                </div>
+            </div>
+            <div class="spec">
+                <div class="spec-icon">📶</div>
+                <div>
+                    <div class="spec-label">Vereisten locatie</div>
+                    <div class="spec-value">Wifi, beamer, stopcontacten</div>
+                </div>
+            </div>
+            <div class="spec">
+                <div class="spec-icon">💰</div>
+                <div>
+                    <div class="spec-label">Tarief</div>
+                    <div class="spec-value">Vanaf € 500 excl. btw</div>
+                </div>
+            </div>
+            <div class="spec">
+                <div class="spec-icon">📋</div>
+                <div>
+                    <div class="spec-label">Inclusief</div>
+                    <div class="spec-value">Handout met tips & bronnen</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CTA -->
+<section class="cta-section">
+    <h2>Workshop boeken voor uw team?</h2>
+    <p>Ik stel graag een programma samen dat past bij uw doelgroep en wensen.</p>
+    <div class="cta-buttons">
+        <a href="mailto:roel@nentjes.nl" class="btn btn-primary">✉️ Mail mij</a>
+        <a href="tel:+31612345678" class="btn btn-outline">📱 Bel mij</a>
+    </div>
+</section>
+
+<footer>
+    <p>&copy; 2026 Roel Nentjes · <a href="../index.html">Home</a> · <a href="../presentatie/index.html">Presentatie</a> · <a href="../index.html#contact">Contact</a></p>
+</footer>
+
+<script>
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('visible');
+    });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
