@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CMS — Roel Nentjes</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0A0E17; --bg2: #111827; --card: #1A2235;
+            --text: #F1F5F9; --muted: #64748B; --sub: #94A3B8;
+            --accent: #E8871E; --accent-l: #F5A623;
+            --green: #22c55e; --red: #ef4444; --blue: #5FA8D3;
+            --border: rgba(255,255,255,0.07);
+            --font: 'DM Sans', -apple-system, sans-serif;
+            --display: 'DM Serif Display', Georgia, serif;
+        }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: var(--font); background: var(--bg); color: var(--text); min-height: 100vh; }
+
+        /* LOGIN */
+        #login-screen {
+            display: flex; align-items: center; justify-content: center;
+            min-height: 100vh; padding: 2rem;
+        }
+        .login-box {
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 16px; padding: 3rem; width: 100%; max-width: 400px;
+            text-align: center;
+        }
+        .login-box h1 { font-family: var(--display); font-size: 1.8rem; margin-bottom: 0.5rem; }
+        .login-box p { color: var(--sub); font-size: 0.9rem; margin-bottom: 2rem; }
+        .login-box input {
+            width: 100%; background: var(--bg); border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px; padding: 0.8rem 1rem; color: var(--text);
+            font-family: var(--font); font-size: 1rem; outline: none;
+            margin-bottom: 1rem; text-align: center; letter-spacing: 0.1em;
+        }
+        .login-box input:focus { border-color: var(--accent); }
+        .login-error { color: var(--red); font-size: 0.85rem; margin-bottom: 1rem; display: none; }
+
+        /* MAIN LAYOUT */
+        #app { display: none; }
+        .topbar {
+            position: sticky; top: 0; z-index: 50;
+            background: rgba(10,14,23,0.95); backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center;
+        }
+        .topbar-brand { font-family: var(--display); font-size: 1.2rem; }
+        .topbar-brand span { color: var(--accent); }
+        .topbar-actions { display: flex; gap: 0.75rem; align-items: center; }
+        .topbar small { color: var(--muted); font-size: 0.8rem; }
+
+        .main { max-width: 1100px; margin: 0 auto; padding: 2rem; }
+
+        /* TABS */
+        .tabs { display: flex; gap: 0.5rem; margin-bottom: 2rem; border-bottom: 1px solid var(--border); padding-bottom: 0; }
+        .tab {
+            padding: 0.75rem 1.5rem; font-size: 0.9rem; font-weight: 600;
+            color: var(--sub); cursor: pointer; border-bottom: 2px solid transparent;
+            margin-bottom: -1px; transition: all 0.2s; background: none; border-top: none;
+            border-left: none; border-right: none; font-family: var(--font);
+        }
+        .tab:hover { color: var(--text); }
+        .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
+
+        /* SECTION HEADERS */
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+        .section-header h2 { font-family: var(--display); font-size: 1.5rem; }
+
+        /* BUTTONS */
+        .btn { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.6rem 1.2rem; border-radius: 8px; font-family: var(--font); font-size: 0.88rem; font-weight: 600; cursor: pointer; transition: all 0.2s; border: none; text-decoration: none; }
+        .btn-primary { background: var(--accent); color: var(--bg); }
+        .btn-primary:hover { background: var(--accent-l); }
+        .btn-outline { background: transparent; color: var(--text); border: 1px solid rgba(255,255,255,0.15); }
+        .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+        .btn-green { background: rgba(34,197,94,0.15); color: var(--green); border: 1px solid rgba(34,197,94,0.3); }
+        .btn-green:hover { background: rgba(34,197,94,0.25); }
+        .btn-red { background: rgba(239,68,68,0.12); color: var(--red); border: 1px solid rgba(239,68,68,0.25); }
+        .btn-red:hover { background: rgba(239,68,68,0.22); }
+        .btn-sm { padding: 0.35rem 0.8rem; font-size: 0.8rem; }
+
+        /* WORKSHOP CARDS */
+        .workshop-list { display: grid; gap: 1rem; }
+        .workshop-item {
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 12px; padding: 1.5rem;
+            display: grid; grid-template-columns: 1fr auto;
+            gap: 1rem; align-items: start;
+        }
+        .workshop-item.status-vol { border-color: rgba(239,68,68,0.2); }
+        .workshop-item.status-open { border-color: rgba(34,197,94,0.15); }
+        .wi-meta { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 0.5rem; }
+        .wi-tag { font-size: 0.78rem; font-weight: 600; padding: 0.2rem 0.6rem; border-radius: 4px; }
+        .tag-open { background: rgba(34,197,94,0.12); color: var(--green); }
+        .tag-vol { background: rgba(239,68,68,0.12); color: var(--red); }
+        .tag-niveau { background: rgba(95,168,211,0.12); color: var(--blue); }
+        .wi-title { font-size: 1.05rem; font-weight: 600; margin-bottom: 0.2rem; }
+        .wi-date { color: var(--accent); font-weight: 600; font-size: 0.9rem; }
+        .wi-desc { color: var(--sub); font-size: 0.88rem; margin-top: 0.5rem; line-height: 1.5; }
+        .wi-actions { display: flex; gap: 0.5rem; flex-shrink: 0; }
+        .wi-spots { font-size: 0.85rem; color: var(--muted); }
+        .wi-spots strong { color: var(--text); }
+        .empty-state {
+            text-align: center; padding: 4rem 2rem;
+            background: var(--card); border: 1px dashed rgba(255,255,255,0.1);
+            border-radius: 12px; color: var(--sub);
+        }
+        .empty-state .icon { font-size: 3rem; margin-bottom: 1rem; }
+
+        /* FORM */
+        .form-card {
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 14px; padding: 2rem; margin-bottom: 2rem; display: none;
+        }
+        .form-card.open { display: block; }
+        .form-card h3 { font-family: var(--display); font-size: 1.2rem; margin-bottom: 1.5rem; }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .form-group { margin-bottom: 0; }
+        .form-group.full { grid-column: 1 / -1; }
+        label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--sub); margin-bottom: 0.4rem; letter-spacing: 0.04em; }
+        input, select, textarea {
+            width: 100%; background: var(--bg); border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px; padding: 0.7rem 1rem; color: var(--text);
+            font-family: var(--font); font-size: 0.92rem; outline: none; transition: border-color 0.2s;
+        }
+        input:focus, select:focus, textarea:focus { border-color: var(--accent); }
+        select { appearance: none; cursor: pointer; }
+        select option { background: var(--bg2); }
+        textarea { resize: vertical; min-height: 90px; }
+        .form-actions { display: flex; gap: 0.75rem; margin-top: 1.5rem; flex-wrap: wrap; }
+
+        /* EXPORT BOX */
+        .export-box {
+            background: var(--bg2); border: 1px solid var(--border);
+            border-radius: 12px; padding: 1.5rem; margin-top: 2rem; display: none;
+        }
+        .export-box h3 { font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem; }
+        .export-box p { color: var(--sub); font-size: 0.87rem; margin-bottom: 1rem; }
+        .export-code {
+            background: var(--bg); border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 8px; padding: 1rem; font-family: monospace;
+            font-size: 0.8rem; color: #7dd3fc; overflow-x: auto;
+            white-space: pre; max-height: 300px; overflow-y: auto;
+        }
+        .export-steps { margin-top: 1rem; }
+        .export-steps li { color: var(--sub); font-size: 0.87rem; margin-bottom: 0.4rem; padding-left: 1.2rem; position: relative; }
+        .export-steps li::before { content: counter(step); counter-increment: step; position: absolute; left: 0; color: var(--accent); font-weight: 700; font-size: 0.8rem; }
+        .export-steps { list-style: none; counter-reset: step; }
+
+        /* PROJECTEN TAB */
+        .project-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+        .project-card {
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 14px; padding: 2rem;
+        }
+        .project-card h3 { font-family: var(--display); font-size: 1.1rem; margin-bottom: 0.5rem; }
+        .project-card p { color: var(--sub); font-size: 0.88rem; line-height: 1.6; margin-bottom: 1rem; }
+        .project-url { color: var(--accent); font-size: 0.85rem; font-weight: 600; }
+        .info-box {
+            background: rgba(232,135,30,0.08); border: 1px solid rgba(232,135,30,0.2);
+            border-radius: 10px; padding: 1rem 1.5rem; margin-bottom: 1.5rem;
+            color: var(--sub); font-size: 0.88rem; line-height: 1.6;
+        }
+        .info-box strong { color: var(--accent); }
+
+        /* TOAST */
+        #toast {
+            position: fixed; bottom: 2rem; right: 2rem; z-index: 999;
+            background: var(--green); color: #000; padding: 0.8rem 1.5rem;
+            border-radius: 8px; font-weight: 600; font-size: 0.9rem;
+            transform: translateY(100px); opacity: 0; transition: all 0.3s;
+        }
+        #toast.show { transform: translateY(0); opacity: 1; }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .main { padding: 1rem; }
+            .form-grid { grid-template-columns: 1fr; }
+            .project-grid { grid-template-columns: 1fr; }
+            .workshop-item { grid-template-columns: 1fr; }
+            .topbar { padding: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+    <div class="login-box">
+        <h1>Roel <span style="color:var(--accent)">Nentjes</span></h1>
+        <p>Beheeromgeving — voer het wachtwoord in</p>
+        <input type="password" id="pw-input" placeholder="Wachtwoord" onkeydown="if(event.key==='Enter') checkLogin()">
+        <div class="login-error" id="login-error">Onjuist wachtwoord</div>
+        <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="checkLogin()">Inloggen →</button>
+    </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+    <div class="topbar">
+        <div class="topbar-brand">Roel <span>Nentjes</span> <small style="font-family:var(--font);font-size:0.75rem;color:var(--muted);margin-left:0.5rem">Beheer</small></div>
+        <div class="topbar-actions">
+            <a href="../index.html" target="_blank" class="btn btn-outline btn-sm">🌐 Bekijk site</a>
+            <button class="btn btn-outline btn-sm" onclick="logout()">Uitloggen</button>
+        </div>
+    </div>
+
+    <div class="main">
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('workshops', this)">🗓 Workshops</button>
+            <button class="tab" onclick="switchTab('projecten', this)">🚀 Projecten</button>
+            <button class="tab" onclick="switchTab('handleiding', this)">📖 Handleiding</button>
+        </div>
+
+        <!-- ====== WORKSHOPS TAB ====== -->
+        <div class="tab-panel active" id="tab-workshops">
+            <div class="section-header">
+                <h2>Aankomende workshops</h2>
+                <button class="btn btn-primary" onclick="toggleForm()">+ Nieuwe workshop</button>
+            </div>
+
+            <!-- FORM -->
+            <div class="form-card" id="workshop-form">
+                <h3 id="form-title">Nieuwe workshop toevoegen</h3>
+                <input type="hidden" id="edit-id">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Titel *</label>
+                        <input type="text" id="f-titel" placeholder="Hands-on AI Workshop">
+                    </div>
+                    <div class="form-group">
+                        <label>Datum *</label>
+                        <input type="date" id="f-datum">
+                    </div>
+                    <div class="form-group">
+                        <label>Tijd</label>
+                        <input type="text" id="f-tijd" placeholder="14:00 – 17:00">
+                    </div>
+                    <div class="form-group">
+                        <label>Locatie *</label>
+                        <input type="text" id="f-locatie" placeholder="Rotterdam">
+                    </div>
+                    <div class="form-group">
+                        <label>Adres</label>
+                        <input type="text" id="f-adres" placeholder="Stationsplein 1, Rotterdam">
+                    </div>
+                    <div class="form-group">
+                        <label>Prijs</label>
+                        <input type="text" id="f-prijs" placeholder="€ 295 excl. btw">
+                    </div>
+                    <div class="form-group">
+                        <label>Max deelnemers</label>
+                        <input type="number" id="f-max" placeholder="20" value="20">
+                    </div>
+                    <div class="form-group">
+                        <label>Plaatsen beschikbaar</label>
+                        <input type="number" id="f-beschikbaar" placeholder="12" value="12">
+                    </div>
+                    <div class="form-group">
+                        <label>Niveau</label>
+                        <select id="f-niveau">
+                            <option value="Beginners">Beginners</option>
+                            <option value="Gevorderden">Gevorderden</option>
+                            <option value="Gemengd">Gemengd</option>
+                            <option value="Organisaties">Organisaties</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select id="f-status">
+                            <option value="open">Open voor inschrijving</option>
+                            <option value="vol">Vol</option>
+                            <option value="geannuleerd">Geannuleerd</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Inschrijf link (email of URL)</label>
+                        <input type="text" id="f-link" placeholder="mailto:roel@nentjes.nl?subject=Inschrijving%20Workshop">
+                    </div>
+                    <div class="form-group full">
+                        <label>Beschrijving *</label>
+                        <textarea id="f-beschrijving" placeholder="Korte beschrijving van de workshop..."></textarea>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button class="btn btn-primary" onclick="saveWorkshop()">Opslaan</button>
+                    <button class="btn btn-outline" onclick="toggleForm(false)">Annuleren</button>
+                </div>
+            </div>
+
+            <!-- LIST -->
+            <div id="workshop-list"></div>
+
+            <!-- EXPORT -->
+            <div class="export-box" id="export-box">
+                <h3>📁 Exporteer workshops-data.js</h3>
+                <p>Kopieer de code hieronder en vervang de inhoud van <code>workshops-data.js</code> in je website map. Push daarna naar git om de site te updaten.</p>
+                <div class="export-code" id="export-code"></div>
+                <div style="display:flex;gap:0.75rem;margin-top:1rem;flex-wrap:wrap;">
+                    <button class="btn btn-green" onclick="copyCode()">📋 Kopieer code</button>
+                    <button class="btn btn-primary" onclick="downloadFile()">⬇ Download bestand</button>
+                </div>
+                <ol class="export-steps" style="margin-top:1.5rem;">
+                    <li>Download het bestand of kopieer de code</li>
+                    <li>Vervang <code>workshops-data.js</code> in je website map</li>
+                    <li>Commit en push naar git: <code>git add . && git commit -m "workshop toegevoegd" && git push</code></li>
+                    <li>Cloudflare deployt automatisch binnen ~1 minuut</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- ====== PROJECTEN TAB ====== -->
+        <div class="tab-panel" id="tab-projecten">
+            <div class="section-header">
+                <h2>Mijn AI-Projecten</h2>
+            </div>
+            <div class="info-box">
+                <strong>Zichtbaar op de website:</strong> De onderstaande projecten worden getoond in de sectie "Mijn AI-Projecten" op de homepage. Wil je een project toevoegen of aanpassen? Vraag dat via Claude Code — de projecten staan hardcoded in <code>index.html</code>.
+            </div>
+            <div class="project-grid">
+                <div class="project-card">
+                    <div style="font-size:2rem;margin-bottom:0.75rem">📱</div>
+                    <h3>AutestMe.com</h3>
+                    <p>Een volledig AI-gedreven project: een iPhone-game, een eigen cryptomunt en een smart contract — allemaal gebouwd samen met AI. Bewijs dat ik niet alleen over AI praat, maar er ook mee bouw.</p>
+                    <a href="https://www.autestme.com" target="_blank" class="project-url">→ autestme.com</a>
+                </div>
+                <div class="project-card" style="border-style:dashed;opacity:0.5;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center">
+                    <div style="font-size:2rem;margin-bottom:0.75rem">➕</div>
+                    <h3>Volgend project</h3>
+                    <p>Voeg een nieuw project toe via Claude Code</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====== HANDLEIDING TAB ====== -->
+        <div class="tab-panel" id="tab-handleiding">
+            <div class="section-header">
+                <h2>Handleiding</h2>
+            </div>
+            <div style="display:grid;gap:1.5rem;max-width:700px">
+                <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem">
+                    <h3 style="font-family:var(--display);margin-bottom:1rem">🗓 Workshop toevoegen</h3>
+                    <ol style="padding-left:1.2rem;display:grid;gap:0.6rem;color:var(--sub);font-size:0.9rem;line-height:1.6">
+                        <li>Ga naar het tabblad <strong style="color:var(--text)">Workshops</strong></li>
+                        <li>Klik op <strong style="color:var(--accent)">+ Nieuwe workshop</strong></li>
+                        <li>Vul het formulier in en klik <strong style="color:var(--text)">Opslaan</strong></li>
+                        <li>Klik onderin op <strong style="color:var(--green)">Download bestand</strong></li>
+                        <li>Vervang <code>workshops-data.js</code> in je website map</li>
+                        <li>Push naar git — Cloudflare deployt automatisch</li>
+                    </ol>
+                </div>
+                <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem">
+                    <h3 style="font-family:var(--display);margin-bottom:1rem">🔐 Wachtwoord wijzigen</h3>
+                    <p style="color:var(--sub);font-size:0.9rem;line-height:1.6">Het wachtwoord staat in <code>admin/index.html</code>. Zoek naar <code>ADMIN_PASSWORD</code> en verander de waarde. Push daarna naar git.</p>
+                </div>
+                <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem">
+                    <h3 style="font-family:var(--display);margin-bottom:1rem">🚀 Project toevoegen</h3>
+                    <p style="color:var(--sub);font-size:0.9rem;line-height:1.6">Projecten worden beheerd in <code>index.html</code> in de sectie <code>id="projecten"</code>. Vraag Claude Code om een nieuw project toe te voegen.</p>
+                </div>
+                <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem">
+                    <h3 style="font-family:var(--display);margin-bottom:1rem">📝 Tekst aanpassen</h3>
+                    <p style="color:var(--sub);font-size:0.9rem;line-height:1.6">Alle tekst op de website staat in de HTML bestanden. Vraag Claude Code om specifieke tekst aan te passen, of edit de bestanden direct in VS Code of een teksteditor.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="toast">✓ Opgeslagen</div>
+
+<script>
+// ============================================================
+//  CONFIGURATIE
+// ============================================================
+const ADMIN_PASSWORD = "nentjes2026"; // ← Verander dit wachtwoord
+
+// ============================================================
+//  LOGIN
+// ============================================================
+function checkLogin() {
+    const pw = document.getElementById('pw-input').value;
+    if (pw === ADMIN_PASSWORD) {
+        document.getElementById('login-screen').style.display = 'none';
+        document.getElementById('app').style.display = 'block';
+        sessionStorage.setItem('cms-auth', '1');
+        loadWorkshopsFromScript();
+    } else {
+        document.getElementById('login-error').style.display = 'block';
+        document.getElementById('pw-input').value = '';
+        document.getElementById('pw-input').focus();
+    }
+}
+function logout() {
+    sessionStorage.removeItem('cms-auth');
+    location.reload();
+}
+if (sessionStorage.getItem('cms-auth') === '1') {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+}
+
+// ============================================================
+//  TABS
+// ============================================================
+function switchTab(name, btn) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + name).classList.add('active');
+}
+
+// ============================================================
+//  WORKSHOPS DATA (laad vanuit parent directory)
+// ============================================================
+let workshops = [];
+
+// Laad workshops-data.js van een niveau hoger
+function loadWorkshopsFromScript() {
+    // Probeer window.workshopsData te lezen als die al geladen is
+    if (typeof workshopsData !== 'undefined') {
+        workshops = JSON.parse(JSON.stringify(workshopsData));
+        renderWorkshops();
+        return;
+    }
+    const script = document.createElement('script');
+    script.src = '../workshops-data.js';
+    script.onload = function() {
+        if (typeof workshopsData !== 'undefined') {
+            workshops = JSON.parse(JSON.stringify(workshopsData));
+        }
+        renderWorkshops();
+    };
+    script.onerror = function() {
+        workshops = [];
+        renderWorkshops();
+    };
+    document.head.appendChild(script);
+}
+
+// ============================================================
+//  RENDER
+// ============================================================
+function renderWorkshops() {
+    updateExport();
+    const list = document.getElementById('workshop-list');
+    if (workshops.length === 0) {
+        list.innerHTML = `<div class="empty-state"><div class="icon">🗓</div><p>Nog geen workshops gepland.<br>Klik op <strong>+ Nieuwe workshop</strong> om te beginnen.</p></div>`;
+        return;
+    }
+    // Sorteer op datum
+    const sorted = [...workshops].sort((a, b) => new Date(a.datum) - new Date(b.datum));
+    list.innerHTML = sorted.map(w => {
+        const dateStr = formatDate(w.datum);
+        const spotsClass = w.beschikbaar <= 3 ? 'style="color:var(--red)"' : '';
+        return `
+        <div class="workshop-item status-${w.status}">
+            <div>
+                <div class="wi-date">${dateStr}${w.tijd ? ' · ' + w.tijd : ''}</div>
+                <div class="wi-title">${esc(w.titel)}</div>
+                <div style="color:var(--sub);font-size:0.85rem">${esc(w.locatie)}${w.prijs ? ' · ' + esc(w.prijs) : ''}</div>
+                <div class="wi-desc">${esc(w.beschrijving)}</div>
+                <div class="wi-meta">
+                    <span class="wi-tag tag-${w.status}">${w.status === 'open' ? '✓ Open' : w.status === 'vol' ? '✗ Vol' : '— Geannuleerd'}</span>
+                    <span class="wi-tag tag-niveau">${esc(w.niveau)}</span>
+                    <span class="wi-spots" ${spotsClass}><strong ${spotsClass}>${w.beschikbaar}</strong> / ${w.max} plaatsen beschikbaar</span>
+                </div>
+            </div>
+            <div class="wi-actions">
+                <button class="btn btn-outline btn-sm" onclick="editWorkshop('${w.id}')">✏️ Bewerk</button>
+                <button class="btn btn-red btn-sm" onclick="deleteWorkshop('${w.id}')">🗑</button>
+            </div>
+        </div>`;
+    }).join('');
+    document.getElementById('export-box').style.display = 'block';
+}
+
+function formatDate(d) {
+    if (!d) return '';
+    const date = new Date(d + 'T12:00:00');
+    return date.toLocaleDateString('nl-NL', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+}
+function esc(s) {
+    return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function genId() {
+    return 'w' + Date.now().toString(36);
+}
+
+// ============================================================
+//  FORM
+// ============================================================
+function toggleForm(force) {
+    const form = document.getElementById('workshop-form');
+    const open = force !== undefined ? force : !form.classList.contains('open');
+    if (open) {
+        form.classList.add('open');
+        clearForm();
+        document.getElementById('form-title').textContent = 'Nieuwe workshop toevoegen';
+        document.getElementById('edit-id').value = '';
+        form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else {
+        form.classList.remove('open');
+    }
+}
+function clearForm() {
+    ['titel','datum','tijd','locatie','adres','prijs','beschrijving','link'].forEach(id => document.getElementById('f-' + id).value = '');
+    document.getElementById('f-max').value = 20;
+    document.getElementById('f-beschikbaar').value = 12;
+    document.getElementById('f-niveau').value = 'Beginners';
+    document.getElementById('f-status').value = 'open';
+}
+function saveWorkshop() {
+    const titel = document.getElementById('f-titel').value.trim();
+    const datum = document.getElementById('f-datum').value;
+    const locatie = document.getElementById('f-locatie').value.trim();
+    const beschrijving = document.getElementById('f-beschrijving').value.trim();
+    if (!titel || !datum || !locatie || !beschrijving) {
+        alert('Vul minimaal Titel, Datum, Locatie en Beschrijving in.');
+        return;
+    }
+    const editId = document.getElementById('edit-id').value;
+    const w = {
+        id: editId || genId(),
+        titel,
+        datum,
+        tijd: document.getElementById('f-tijd').value.trim(),
+        locatie,
+        adres: document.getElementById('f-adres').value.trim(),
+        beschrijving,
+        max: parseInt(document.getElementById('f-max').value) || 20,
+        beschikbaar: parseInt(document.getElementById('f-beschikbaar').value) || 12,
+        prijs: document.getElementById('f-prijs').value.trim(),
+        niveau: document.getElementById('f-niveau').value,
+        status: document.getElementById('f-status').value,
+        link: document.getElementById('f-link').value.trim() || `mailto:roel@nentjes.nl?subject=Inschrijving%20${encodeURIComponent(titel)}`
+    };
+    if (editId) {
+        const idx = workshops.findIndex(x => x.id === editId);
+        if (idx >= 0) workshops[idx] = w;
+    } else {
+        workshops.push(w);
+    }
+    toggleForm(false);
+    renderWorkshops();
+    showToast('Workshop opgeslagen!');
+}
+function editWorkshop(id) {
+    const w = workshops.find(x => x.id === id);
+    if (!w) return;
+    toggleForm(true);
+    document.getElementById('form-title').textContent = 'Workshop bewerken';
+    document.getElementById('edit-id').value = w.id;
+    document.getElementById('f-titel').value = w.titel;
+    document.getElementById('f-datum').value = w.datum;
+    document.getElementById('f-tijd').value = w.tijd || '';
+    document.getElementById('f-locatie').value = w.locatie;
+    document.getElementById('f-adres').value = w.adres || '';
+    document.getElementById('f-beschrijving').value = w.beschrijving;
+    document.getElementById('f-max').value = w.max;
+    document.getElementById('f-beschikbaar').value = w.beschikbaar;
+    document.getElementById('f-prijs').value = w.prijs || '';
+    document.getElementById('f-niveau').value = w.niveau || 'Beginners';
+    document.getElementById('f-status').value = w.status || 'open';
+    document.getElementById('f-link').value = w.link || '';
+}
+function deleteWorkshop(id) {
+    if (!confirm('Weet je zeker dat je deze workshop wilt verwijderen?')) return;
+    workshops = workshops.filter(x => x.id !== id);
+    renderWorkshops();
+    showToast('Workshop verwijderd');
+}
+
+// ============================================================
+//  EXPORT
+// ============================================================
+function generateCode() {
+    const json = JSON.stringify(workshops, null, 2)
+        .replace(/"([^"]+)":/g, '$1:')   // verwijder quotes om keys
+        .replace(/"/g, "'");              // vervang " door '
+    return `// ============================================================
+//  workshops-data.js  —  Beheer via /admin of pas direct aan
+// ============================================================
+// Gegenereerd op ${new Date().toLocaleDateString('nl-NL')} via /admin/
+
+const workshopsData = ${json};
+`;
+}
+function updateExport() {
+    document.getElementById('export-code').textContent = generateCode();
+}
+function copyCode() {
+    navigator.clipboard.writeText(generateCode()).then(() => showToast('Code gekopieerd!'));
+}
+function downloadFile() {
+    const blob = new Blob([generateCode()], { type: 'text/javascript' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'workshops-data.js';
+    a.click();
+    showToast('Bestand gedownload!');
+}
+
+// ============================================================
+//  TOAST
+// ============================================================
+function showToast(msg = 'Opgeslagen!') {
+    const t = document.getElementById('toast');
+    t.textContent = '✓ ' + msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ============================================================
+//  INIT
+// ============================================================
+document.addEventListener('DOMContentLoaded', () => {
+    if (sessionStorage.getItem('cms-auth') === '1') {
+        loadWorkshopsFromScript();
+    }
+    document.getElementById('pw-input').focus();
+});
+</script>
+
+</body>
+</html>

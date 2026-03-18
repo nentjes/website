@@ -1,0 +1,1675 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NIMCO Boekhouding</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+:root {
+  --teal:      #0D6B5D;
+  --teal-dark: #095248;
+  --teal-light:#E6F4F1;
+  --coral:     #E85A5A;
+  --coral-dark:#D14545;
+  --green-bg:  #1A4D45;
+  --gray-50:   #F9FAFB;
+  --gray-100:  #F3F4F6;
+  --gray-200:  #E5E7EB;
+  --gray-400:  #9CA3AF;
+  --gray-600:  #6B7280;
+  --gray-800:  #1F2937;
+  --gray-900:  #111827;
+  --white:     #ffffff;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,.08);
+  --shadow:    0 4px 12px rgba(0,0,0,.1);
+  --radius:    10px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body { font-family: 'Inter', sans-serif; background: var(--gray-50); color: var(--gray-800); font-size: 14px; }
+
+/* ─── LOGIN ─── */
+#login-screen {
+  display: flex; align-items: center; justify-content: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--green-bg) 0%, var(--teal) 100%);
+}
+.login-box {
+  background: var(--white); border-radius: 16px; padding: 48px 40px;
+  width: 360px; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,.25);
+}
+.login-logo { font-size: 28px; font-weight: 700; color: var(--teal); letter-spacing: -0.5px; margin-bottom: 4px; }
+.login-sub { color: var(--gray-600); font-size: 13px; margin-bottom: 32px; }
+.login-box input {
+  width: 100%; padding: 12px 16px; border: 1.5px solid var(--gray-200);
+  border-radius: 8px; font-size: 15px; font-family: inherit; margin-bottom: 12px;
+  outline: none; transition: border-color .2s;
+}
+.login-box input:focus { border-color: var(--teal); }
+.btn-primary {
+  background: var(--teal); color: var(--white); border: none; border-radius: 8px;
+  padding: 12px 24px; font-size: 14px; font-weight: 600; font-family: inherit;
+  cursor: pointer; transition: background .2s; width: 100%;
+}
+.btn-primary:hover { background: var(--teal-dark); }
+#login-error { color: var(--coral); font-size: 13px; margin-top: 8px; display: none; }
+
+/* ─── APP SHELL ─── */
+#app { display: none; min-height: 100vh; flex-direction: column; }
+
+/* NAV */
+.top-nav {
+  background: linear-gradient(135deg, var(--green-bg) 0%, var(--teal) 100%);
+  padding: 0 24px; display: flex; align-items: center; gap: 0;
+  position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,.2);
+}
+.nav-brand {
+  font-size: 18px; font-weight: 700; color: var(--white); letter-spacing: -0.3px;
+  padding: 16px 20px 16px 0; margin-right: 16px; border-right: 1px solid rgba(255,255,255,.15);
+}
+.nav-brand span { color: rgba(255,255,255,.65); font-weight: 400; font-size: 12px; display: block; }
+.nav-tabs { display: flex; gap: 0; flex: 1; }
+.nav-tab {
+  color: rgba(255,255,255,.75); text-decoration: none; padding: 18px 16px;
+  font-size: 13px; font-weight: 500; cursor: pointer; border: none; background: none;
+  font-family: inherit; transition: color .2s, background .2s; position: relative;
+  white-space: nowrap;
+}
+.nav-tab:hover { color: var(--white); background: rgba(255,255,255,.08); }
+.nav-tab.active { color: var(--white); }
+.nav-tab.active::after {
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+  height: 3px; background: var(--coral); border-radius: 3px 3px 0 0;
+}
+.nav-right { margin-left: auto; display: flex; align-items: center; gap: 12px; }
+.nav-user { color: rgba(255,255,255,.65); font-size: 12px; }
+.btn-logout {
+  background: rgba(255,255,255,.12); color: var(--white); border: 1px solid rgba(255,255,255,.2);
+  border-radius: 6px; padding: 6px 12px; font-size: 12px; font-family: inherit;
+  cursor: pointer; transition: background .2s;
+}
+.btn-logout:hover { background: rgba(255,255,255,.22); }
+
+/* CONTENT */
+#content { flex: 1; padding: 28px 32px; max-width: 1200px; margin: 0 auto; width: 100%; }
+
+/* ─── CARDS & TYPOGRAPHY ─── */
+.page-title { font-size: 22px; font-weight: 700; color: var(--gray-900); margin-bottom: 24px; }
+.card {
+  background: var(--white); border-radius: var(--radius); padding: 24px;
+  box-shadow: var(--shadow-sm); border: 1px solid var(--gray-200);
+}
+.card-title { font-size: 13px; font-weight: 600; color: var(--gray-600); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 16px; }
+
+/* ─── BUTTONS ─── */
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  border-radius: 7px; padding: 8px 16px; font-size: 13px; font-weight: 600;
+  font-family: inherit; cursor: pointer; border: none; transition: all .15s;
+  text-decoration: none;
+}
+.btn-sm { padding: 5px 10px; font-size: 12px; }
+.btn-primary { background: var(--teal); color: var(--white); }
+.btn-primary:hover { background: var(--teal-dark); }
+.btn-secondary { background: var(--white); color: var(--gray-800); border: 1.5px solid var(--gray-200); }
+.btn-secondary:hover { background: var(--gray-50); border-color: var(--gray-400); }
+.btn-coral { background: var(--coral); color: var(--white); }
+.btn-coral:hover { background: var(--coral-dark); }
+.btn-danger { background: #FEE2E2; color: #DC2626; }
+.btn-danger:hover { background: #FECACA; }
+.btn-success { background: #D1FAE5; color: #059669; }
+.btn-success:hover { background: #A7F3D0; }
+.btn-group { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+
+/* ─── DASHBOARD ─── */
+.stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 24px; }
+.stat-card {
+  background: var(--white); border-radius: var(--radius); padding: 20px 24px;
+  box-shadow: var(--shadow-sm); border: 1px solid var(--gray-200);
+  border-left: 4px solid var(--teal);
+}
+.stat-card.coral { border-left-color: var(--coral); }
+.stat-card.green { border-left-color: #10B981; }
+.stat-card.amber { border-left-color: #F59E0B; }
+.stat-label { font-size: 12px; color: var(--gray-600); font-weight: 500; margin-bottom: 8px; }
+.stat-value { font-size: 24px; font-weight: 700; color: var(--gray-900); }
+.stat-sub { font-size: 11px; color: var(--gray-400); margin-top: 4px; }
+.dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+@media(max-width: 768px) { .dashboard-grid { grid-template-columns: 1fr; } }
+
+/* ─── TABLES ─── */
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+thead th {
+  background: var(--gray-50); color: var(--gray-600); font-size: 11px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: .5px; padding: 10px 14px; text-align: left;
+  border-bottom: 1px solid var(--gray-200);
+}
+tbody td { padding: 12px 14px; border-bottom: 1px solid var(--gray-100); vertical-align: middle; }
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:hover { background: var(--gray-50); }
+.empty-state { text-align: center; color: var(--gray-400); padding: 48px 20px; }
+.empty-state .empty-icon { font-size: 40px; margin-bottom: 12px; }
+.empty-state p { font-size: 14px; }
+
+/* ─── BADGES ─── */
+.badge {
+  display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 20px;
+  font-size: 11px; font-weight: 600;
+}
+.badge-concept  { background: #F3F4F6; color: #6B7280; }
+.badge-verstuurd{ background: #DBEAFE; color: #1D4ED8; }
+.badge-betaald  { background: #D1FAE5; color: #059669; }
+.badge-verlopen { background: #FEE2E2; color: #DC2626; }
+.badge-open     { background: #FEF3C7; color: #D97706; }
+
+/* ─── FORMS ─── */
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.form-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+.form-full { grid-column: 1 / -1; }
+.form-group { display: flex; flex-direction: column; gap: 5px; }
+.form-group label { font-size: 12px; font-weight: 600; color: var(--gray-700); }
+.form-group input, .form-group select, .form-group textarea {
+  padding: 9px 12px; border: 1.5px solid var(--gray-200); border-radius: 7px;
+  font-size: 14px; font-family: inherit; outline: none; transition: border-color .2s;
+  background: var(--white); color: var(--gray-800);
+}
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--teal); }
+.form-group textarea { resize: vertical; min-height: 80px; }
+
+/* ─── FACTUUR REGELS ─── */
+.regels-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+.regels-table th { background: var(--gray-50); padding: 8px 10px; font-size: 11px; font-weight: 600; color: var(--gray-600); text-align: left; border-bottom: 1px solid var(--gray-200); }
+.regels-table td { padding: 6px 4px; border-bottom: 1px solid var(--gray-100); }
+.regels-table input, .regels-table select {
+  width: 100%; padding: 6px 8px; border: 1.5px solid var(--gray-200); border-radius: 6px;
+  font-size: 13px; font-family: inherit; outline: none;
+}
+.regels-table input:focus, .regels-table select:focus { border-color: var(--teal); }
+.regel-totaal { text-align: right; font-size: 13px; font-weight: 500; padding: 6px 8px !important; color: var(--gray-800); }
+.totaal-box { margin-top: 16px; text-align: right; }
+.totaal-box table { display: inline-table; min-width: 260px; }
+.totaal-box td { padding: 5px 10px; font-size: 13px; }
+.totaal-box tr.grand-total td { font-weight: 700; font-size: 15px; border-top: 2px solid var(--gray-200); padding-top: 10px; }
+
+/* ─── FACTUUR PREVIEW ─── */
+#factuur-preview-wrap {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,.55); z-index: 200; display: none;
+  align-items: center; justify-content: center; padding: 20px;
+}
+#factuur-preview-wrap.open { display: flex; }
+.preview-modal {
+  background: var(--white); border-radius: 12px; width: 100%; max-width: 800px;
+  max-height: 95vh; overflow-y: auto; box-shadow: 0 25px 80px rgba(0,0,0,.3);
+}
+.preview-toolbar {
+  padding: 14px 20px; background: var(--gray-50); border-bottom: 1px solid var(--gray-200);
+  display: flex; gap: 10px; align-items: center; border-radius: 12px 12px 0 0;
+  position: sticky; top: 0; z-index: 1;
+}
+.preview-toolbar h3 { flex: 1; font-size: 15px; font-weight: 600; }
+#factuur-print-area { padding: 40px 48px; }
+.fp-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 40px; }
+.fp-logo { font-size: 26px; font-weight: 800; color: var(--teal); letter-spacing: -1px; }
+.fp-logo span { display: block; font-size: 11px; color: var(--gray-600); font-weight: 400; letter-spacing: 0; }
+.fp-factuur-nr { text-align: right; }
+.fp-factuur-nr h1 { font-size: 22px; font-weight: 700; color: var(--gray-900); }
+.fp-factuur-nr p { font-size: 12px; color: var(--gray-600); }
+.fp-parties { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 32px; }
+.fp-party h4 { font-size: 11px; font-weight: 600; color: var(--gray-400); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 8px; }
+.fp-party p { font-size: 13px; color: var(--gray-800); line-height: 1.6; }
+.fp-table { width: 100%; border-collapse: collapse; margin-bottom: 24px; }
+.fp-table thead th { background: var(--teal); color: var(--white); padding: 10px 12px; font-size: 12px; font-weight: 600; text-align: left; }
+.fp-table thead th:last-child { text-align: right; }
+.fp-table tbody td { padding: 10px 12px; border-bottom: 1px solid var(--gray-100); font-size: 13px; }
+.fp-table tbody td:last-child { text-align: right; font-weight: 500; }
+.fp-totals { float: right; width: 260px; margin-bottom: 40px; }
+.fp-totals table { width: 100%; }
+.fp-totals td { padding: 5px 0; font-size: 13px; }
+.fp-totals td:last-child { text-align: right; font-weight: 600; }
+.fp-totals tr.grand td { font-size: 15px; font-weight: 700; border-top: 2px solid var(--teal); padding-top: 10px; color: var(--teal); }
+.fp-footer-clear { clear: both; }
+.fp-betaling { background: var(--teal-light); border-radius: 8px; padding: 16px 20px; margin-top: 24px; }
+.fp-betaling h4 { font-size: 12px; font-weight: 600; color: var(--teal); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 6px; }
+.fp-betaling p { font-size: 13px; color: var(--gray-700); line-height: 1.6; }
+.fp-notes { margin-top: 16px; font-size: 12px; color: var(--gray-600); font-style: italic; }
+
+/* ─── MODAL ─── */
+.modal-wrap {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,.45); z-index: 150; display: none;
+  align-items: center; justify-content: center; padding: 20px;
+}
+.modal-wrap.open { display: flex; }
+.modal {
+  background: var(--white); border-radius: 12px; width: 100%;
+  max-width: 680px; max-height: 90vh; overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0,0,0,.25);
+}
+.modal-header {
+  padding: 20px 24px; border-bottom: 1px solid var(--gray-200);
+  display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; background: var(--white); z-index: 1;
+  border-radius: 12px 12px 0 0;
+}
+.modal-header h2 { font-size: 17px; font-weight: 700; }
+.modal-close { background: none; border: none; font-size: 20px; cursor: pointer; color: var(--gray-400); padding: 4px; border-radius: 4px; }
+.modal-close:hover { background: var(--gray-100); color: var(--gray-800); }
+.modal-body { padding: 24px; }
+.modal-footer { padding: 16px 24px; border-top: 1px solid var(--gray-200); display: flex; justify-content: flex-end; gap: 10px; }
+
+/* ─── BTW ─── */
+.btw-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.btw-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--gray-100); }
+.btw-row:last-child { border-bottom: none; }
+.btw-label { font-size: 13px; color: var(--gray-700); }
+.btw-rubriek { font-size: 11px; color: var(--gray-400); }
+.btw-amount { font-size: 14px; font-weight: 600; color: var(--gray-900); }
+.btw-saldo-card { background: linear-gradient(135deg, var(--green-bg), var(--teal)); color: white; border-radius: var(--radius); padding: 24px; text-align: center; }
+.btw-saldo-label { font-size: 13px; opacity: .8; margin-bottom: 8px; }
+.btw-saldo-amount { font-size: 36px; font-weight: 700; }
+.btw-saldo-sub { font-size: 12px; opacity: .7; margin-top: 4px; }
+.btw-saldo-card.terug-ontvangen { background: linear-gradient(135deg, #065F46, #059669); }
+
+/* ─── SETTINGS ─── */
+.settings-section { margin-bottom: 28px; }
+.settings-section h3 { font-size: 14px; font-weight: 600; color: var(--gray-900); margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--gray-200); }
+
+/* ─── SEARCH BAR ─── */
+.search-bar {
+  padding: 9px 14px; border: 1.5px solid var(--gray-200); border-radius: 7px;
+  font-size: 14px; font-family: inherit; outline: none; min-width: 220px;
+  transition: border-color .2s;
+}
+.search-bar:focus { border-color: var(--teal); }
+.toolbar { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+.toolbar-right { margin-left: auto; display: flex; gap: 8px; }
+
+/* ─── FILTER TABS ─── */
+.filter-tabs { display: flex; gap: 4px; margin-bottom: 20px; flex-wrap: wrap; }
+.filter-tab {
+  padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 500;
+  cursor: pointer; border: 1.5px solid var(--gray-200); background: var(--white);
+  color: var(--gray-600); transition: all .15s; font-family: inherit;
+}
+.filter-tab.active { background: var(--teal); color: var(--white); border-color: var(--teal); }
+.filter-tab:hover:not(.active) { border-color: var(--teal); color: var(--teal); }
+
+/* ─── MISC ─── */
+.text-right { text-align: right; }
+.text-muted { color: var(--gray-400); }
+.fw-6 { font-weight: 600; }
+.mt-4 { margin-top: 16px; }
+.mb-4 { margin-bottom: 16px; }
+.inline-flex { display: inline-flex; gap: 6px; align-items: center; }
+.separator { border: none; border-top: 1px solid var(--gray-200); margin: 20px 0; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ LOGIN ═══════════════ -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">nimco</div>
+    <div class="login-sub">Nentjes Interim Management &amp; Consultancy</div>
+    <input type="password" id="pw-input" placeholder="Wachtwoord" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="btn-primary" onclick="doLogin()">Inloggen</button>
+    <div id="login-error">Onjuist wachtwoord</div>
+  </div>
+</div>
+
+<!-- ═══════════════ APP ═══════════════ -->
+<div id="app" style="display:none;flex-direction:column;min-height:100vh;">
+  <nav class="top-nav">
+    <div class="nav-brand">nimco <span>Boekhouding</span></div>
+    <div class="nav-tabs">
+      <button class="nav-tab active" onclick="showView('dashboard')">📊 Dashboard</button>
+      <button class="nav-tab" onclick="showView('klanten')">👥 Klanten</button>
+      <button class="nav-tab" onclick="showView('facturen')">🧾 Facturen</button>
+      <button class="nav-tab" onclick="showView('kosten')">💸 Kosten</button>
+      <button class="nav-tab" onclick="showView('btw')">🏛 BTW-aangifte</button>
+      <button class="nav-tab" onclick="showView('instellingen')">⚙️ Instellingen</button>
+    </div>
+    <div class="nav-right">
+      <span class="nav-user">Roel Nentjes</span>
+      <button class="btn-logout" onclick="logout()">Uitloggen</button>
+    </div>
+  </nav>
+  <div id="content"></div>
+</div>
+
+<!-- ═══════════════ MODALS ═══════════════ -->
+<div class="modal-wrap" id="modal-klant">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="modal-klant-title">Klant toevoegen</h2>
+      <button class="modal-close" onclick="closeModal('modal-klant')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group form-full">
+          <label>Bedrijfsnaam *</label>
+          <input type="text" id="kl-naam">
+        </div>
+        <div class="form-group"><label>Contactpersoon</label><input type="text" id="kl-contact"></div>
+        <div class="form-group"><label>E-mailadres</label><input type="email" id="kl-email"></div>
+        <div class="form-group"><label>Telefoon</label><input type="tel" id="kl-tel"></div>
+        <div class="form-group form-full"><label>Adres</label><input type="text" id="kl-adres"></div>
+        <div class="form-group"><label>Postcode</label><input type="text" id="kl-postcode"></div>
+        <div class="form-group"><label>Plaats</label><input type="text" id="kl-plaats"></div>
+        <div class="form-group"><label>KVK-nummer</label><input type="text" id="kl-kvk"></div>
+        <div class="form-group"><label>BTW-nummer</label><input type="text" id="kl-btwnr"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-klant')">Annuleren</button>
+      <button class="btn btn-primary" onclick="saveKlant()">Opslaan</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-wrap" id="modal-kost">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="modal-kost-title">Kost toevoegen</h2>
+      <button class="modal-close" onclick="closeModal('modal-kost')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group"><label>Datum *</label><input type="date" id="ko-datum"></div>
+        <div class="form-group"><label>Categorie</label>
+          <select id="ko-categorie">
+            <option>Kantoor</option><option>Reiskosten</option><option>Abonnementen</option>
+            <option>Apparatuur</option><option>Marketing</option><option>Overig</option>
+          </select>
+        </div>
+        <div class="form-group form-full"><label>Omschrijving *</label><input type="text" id="ko-omschrijving"></div>
+        <div class="form-group"><label>Leverancier</label><input type="text" id="ko-leverancier"></div>
+        <div class="form-group"><label>Bedrag excl. BTW (€) *</label><input type="number" id="ko-bedrag" step="0.01" min="0"></div>
+        <div class="form-group"><label>BTW %</label>
+          <select id="ko-btwpct"><option value="21">21%</option><option value="9">9%</option><option value="0">0%</option></select>
+        </div>
+        <div class="form-group"><label>Status</label>
+          <select id="ko-betaald"><option value="1">Betaald</option><option value="0">Onbetaald</option></select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-kost')">Annuleren</button>
+      <button class="btn btn-primary" onclick="saveKost()">Opslaan</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ FACTUUR PREVIEW ═══════════════ -->
+<div id="factuur-preview-wrap">
+  <div class="preview-modal">
+    <div class="preview-toolbar">
+      <h3>Factuurvoorbeeld</h3>
+      <button class="btn btn-secondary btn-sm" onclick="closePreview()">✕ Sluiten</button>
+      <button class="btn btn-primary btn-sm" onclick="downloadFactuurPDF()">⬇ PDF downloaden</button>
+      <button class="btn btn-coral btn-sm" onclick="emailFactuur()">✉ E-mail openen</button>
+    </div>
+    <div id="factuur-print-area"></div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════
+//  CONSTANTEN & STATE
+// ══════════════════════════════════════════════
+const ADMIN_PASSWORD = 'nimco2026';
+let currentView = 'dashboard';
+let editingKlantId = null;
+let editingKostId = null;
+let editingFactuurId = null;
+let previewFactuurId = null;
+let factuurFilter = 'alle';
+let kostenFilter = 'alle';
+
+// ── STORAGE HELPERS ──
+function load(key, fallback=[]) {
+  try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch { return fallback; }
+}
+function save(key, val) { localStorage.setItem(key, JSON.stringify(val)); }
+
+const KEYS = { settings:'nimco_settings', klanten:'nimco_klanten', facturen:'nimco_facturen', kosten:'nimco_kosten' };
+
+function getSettings() {
+  return load(KEYS.settings, {
+    bedrijf:'NIMCO', naam:'Roel Nentjes', adres:'', postcode:'', plaats:'',
+    kvk:'', btwnummer:'', iban:'', bic:'', email:'roel@nentjes.nl',
+    tel:'', website:'www.nentjes.nl', prefix:'NIMCO', volgendNummer:1,
+    termijn:30, btwTarief:21
+  });
+}
+function getKlanten() { return load(KEYS.klanten); }
+function getFacturen() { return load(KEYS.facturen); }
+function getKosten() { return load(KEYS.kosten); }
+
+// ── ID GENERATOR ──
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
+
+// ── DATUM HELPERS ──
+function today() { return new Date().toISOString().slice(0,10); }
+function addDays(d, n) { const dt = new Date(d); dt.setDate(dt.getDate()+n); return dt.toISOString().slice(0,10); }
+function fmtDate(d) { if(!d) return '–'; const [y,m,dd]=d.split('-'); return `${dd}-${m}-${y}`; }
+function fmtEur(n) { return '€ '+Number(n||0).toLocaleString('nl-NL',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+function nowYear() { return new Date().getFullYear(); }
+
+// ── FACTUUR NUMMER ──
+function genFactuurNummer() {
+  const s = getSettings();
+  const num = String(s.volgendNummer).padStart(3,'0');
+  return `${s.prefix}-${nowYear()}-${num}`;
+}
+function bumpFactuurNummer() {
+  const s = getSettings();
+  s.volgendNummer = (s.volgendNummer||1) + 1;
+  save(KEYS.settings, s);
+}
+
+// ══════════════════════════════════════════════
+//  AUTH
+// ══════════════════════════════════════════════
+function doLogin() {
+  const pw = document.getElementById('pw-input').value;
+  if(pw === ADMIN_PASSWORD) {
+    sessionStorage.setItem('nimco-auth','1');
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'flex';
+    showView('dashboard');
+  } else {
+    document.getElementById('login-error').style.display = 'block';
+  }
+}
+function logout() {
+  sessionStorage.removeItem('nimco-auth');
+  location.reload();
+}
+window.addEventListener('load', () => {
+  if(sessionStorage.getItem('nimco-auth') === '1') {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'flex';
+    showView('dashboard');
+  }
+});
+
+// ══════════════════════════════════════════════
+//  NAVIGATION
+// ══════════════════════════════════════════════
+function showView(view) {
+  currentView = view;
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  const tabs = document.querySelectorAll('.nav-tab');
+  const viewIndex = ['dashboard','klanten','facturen','kosten','btw','instellingen'].indexOf(view);
+  if(tabs[viewIndex]) tabs[viewIndex].classList.add('active');
+  const renders = {
+    dashboard: renderDashboard, klanten: renderKlanten,
+    facturen: renderFacturen, kosten: renderKosten,
+    btw: renderBTW, instellingen: renderInstellingen,
+    factuur_form: renderFactuurForm
+  };
+  (renders[view] || renderDashboard)();
+}
+
+// ══════════════════════════════════════════════
+//  DASHBOARD
+// ══════════════════════════════════════════════
+function renderDashboard() {
+  const facturen = getFacturen();
+  const kosten = getKosten();
+  const year = nowYear();
+
+  const omzetExcl = facturen.filter(f=>f.datum && f.datum.startsWith(year) && f.status!=='concept')
+    .reduce((s,f)=>s+calcFactuurTotaalExcl(f), 0);
+  const openstaand = facturen.filter(f=>['verstuurd','verlopen'].includes(f.status));
+  const openstaandBedrag = openstaand.reduce((s,f)=>s+calcFactuurTotaalIncl(f), 0);
+
+  // BTW dit kwartaal
+  const q = Math.floor(new Date().getMonth()/3)+1;
+  const qStart = `${year}-${String((q-1)*3+1).padStart(2,'0')}-01`;
+  const qEnd = `${year}-${String(q*3).padStart(2,'0')}-31`;
+  const btwOmzet = facturen.filter(f=>f.datum>=qStart && f.datum<=qEnd && f.status!=='concept')
+    .reduce((s,f)=>s+calcFactuurBTW(f), 0);
+  const btwKosten = kosten.filter(k=>k.datum>=qStart && k.datum<=qEnd)
+    .reduce((s,k)=>s+((k.bedrag||0)*(k.btwpct||0)/100), 0);
+  const btwSaldo = btwOmzet - btwKosten;
+
+  const kostenJaar = kosten.filter(k=>k.datum&&k.datum.startsWith(year))
+    .reduce((s,k)=>s+(k.bedrag||0), 0);
+  const winst = omzetExcl - kostenJaar;
+
+  const recentFacturen = [...facturen].sort((a,b)=>b.datum>a.datum?1:-1).slice(0,5);
+  const recentKosten = [...kosten].sort((a,b)=>b.datum>a.datum?1:-1).slice(0,5);
+
+  document.getElementById('content').innerHTML = `
+    <div class="page-title">Dashboard ${year}</div>
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-label">Omzet dit jaar</div>
+        <div class="stat-value">${fmtEur(omzetExcl)}</div>
+        <div class="stat-sub">excl. BTW</div>
+      </div>
+      <div class="stat-card coral">
+        <div class="stat-label">Openstaand</div>
+        <div class="stat-value">${fmtEur(openstaandBedrag)}</div>
+        <div class="stat-sub">${openstaand.length} factuur${openstaand.length!==1?'en':''}</div>
+      </div>
+      <div class="stat-card amber">
+        <div class="stat-label">BTW te betalen Q${q}</div>
+        <div class="stat-value">${fmtEur(btwSaldo)}</div>
+        <div class="stat-sub">geschat saldo</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Kosten dit jaar</div>
+        <div class="stat-value">${fmtEur(kostenJaar)}</div>
+        <div class="stat-sub">excl. BTW</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-label">Netto winst (schatting)</div>
+        <div class="stat-value">${fmtEur(winst)}</div>
+        <div class="stat-sub">omzet minus kosten</div>
+      </div>
+    </div>
+    <div class="dashboard-grid">
+      <div class="card">
+        <div class="card-title">Recente facturen</div>
+        ${recentFacturen.length===0 ? '<div class="empty-state"><div class="empty-icon">🧾</div><p>Nog geen facturen</p></div>' : `
+        <div class="table-wrap"><table>
+          <thead><tr><th>Nummer</th><th>Klant</th><th>Datum</th><th>Bedrag</th><th>Status</th></tr></thead>
+          <tbody>${recentFacturen.map(f=>`
+            <tr onclick="editFactuur('${f.id}')" style="cursor:pointer">
+              <td class="fw-6">${f.nummer}</td>
+              <td>${klantNaam(f.klantId)}</td>
+              <td>${fmtDate(f.datum)}</td>
+              <td class="fw-6">${fmtEur(calcFactuurTotaalIncl(f))}</td>
+              <td>${badgeStatus(f.status)}</td>
+            </tr>`).join('')}
+          </tbody>
+        </table></div>`}
+        <div class="mt-4"><button class="btn btn-primary btn-sm" onclick="showView('facturen')">Alle facturen →</button></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Recente kosten</div>
+        ${recentKosten.length===0 ? '<div class="empty-state"><div class="empty-icon">💸</div><p>Nog geen kosten</p></div>' : `
+        <div class="table-wrap"><table>
+          <thead><tr><th>Datum</th><th>Omschrijving</th><th>Categorie</th><th>Bedrag</th></tr></thead>
+          <tbody>${recentKosten.map(k=>`
+            <tr onclick="editKost('${k.id}')" style="cursor:pointer">
+              <td>${fmtDate(k.datum)}</td>
+              <td>${k.omschrijving}</td>
+              <td><span class="badge badge-concept">${k.categorie}</span></td>
+              <td class="fw-6">${fmtEur(k.bedrag)}</td>
+            </tr>`).join('')}
+          </tbody>
+        </table></div>`}
+        <div class="mt-4"><button class="btn btn-primary btn-sm" onclick="showView('kosten')">Alle kosten →</button></div>
+      </div>
+    </div>`;
+}
+
+// ══════════════════════════════════════════════
+//  KLANTEN
+// ══════════════════════════════════════════════
+function renderKlanten(q='') {
+  let klanten = getKlanten();
+  if(q) klanten = klanten.filter(k=>
+    k.naam?.toLowerCase().includes(q.toLowerCase()) ||
+    k.contact?.toLowerCase().includes(q.toLowerCase()) ||
+    k.email?.toLowerCase().includes(q.toLowerCase())
+  );
+  document.getElementById('content').innerHTML = `
+    <div class="page-title">Klanten</div>
+    <div class="toolbar">
+      <input class="search-bar" placeholder="Zoeken…" oninput="renderKlanten(this.value)" value="${q}">
+      <div class="toolbar-right">
+        <button class="btn btn-primary" onclick="openModalKlant()">+ Klant toevoegen</button>
+      </div>
+    </div>
+    <div class="card">
+      ${klanten.length===0 ? `<div class="empty-state"><div class="empty-icon">👥</div><p>${q?'Geen klanten gevonden':'Nog geen klanten. Voeg je eerste klant toe!'}</p></div>` : `
+      <div class="table-wrap"><table>
+        <thead><tr><th>Bedrijf</th><th>Contactpersoon</th><th>E-mail</th><th>Telefoon</th><th>Plaats</th><th>Acties</th></tr></thead>
+        <tbody>${klanten.map(k=>`
+          <tr>
+            <td class="fw-6">${k.naam}</td>
+            <td>${k.contact||'–'}</td>
+            <td>${k.email?`<a href="mailto:${k.email}" style="color:var(--teal)">${k.email}</a>`:'–'}</td>
+            <td>${k.tel||'–'}</td>
+            <td>${k.plaats||'–'}</td>
+            <td>
+              <button class="btn btn-secondary btn-sm" onclick="editKlant('${k.id}')">✏️ Bewerken</button>
+              <button class="btn btn-danger btn-sm" onclick="deleteKlant('${k.id}')">🗑</button>
+            </td>
+          </tr>`).join('')}
+        </tbody>
+      </table></div>`}
+    </div>`;
+}
+
+function openModalKlant(id=null) {
+  editingKlantId = id;
+  document.getElementById('modal-klant-title').textContent = id ? 'Klant bewerken' : 'Klant toevoegen';
+  const k = id ? getKlanten().find(x=>x.id===id) : {};
+  ['naam','contact','email','tel','adres','postcode','plaats','kvk','btwnr'].forEach(f=>{
+    document.getElementById('kl-'+f).value = k[f]||'';
+  });
+  openModal('modal-klant');
+}
+function editKlant(id) { openModalKlant(id); }
+function saveKlant() {
+  const k = {
+    id: editingKlantId || uid(),
+    naam: document.getElementById('kl-naam').value.trim(),
+    contact: document.getElementById('kl-contact').value.trim(),
+    email: document.getElementById('kl-email').value.trim(),
+    tel: document.getElementById('kl-tel').value.trim(),
+    adres: document.getElementById('kl-adres').value.trim(),
+    postcode: document.getElementById('kl-postcode').value.trim(),
+    plaats: document.getElementById('kl-plaats').value.trim(),
+    kvk: document.getElementById('kl-kvk').value.trim(),
+    btwnr: document.getElementById('kl-btwnr').value.trim(),
+  };
+  if(!k.naam) { alert('Bedrijfsnaam is verplicht.'); return; }
+  const klanten = getKlanten();
+  if(editingKlantId) {
+    const i = klanten.findIndex(x=>x.id===editingKlantId);
+    klanten[i] = k;
+  } else { klanten.push(k); }
+  save(KEYS.klanten, klanten);
+  closeModal('modal-klant');
+  renderKlanten();
+}
+function deleteKlant(id) {
+  if(!confirm('Klant verwijderen?')) return;
+  save(KEYS.klanten, getKlanten().filter(k=>k.id!==id));
+  renderKlanten();
+}
+function klantNaam(id) { return getKlanten().find(k=>k.id===id)?.naam || '–'; }
+
+// ══════════════════════════════════════════════
+//  FACTUUR BEREKENINGEN
+// ══════════════════════════════════════════════
+function calcFactuurRegels(f) {
+  return (f.regels||[]).map(r=>{
+    const excl = (r.aantal||0)*(r.prijsExcl||0);
+    const btw = excl*(r.btwPct||0)/100;
+    return {...r, excl, btw, incl: excl+btw};
+  });
+}
+function calcFactuurTotaalExcl(f) { return calcFactuurRegels(f).reduce((s,r)=>s+r.excl,0); }
+function calcFactuurBTW(f) { return calcFactuurRegels(f).reduce((s,r)=>s+r.btw,0); }
+function calcFactuurTotaalIncl(f) { return calcFactuurRegels(f).reduce((s,r)=>s+r.incl,0); }
+
+// ══════════════════════════════════════════════
+//  FACTUREN LIST
+// ══════════════════════════════════════════════
+function renderFacturen() {
+  let facturen = getFacturen();
+  // auto-verlopen
+  facturen.forEach(f=>{
+    if(f.status==='verstuurd' && f.vervaldatum && f.vervaldatum < today()) f.status='verlopen';
+  });
+  save(KEYS.facturen, facturen);
+
+  const filtered = factuurFilter==='alle' ? facturen : facturen.filter(f=>f.status===factuurFilter);
+  const counts = {alle:facturen.length};
+  ['concept','verstuurd','betaald','verlopen'].forEach(s=>counts[s]=facturen.filter(f=>f.status===s).length);
+
+  document.getElementById('content').innerHTML = `
+    <div class="page-title">Facturen</div>
+    <div class="toolbar">
+      <div class="filter-tabs">
+        ${['alle','concept','verstuurd','betaald','verlopen'].map(s=>`
+          <button class="filter-tab ${factuurFilter===s?'active':''}" onclick="factuurFilter='${s}';renderFacturen()">
+            ${s.charAt(0).toUpperCase()+s.slice(1)} (${counts[s]})
+          </button>`).join('')}
+      </div>
+      <div class="toolbar-right">
+        <button class="btn btn-primary" onclick="nieuweFactuur()">+ Nieuwe factuur</button>
+      </div>
+    </div>
+    <div class="card">
+      ${filtered.length===0 ? `<div class="empty-state"><div class="empty-icon">🧾</div><p>Geen facturen gevonden.</p></div>` : `
+      <div class="table-wrap"><table>
+        <thead><tr><th>Nummer</th><th>Klant</th><th>Datum</th><th>Vervaldatum</th><th class="text-right">Excl. BTW</th><th class="text-right">Incl. BTW</th><th>Status</th><th>Acties</th></tr></thead>
+        <tbody>${[...filtered].sort((a,b)=>b.datum>a.datum?1:-1).map(f=>`
+          <tr>
+            <td class="fw-6">${f.nummer}</td>
+            <td>${klantNaam(f.klantId)}</td>
+            <td>${fmtDate(f.datum)}</td>
+            <td>${fmtDate(f.vervaldatum)}</td>
+            <td class="text-right">${fmtEur(calcFactuurTotaalExcl(f))}</td>
+            <td class="text-right fw-6">${fmtEur(calcFactuurTotaalIncl(f))}</td>
+            <td>${badgeStatus(f.status)}</td>
+            <td>
+              <button class="btn btn-secondary btn-sm" onclick="previewFactuur('${f.id}')">👁 Preview</button>
+              <button class="btn btn-secondary btn-sm" onclick="editFactuur('${f.id}')">✏️</button>
+              ${f.status==='concept'?`<button class="btn btn-success btn-sm" onclick="setFactuurStatus('${f.id}','verstuurd')">✉ Verstuur</button>`:''}
+              ${f.status==='verstuurd'||f.status==='verlopen'?`<button class="btn btn-success btn-sm" onclick="setFactuurStatus('${f.id}','betaald')">✓ Betaald</button>`:''}
+              <button class="btn btn-danger btn-sm" onclick="deleteFactuur('${f.id}')">🗑</button>
+            </td>
+          </tr>`).join('')}
+        </tbody>
+      </table></div>`}
+    </div>`;
+}
+
+function badgeStatus(s) {
+  const map = {concept:'badge-concept',verstuurd:'badge-verstuurd',betaald:'badge-betaald',verlopen:'badge-verlopen'};
+  const label = {concept:'Concept',verstuurd:'Verstuurd',betaald:'Betaald',verlopen:'Verlopen'};
+  return `<span class="badge ${map[s]||'badge-concept'}">${label[s]||s}</span>`;
+}
+
+function setFactuurStatus(id, status) {
+  const facturen = getFacturen();
+  const f = facturen.find(x=>x.id===id);
+  if(!f) return;
+  f.status = status;
+  if(status==='betaald') f.betaaldatum = today();
+  save(KEYS.facturen, facturen);
+  renderFacturen();
+}
+function deleteFactuur(id) {
+  if(!confirm('Factuur verwijderen?')) return;
+  save(KEYS.facturen, getFacturen().filter(f=>f.id!==id));
+  renderFacturen();
+}
+
+// ══════════════════════════════════════════════
+//  FACTUUR FORM
+// ══════════════════════════════════════════════
+let factuurRegels = [];
+
+function nieuweFactuur() {
+  editingFactuurId = null;
+  const s = getSettings();
+  factuurRegels = [{id:uid(), omschrijving:'', aantal:1, prijsExcl:0, btwPct: s.btwTarief||21}];
+  renderFactuurForm();
+}
+function editFactuur(id) {
+  editingFactuurId = id;
+  const f = getFacturen().find(x=>x.id===id);
+  if(!f) return;
+  factuurRegels = (f.regels||[]).map(r=>({...r}));
+  renderFactuurForm(f);
+}
+
+function renderFactuurForm(f=null) {
+  currentView = 'factuur_form';
+  const s = getSettings();
+  const klanten = getKlanten();
+  const isNew = !f;
+  const datum = f?.datum || today();
+  const termijn = s.termijn||30;
+
+  document.getElementById('content').innerHTML = `
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px">
+      <button class="btn btn-secondary btn-sm" onclick="showView('facturen')">← Terug</button>
+      <div class="page-title" style="margin:0">${isNew?'Nieuwe factuur':'Factuur bewerken'}</div>
+    </div>
+    <div class="card mb-4">
+      <div class="card-title">Factuurgegevens</div>
+      <div class="form-grid">
+        <div class="form-group"><label>Factuurnummer</label>
+          <input type="text" id="ff-nummer" value="${f?.nummer||genFactuurNummer()}" ${!isNew?'readonly':''}></div>
+        <div class="form-group"><label>Klant</label>
+          <select id="ff-klant">
+            <option value="">– Selecteer klant –</option>
+            ${klanten.map(k=>`<option value="${k.id}" ${f?.klantId===k.id?'selected':''}>${k.naam}</option>`).join('')}
+          </select></div>
+        <div class="form-group"><label>Factuurdatum</label>
+          <input type="date" id="ff-datum" value="${datum}" onchange="updateVervaldatum()"></div>
+        <div class="form-group"><label>Vervaldatum</label>
+          <input type="date" id="ff-verval" value="${f?.vervaldatum||addDays(datum,termijn)}"></div>
+        <div class="form-group"><label>Status</label>
+          <select id="ff-status">
+            ${['concept','verstuurd','betaald','verlopen'].map(s=>`<option value="${s}" ${(f?.status||'concept')===s?'selected':''}>${s.charAt(0).toUpperCase()+s.slice(1)}</option>`).join('')}
+          </select></div>
+      </div>
+    </div>
+    <div class="card mb-4">
+      <div class="card-title">Factuurregels</div>
+      <table class="regels-table" id="regels-table">
+        <thead><tr>
+          <th style="width:40%">Omschrijving</th>
+          <th style="width:10%">Aantal</th>
+          <th style="width:15%">Prijs excl. (€)</th>
+          <th style="width:10%">BTW %</th>
+          <th style="width:15%" class="text-right">Totaal excl.</th>
+          <th style="width:10%"></th>
+        </tr></thead>
+        <tbody id="regels-body"></tbody>
+      </table>
+      <button class="btn btn-secondary btn-sm mt-4" onclick="addRegel()">+ Regel toevoegen</button>
+      <div class="totaal-box" id="totaal-box"></div>
+    </div>
+    <div class="card mb-4">
+      <div class="card-title">Notities &amp; betalingsinstructie</div>
+      <div class="form-grid">
+        <div class="form-group form-full"><label>Notities (zichtbaar op factuur)</label>
+          <textarea id="ff-notities">${f?.notities||''}</textarea></div>
+      </div>
+    </div>
+    <div class="btn-group">
+      <button class="btn btn-primary" onclick="saveFactuur()">💾 Opslaan</button>
+      <button class="btn btn-secondary" onclick="saveAndPreview()">👁 Opslaan &amp; preview</button>
+      <button class="btn btn-secondary" onclick="showView('facturen')">Annuleren</button>
+    </div>`;
+
+  renderRegels();
+}
+
+function updateVervaldatum() {
+  const s = getSettings();
+  const datum = document.getElementById('ff-datum').value;
+  document.getElementById('ff-verval').value = addDays(datum, s.termijn||30);
+}
+
+function renderRegels() {
+  const tbody = document.getElementById('regels-body');
+  if(!tbody) return;
+  tbody.innerHTML = factuurRegels.map((r,i)=>`
+    <tr id="regel-${r.id}">
+      <td><input type="text" value="${r.omschrijving}" oninput="factuurRegels[${i}].omschrijving=this.value"></td>
+      <td><input type="number" value="${r.aantal}" min="0" step="0.01" oninput="factuurRegels[${i}].aantal=parseFloat(this.value)||0;updateTotals()"></td>
+      <td><input type="number" value="${r.prijsExcl}" min="0" step="0.01" oninput="factuurRegels[${i}].prijsExcl=parseFloat(this.value)||0;updateTotals()"></td>
+      <td><select onchange="factuurRegels[${i}].btwPct=parseInt(this.value);updateTotals()">
+        ${[21,9,0].map(p=>`<option value="${p}" ${r.btwPct===p?'selected':''}>${p}%</option>`).join('')}
+      </select></td>
+      <td class="regel-totaal" id="rt-${r.id}">${fmtEur((r.aantal||0)*(r.prijsExcl||0))}</td>
+      <td><button class="btn btn-danger btn-sm" onclick="removeRegel('${r.id}')">✕</button></td>
+    </tr>`).join('');
+  updateTotals();
+}
+
+function addRegel() {
+  const s = getSettings();
+  factuurRegels.push({id:uid(), omschrijving:'', aantal:1, prijsExcl:0, btwPct:s.btwTarief||21});
+  renderRegels();
+}
+function removeRegel(id) {
+  factuurRegels = factuurRegels.filter(r=>r.id!==id);
+  renderRegels();
+}
+function updateTotals() {
+  factuurRegels.forEach((r,i)=>{
+    const el = document.getElementById('rt-'+r.id);
+    if(el) el.textContent = fmtEur(r.aantal*r.prijsExcl);
+  });
+  const regels = calcFactuurRegels({regels:factuurRegels});
+  const excl = regels.reduce((s,r)=>s+r.excl,0);
+  const btw21 = regels.filter(r=>r.btwPct===21).reduce((s,r)=>s+r.btw,0);
+  const btw9 = regels.filter(r=>r.btwPct===9).reduce((s,r)=>s+r.btw,0);
+  const incl = regels.reduce((s,r)=>s+r.incl,0);
+  const box = document.getElementById('totaal-box');
+  if(box) box.innerHTML = `
+    <table>
+      <tr><td>Subtotaal excl. BTW</td><td class="text-right">${fmtEur(excl)}</td></tr>
+      ${btw21>0?`<tr><td>BTW 21%</td><td class="text-right">${fmtEur(btw21)}</td></tr>`:''}
+      ${btw9>0?`<tr><td>BTW 9%</td><td class="text-right">${fmtEur(btw9)}</td></tr>`:''}
+      <tr class="grand-total"><td><strong>Totaal incl. BTW</strong></td><td class="text-right"><strong>${fmtEur(incl)}</strong></td></tr>
+    </table>`;
+}
+
+function saveFactuur(andPreview=false) {
+  const nummer = document.getElementById('ff-nummer').value.trim();
+  const klantId = document.getElementById('ff-klant').value;
+  const datum = document.getElementById('ff-datum').value;
+  const vervaldatum = document.getElementById('ff-verval').value;
+  const status = document.getElementById('ff-status').value;
+  const notities = document.getElementById('ff-notities').value.trim();
+  if(!nummer || !datum) { alert('Factuurnummer en datum zijn verplicht.'); return; }
+  const facturen = getFacturen();
+  const f = {
+    id: editingFactuurId || uid(),
+    nummer, klantId, datum, vervaldatum, status,
+    regels: factuurRegels.map(r=>({...r})),
+    notities, betaaldatum: status==='betaald'?today():''
+  };
+  if(editingFactuurId) {
+    const i = facturen.findIndex(x=>x.id===editingFactuurId);
+    facturen[i] = f;
+  } else {
+    facturen.push(f);
+    bumpFactuurNummer();
+  }
+  save(KEYS.facturen, facturen);
+  editingFactuurId = f.id;
+  if(andPreview) { previewFactuur(f.id); }
+  else showView('facturen');
+}
+function saveAndPreview() { saveFactuur(true); }
+
+// ══════════════════════════════════════════════
+//  FACTUUR PREVIEW & PDF
+// ══════════════════════════════════════════════
+function previewFactuur(id) {
+  previewFactuurId = id;
+  const f = getFacturen().find(x=>x.id===id);
+  if(!f) return;
+  const s = getSettings();
+  const klant = getKlanten().find(k=>k.id===f.klantId)||{};
+  const regels = calcFactuurRegels(f);
+  const excl = regels.reduce((s,r)=>s+r.excl,0);
+  const btw21 = regels.filter(r=>r.btwPct===21).reduce((s,r)=>s+r.btw,0);
+  const btw9 = regels.filter(r=>r.btwPct===9).reduce((s,r)=>s+r.btw,0);
+  const incl = regels.reduce((s,r)=>s+r.incl,0);
+
+  document.getElementById('factuur-print-area').innerHTML = `
+    <div class="fp-header">
+      <div>
+        <div class="fp-logo">${s.bedrijf||'NIMCO'}<span>${s.naam}</span></div>
+      </div>
+      <div class="fp-factuur-nr">
+        <h1>FACTUUR</h1>
+        <p><strong>${f.nummer}</strong></p>
+        <p>Datum: ${fmtDate(f.datum)}</p>
+        <p>Vervaldatum: ${fmtDate(f.vervaldatum)}</p>
+      </div>
+    </div>
+    <div class="fp-parties">
+      <div class="fp-party">
+        <h4>Van</h4>
+        <p><strong>${s.bedrijf||'NIMCO'}</strong><br>
+        ${s.naam}<br>
+        ${s.adres?s.adres+'<br>':''}
+        ${s.postcode||''} ${s.plaats||''}<br>
+        ${s.kvk?'KVK: '+s.kvk+'<br>':''}
+        ${s.btwnummer?'BTW: '+s.btwnummer+'<br>':''}
+        ${s.email||''}</p>
+      </div>
+      <div class="fp-party">
+        <h4>Aan</h4>
+        <p><strong>${klant.naam||'–'}</strong><br>
+        ${klant.contact?klant.contact+'<br>':''}
+        ${klant.adres?klant.adres+'<br>':''}
+        ${klant.postcode||''} ${klant.plaats||''}<br>
+        ${klant.btwnr?'BTW: '+klant.btwnr+'<br>':''}
+        ${klant.email||''}</p>
+      </div>
+    </div>
+    <table class="fp-table">
+      <thead><tr>
+        <th>Omschrijving</th><th style="text-align:center">Aantal</th>
+        <th style="text-align:right">Prijs excl.</th><th style="text-align:center">BTW</th>
+        <th>Totaal excl.</th>
+      </tr></thead>
+      <tbody>${regels.map(r=>`
+        <tr>
+          <td>${r.omschrijving||'–'}</td>
+          <td style="text-align:center">${r.aantal}</td>
+          <td style="text-align:right">${fmtEur(r.prijsExcl)}</td>
+          <td style="text-align:center">${r.btwPct}%</td>
+          <td style="text-align:right">${fmtEur(r.excl)}</td>
+        </tr>`).join('')}
+      </tbody>
+    </table>
+    <div class="fp-totals">
+      <table>
+        <tr><td>Subtotaal excl. BTW</td><td>${fmtEur(excl)}</td></tr>
+        ${btw21>0?`<tr><td>BTW 21%</td><td>${fmtEur(btw21)}</td></tr>`:''}
+        ${btw9>0?`<tr><td>BTW 9%</td><td>${fmtEur(btw9)}</td></tr>`:''}
+        <tr class="grand"><td>Totaal incl. BTW</td><td>${fmtEur(incl)}</td></tr>
+      </table>
+    </div>
+    <div class="fp-footer-clear"></div>
+    <div class="fp-betaling">
+      <h4>Betalingsinstructie</h4>
+      <p>Gelieve het bedrag van <strong>${fmtEur(incl)}</strong> over te maken op <strong>${s.iban||'IBAN'}</strong>${s.bic?' (BIC: '+s.bic+')':''}, onder vermelding van factuurnummer <strong>${f.nummer}</strong>, uiterlijk op <strong>${fmtDate(f.vervaldatum)}</strong>.</p>
+    </div>
+    ${f.notities?`<div class="fp-notes">${f.notities}</div>`:''}`;
+
+  document.getElementById('factuur-preview-wrap').classList.add('open');
+}
+
+function closePreview() {
+  document.getElementById('factuur-preview-wrap').classList.remove('open');
+}
+
+function downloadFactuurPDF() {
+  const f = getFacturen().find(x=>x.id===previewFactuurId);
+  const el = document.getElementById('factuur-print-area');
+  html2canvas(el, {scale:2, useCORS:true}).then(canvas=>{
+    const {jsPDF} = window.jspdf;
+    const pdf = new jsPDF('p','mm','a4');
+    const w = pdf.internal.pageSize.getWidth();
+    const h = (canvas.height * w) / canvas.width;
+    pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, w, h);
+    pdf.save(`${f?.nummer||'factuur'}.pdf`);
+  });
+}
+
+function emailFactuur() {
+  const f = getFacturen().find(x=>x.id===previewFactuurId);
+  if(!f) return;
+  const klant = getKlanten().find(k=>k.id===f.klantId)||{};
+  const s = getSettings();
+  const incl = fmtEur(calcFactuurTotaalIncl(f));
+  const onderwerp = encodeURIComponent(`Factuur ${f.nummer} – ${s.bedrijf||'NIMCO'}`);
+  const body = encodeURIComponent(
+    `Beste ${klant.contact||klant.naam||''},\n\nHierbij ontvangt u factuur ${f.nummer} ter hoogte van ${incl} (incl. BTW).\n\nDe factuur is als PDF bijgevoegd.\n\nMet vriendelijke groet,\n${s.naam}\n${s.bedrijf||'NIMCO'}\n${s.tel||''}\n${s.email||''}`
+  );
+  window.open(`mailto:${klant.email||''}?subject=${onderwerp}&body=${body}`);
+}
+
+// ══════════════════════════════════════════════
+//  KOSTEN
+// ══════════════════════════════════════════════
+function renderKosten() {
+  let kosten = getKosten();
+  const filtered = kostenFilter==='alle' ? kosten : kostenFilter==='betaald' ? kosten.filter(k=>k.betaald) : kosten.filter(k=>!k.betaald);
+  const totaalExcl = filtered.reduce((s,k)=>s+(k.bedrag||0),0);
+  const totaalBtw = filtered.reduce((s,k)=>s+(k.bedrag||0)*(k.btwpct||0)/100,0);
+
+  document.getElementById('content').innerHTML = `
+    <div class="page-title">Kosten &amp; Uitgaven</div>
+    <div class="toolbar">
+      <div class="filter-tabs">
+        ${['alle','betaald','onbetaald'].map(s=>`
+          <button class="filter-tab ${kostenFilter===s?'active':''}" onclick="kostenFilter='${s}';renderKosten()">
+            ${s.charAt(0).toUpperCase()+s.slice(1)}
+          </button>`).join('')}
+      </div>
+      <div class="toolbar-right">
+        <button class="btn btn-primary" onclick="openModalKost()">+ Kost toevoegen</button>
+      </div>
+    </div>
+    <div class="stat-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:20px">
+      <div class="stat-card"><div class="stat-label">Totaal excl. BTW</div><div class="stat-value">${fmtEur(totaalExcl)}</div></div>
+      <div class="stat-card coral"><div class="stat-label">BTW voorbelasting</div><div class="stat-value">${fmtEur(totaalBtw)}</div></div>
+      <div class="stat-card"><div class="stat-label">Totaal incl. BTW</div><div class="stat-value">${fmtEur(totaalExcl+totaalBtw)}</div></div>
+    </div>
+    <div class="card">
+      ${filtered.length===0 ? `<div class="empty-state"><div class="empty-icon">💸</div><p>Geen kosten gevonden.</p></div>` : `
+      <div class="table-wrap"><table>
+        <thead><tr><th>Datum</th><th>Omschrijving</th><th>Categorie</th><th>Leverancier</th><th class="text-right">Excl. BTW</th><th class="text-right">BTW</th><th>Status</th><th>Acties</th></tr></thead>
+        <tbody>${[...filtered].sort((a,b)=>b.datum>a.datum?1:-1).map(k=>`
+          <tr>
+            <td>${fmtDate(k.datum)}</td>
+            <td>${k.omschrijving}</td>
+            <td><span class="badge badge-concept">${k.categorie}</span></td>
+            <td>${k.leverancier||'–'}</td>
+            <td class="text-right">${fmtEur(k.bedrag)}</td>
+            <td class="text-right text-muted">${fmtEur((k.bedrag||0)*(k.btwpct||0)/100)}</td>
+            <td>${k.betaald?'<span class="badge badge-betaald">Betaald</span>':'<span class="badge badge-open">Onbetaald</span>'}</td>
+            <td>
+              <button class="btn btn-secondary btn-sm" onclick="editKost('${k.id}')">✏️</button>
+              <button class="btn btn-danger btn-sm" onclick="deleteKost('${k.id}')">🗑</button>
+            </td>
+          </tr>`).join('')}
+        </tbody>
+      </table></div>`}
+    </div>`;
+}
+
+function openModalKost(id=null) {
+  editingKostId = id;
+  document.getElementById('modal-kost-title').textContent = id ? 'Kost bewerken' : 'Kost toevoegen';
+  const k = id ? getKosten().find(x=>x.id===id) : {};
+  document.getElementById('ko-datum').value = k.datum||today();
+  document.getElementById('ko-omschrijving').value = k.omschrijving||'';
+  document.getElementById('ko-categorie').value = k.categorie||'Kantoor';
+  document.getElementById('ko-leverancier').value = k.leverancier||'';
+  document.getElementById('ko-bedrag').value = k.bedrag||'';
+  document.getElementById('ko-btwpct').value = k.btwpct!==undefined?k.btwpct:21;
+  document.getElementById('ko-betaald').value = k.betaald?'1':'0';
+  openModal('modal-kost');
+}
+function editKost(id) { openModalKost(id); }
+function saveKost() {
+  const k = {
+    id: editingKostId||uid(),
+    datum: document.getElementById('ko-datum').value,
+    omschrijving: document.getElementById('ko-omschrijving').value.trim(),
+    categorie: document.getElementById('ko-categorie').value,
+    leverancier: document.getElementById('ko-leverancier').value.trim(),
+    bedrag: parseFloat(document.getElementById('ko-bedrag').value)||0,
+    btwpct: parseInt(document.getElementById('ko-btwpct').value),
+    betaald: document.getElementById('ko-betaald').value==='1',
+  };
+  if(!k.omschrijving||!k.datum) { alert('Datum en omschrijving zijn verplicht.'); return; }
+  const kosten = getKosten();
+  if(editingKostId) { const i=kosten.findIndex(x=>x.id===editingKostId); kosten[i]=k; }
+  else kosten.push(k);
+  save(KEYS.kosten, kosten);
+  closeModal('modal-kost');
+  renderKosten();
+}
+function deleteKost(id) {
+  if(!confirm('Kost verwijderen?')) return;
+  save(KEYS.kosten, getKosten().filter(k=>k.id!==id));
+  renderKosten();
+}
+
+// ══════════════════════════════════════════════
+//  BTW-AANGIFTE
+// ══════════════════════════════════════════════
+let btwYear = nowYear();
+let btwQ = Math.floor(new Date().getMonth()/3)+1;
+
+function renderBTW() {
+  const facturen = getFacturen();
+  const kosten = getKosten();
+
+  const qStart = `${btwYear}-${String((btwQ-1)*3+1).padStart(2,'0')}-01`;
+  const qEndMonth = btwQ*3;
+  const qEndDay = [31,30,30,31][btwQ-1];
+  const qEnd = `${btwYear}-${String(qEndMonth).padStart(2,'0')}-${qEndDay}`;
+
+  const fInQ = facturen.filter(f=>f.datum>=qStart && f.datum<=qEnd && f.status!=='concept');
+  const kInQ = kosten.filter(k=>k.datum>=qStart && k.datum<=qEnd);
+
+  const omzet21 = fInQ.reduce((s,f)=>s+calcFactuurRegels(f).filter(r=>r.btwPct===21).reduce((a,r)=>a+r.excl,0),0);
+  const btw21   = fInQ.reduce((s,f)=>s+calcFactuurRegels(f).filter(r=>r.btwPct===21).reduce((a,r)=>a+r.btw,0),0);
+  const omzet9  = fInQ.reduce((s,f)=>s+calcFactuurRegels(f).filter(r=>r.btwPct===9).reduce((a,r)=>a+r.excl,0),0);
+  const btw9    = fInQ.reduce((s,f)=>s+calcFactuurRegels(f).filter(r=>r.btwPct===9).reduce((a,r)=>a+r.btw,0),0);
+  const omzet0  = fInQ.reduce((s,f)=>s+calcFactuurRegels(f).filter(r=>r.btwPct===0).reduce((a,r)=>a+r.excl,0),0);
+  const voorbelasting = kInQ.reduce((s,k)=>s+(k.bedrag||0)*(k.btwpct||0)/100,0);
+  const totalBtwOmzet = btw21+btw9;
+  const saldo = totalBtwOmzet - voorbelasting;
+
+  document.getElementById('content').innerHTML = `
+    <div class="page-title">BTW-aangifte</div>
+    <div class="toolbar" style="margin-bottom:24px">
+      <select class="search-bar" onchange="btwYear=parseInt(this.value);renderBTW()" style="min-width:100px">
+        ${[nowYear()-1,nowYear(),nowYear()+1].map(y=>`<option value="${y}" ${btwYear===y?'selected':''}>${y}</option>`).join('')}
+      </select>
+      ${[1,2,3,4].map(q=>`
+        <button class="filter-tab ${btwQ===q?'active':''}" onclick="btwQ=${q};renderBTW()">Q${q}</button>`).join('')}
+      <button class="btn btn-secondary btn-sm" style="margin-left:8px" onclick="exportBTW()">📋 Exporteer als tekst</button>
+    </div>
+    <div class="btw-grid">
+      <div class="card">
+        <div class="card-title">Omzet &amp; verschuldigde BTW — Q${btwQ} ${btwYear}</div>
+        <div class="btw-row">
+          <div><div class="btw-label">Rubriek 1a — 21% tarief</div><div class="btw-rubriek">Omzet: ${fmtEur(omzet21)}</div></div>
+          <div class="btw-amount">${fmtEur(btw21)}</div>
+        </div>
+        <div class="btw-row">
+          <div><div class="btw-label">Rubriek 1b — 9% tarief (verlaagd)</div><div class="btw-rubriek">Omzet: ${fmtEur(omzet9)}</div></div>
+          <div class="btw-amount">${fmtEur(btw9)}</div>
+        </div>
+        <div class="btw-row">
+          <div><div class="btw-label">Rubriek 1c — 0% / vrijgesteld</div><div class="btw-rubriek">Omzet: ${fmtEur(omzet0)}</div></div>
+          <div class="btw-amount">€ 0,00</div>
+        </div>
+        <div class="btw-row" style="border-top:2px solid var(--gray-200);margin-top:8px;padding-top:16px">
+          <div><div class="btw-label fw-6">Totaal verschuldigde BTW</div></div>
+          <div class="btw-amount">${fmtEur(totalBtwOmzet)}</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Voorbelasting &amp; saldo</div>
+        <div class="btw-row">
+          <div><div class="btw-label">Rubriek 5b — Voorbelasting (inkoop)</div><div class="btw-rubriek">BTW op kosten in Q${btwQ}</div></div>
+          <div class="btw-amount">${fmtEur(voorbelasting)}</div>
+        </div>
+        <div class="btw-row" style="border-top:2px solid var(--gray-200);margin-top:8px;padding-top:16px">
+          <div><div class="btw-label fw-6">Te betalen / terug</div></div>
+          <div class="btw-amount">${fmtEur(Math.abs(saldo))}</div>
+        </div>
+        <div class="mt-4">
+          <div class="btw-saldo-card ${saldo<0?'terug-ontvangen':''}">
+            <div class="btw-saldo-label">${saldo>=0?'Te betalen aan de Belastingdienst':'Terug te ontvangen'}</div>
+            <div class="btw-saldo-amount">${fmtEur(Math.abs(saldo))}</div>
+            <div class="btw-saldo-sub">Q${btwQ} ${btwYear} · ${fInQ.length} factuur${fInQ.length!==1?'en':''} · ${kInQ.length} kost${kInQ.length!==1?'en':''}</div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+}
+
+function exportBTW() {
+  const facturen = getFacturen();
+  const kosten = getKosten();
+  const qStart = `${btwYear}-${String((btwQ-1)*3+1).padStart(2,'0')}-01`;
+  const qEndMonth = btwQ*3;
+  const qEndDay = [31,30,30,31][btwQ-1];
+  const qEnd = `${btwYear}-${String(qEndMonth).padStart(2,'0')}-${qEndDay}`;
+  const fInQ = facturen.filter(f=>f.datum>=qStart && f.datum<=qEnd && f.status!=='concept');
+  const kInQ = kosten.filter(k=>k.datum>=qStart && k.datum<=qEnd);
+  const omzet21 = fInQ.reduce((s,f)=>s+calcFactuurRegels(f).filter(r=>r.btwPct===21).reduce((a,r)=>a+r.excl,0),0);
+  const btw21   = fInQ.reduce((s,f)=>s+calcFactuurRegels(f).filter(r=>r.btwPct===21).reduce((a,r)=>a+r.btw,0),0);
+  const omzet9  = fInQ.reduce((s,f)=>s+calcFactuurRegels(f).filter(r=>r.btwPct===9).reduce((a,r)=>a+r.excl,0),0);
+  const btw9    = fInQ.reduce((s,f)=>s+calcFactuurRegels(f).filter(r=>r.btwPct===9).reduce((a,r)=>a+r.btw,0),0);
+  const omzet0  = fInQ.reduce((s,f)=>s+calcFactuurRegels(f).filter(r=>r.btwPct===0).reduce((a,r)=>a+r.excl,0),0);
+  const voorbelasting = kInQ.reduce((s,k)=>s+(k.bedrag||0)*(k.btwpct||0)/100,0);
+  const saldo = (btw21+btw9)-voorbelasting;
+  const s = getSettings();
+  const txt = `NIMCO BTW-AANGIFTE — Q${btwQ} ${btwYear}
+${'='.repeat(40)}
+Aangifteplichtige: ${s.naam}
+BTW-nummer: ${s.btwnummer||'–'}
+Periode: ${qStart} t/m ${qEnd}
+
+OMZET & VERSCHULDIGDE BTW
+1a  Leveringen 21%         Omzet: ${fmtEur(omzet21).padStart(14)}   BTW: ${fmtEur(btw21).padStart(14)}
+1b  Leveringen 9%          Omzet: ${fmtEur(omzet9).padStart(14)}   BTW: ${fmtEur(btw9).padStart(14)}
+1c  Leveringen 0%          Omzet: ${fmtEur(omzet0).padStart(14)}
+    Totaal verschuldigde BTW:                         ${fmtEur(btw21+btw9).padStart(14)}
+
+VOORBELASTING
+5b  Voorbelasting:                                    ${fmtEur(voorbelasting).padStart(14)}
+
+SALDO
+    ${saldo>=0?'Te betalen aan Belastingdienst:':'Terug te ontvangen:      '}                ${fmtEur(Math.abs(saldo)).padStart(14)}
+${'='.repeat(40)}
+Gegenereerd door NIMCO Boekhouding op ${new Date().toLocaleDateString('nl-NL')}`;
+
+  const blob = new Blob([txt], {type:'text/plain'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `BTW-aangifte-Q${btwQ}-${btwYear}.txt`;
+  a.click();
+}
+
+// ══════════════════════════════════════════════
+//  INSTELLINGEN
+// ══════════════════════════════════════════════
+function renderInstellingen() {
+  const s = getSettings();
+  document.getElementById('content').innerHTML = `
+    <div class="page-title">Instellingen</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+      <div>
+        <div class="card settings-section">
+          <h3>Bedrijfsgegevens</h3>
+          <div class="form-grid">
+            <div class="form-group form-full"><label>Handelsnaam</label><input type="text" id="st-bedrijf" value="${s.bedrijf||''}"></div>
+            <div class="form-group form-full"><label>Volledige naam</label><input type="text" id="st-naam" value="${s.naam||''}"></div>
+            <div class="form-group form-full"><label>Adres</label><input type="text" id="st-adres" value="${s.adres||''}"></div>
+            <div class="form-group"><label>Postcode</label><input type="text" id="st-postcode" value="${s.postcode||''}"></div>
+            <div class="form-group"><label>Plaats</label><input type="text" id="st-plaats" value="${s.plaats||''}"></div>
+            <div class="form-group"><label>KVK-nummer</label><input type="text" id="st-kvk" value="${s.kvk||''}"></div>
+            <div class="form-group"><label>BTW-nummer</label><input type="text" id="st-btwnummer" value="${s.btwnummer||''}"></div>
+          </div>
+        </div>
+        <div class="card settings-section mt-4">
+          <h3>Contactgegevens</h3>
+          <div class="form-grid">
+            <div class="form-group"><label>E-mailadres</label><input type="email" id="st-email" value="${s.email||''}"></div>
+            <div class="form-group"><label>Telefoon</label><input type="tel" id="st-tel" value="${s.tel||''}"></div>
+            <div class="form-group form-full"><label>Website</label><input type="text" id="st-website" value="${s.website||''}"></div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="card settings-section">
+          <h3>Bankgegevens</h3>
+          <div class="form-grid">
+            <div class="form-group form-full"><label>IBAN</label><input type="text" id="st-iban" value="${s.iban||''}"></div>
+            <div class="form-group"><label>BIC</label><input type="text" id="st-bic" value="${s.bic||''}"></div>
+          </div>
+        </div>
+        <div class="card settings-section mt-4">
+          <h3>Factuurinstellingen</h3>
+          <div class="form-grid">
+            <div class="form-group"><label>Factuurnummer prefix</label><input type="text" id="st-prefix" value="${s.prefix||'NIMCO'}"></div>
+            <div class="form-group"><label>Volgend nummer</label><input type="number" id="st-volgend" value="${s.volgendNummer||1}" min="1"></div>
+            <div class="form-group"><label>Betalingstermijn (dagen)</label><input type="number" id="st-termijn" value="${s.termijn||30}" min="1"></div>
+            <div class="form-group"><label>Standaard BTW %</label>
+              <select id="st-btwtarief">
+                ${[21,9,0].map(p=>`<option value="${p}" ${(s.btwTarief||21)===p?'selected':''}>${p}%</option>`).join('')}
+              </select></div>
+          </div>
+        </div>
+        <div class="card mt-4">
+          <h3 style="font-size:14px;font-weight:600;margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid var(--gray-200)">Data beheer</h3>
+          <div class="btn-group">
+            <button class="btn btn-secondary" onclick="exportData()">⬇ Export JSON</button>
+            <button class="btn btn-secondary" onclick="document.getElementById('import-file').click()">⬆ Import JSON</button>
+            <button class="btn btn-coral" onclick="loadSampleData()">🎭 Demo-data laden</button>
+          </div>
+          <input type="file" id="import-file" accept=".json" style="display:none" onchange="importData(this)">
+        </div>
+        <div class="card mt-4" style="border-left:4px solid #0D6B5D">
+          <h3 style="font-size:14px;font-weight:600;margin-bottom:4px;padding-bottom:8px;border-bottom:1px solid var(--gray-200)">📥 Importeer vanuit e-Boekhouden.nl</h3>
+          <p style="font-size:12px;color:var(--gray-600);margin-bottom:16px">Exporteer eerst CSV-bestanden uit e-Boekhouden (Relaties → export, Factureren → export), en laad ze hier in.</p>
+          <div class="btn-group">
+            <button class="btn btn-secondary" onclick="document.getElementById('eb-relaties-file').click()">👥 Importeer Relaties (klanten)</button>
+            <button class="btn btn-secondary" onclick="document.getElementById('eb-facturen-file').click()">🧾 Importeer Facturen</button>
+          </div>
+          <input type="file" id="eb-relaties-file" accept=".csv,.txt" style="display:none" onchange="importEBRelaties(this)">
+          <input type="file" id="eb-facturen-file" accept=".csv,.txt" style="display:none" onchange="importEBFacturen(this)">
+          <div id="eb-import-result" style="display:none;margin-top:12px;padding:12px;border-radius:8px;font-size:13px"></div>
+        </div>
+        <div class="card mt-4">
+          <h3 style="font-size:14px;font-weight:600;margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid var(--gray-200)">⚠️ Gevaarlijke acties</h3>
+          <button class="btn btn-danger" onclick="resetData()">⚠️ Alle data wissen</button>
+        </div>
+      </div>
+    </div>
+    <div class="btn-group mt-4">
+      <button class="btn btn-primary" onclick="saveInstellingen()">💾 Instellingen opslaan</button>
+    </div>`;
+}
+
+function saveInstellingen() {
+  const s = {
+    bedrijf: document.getElementById('st-bedrijf').value.trim(),
+    naam:    document.getElementById('st-naam').value.trim(),
+    adres:   document.getElementById('st-adres').value.trim(),
+    postcode:document.getElementById('st-postcode').value.trim(),
+    plaats:  document.getElementById('st-plaats').value.trim(),
+    kvk:     document.getElementById('st-kvk').value.trim(),
+    btwnummer:document.getElementById('st-btwnummer').value.trim(),
+    email:   document.getElementById('st-email').value.trim(),
+    tel:     document.getElementById('st-tel').value.trim(),
+    website: document.getElementById('st-website').value.trim(),
+    iban:    document.getElementById('st-iban').value.trim(),
+    bic:     document.getElementById('st-bic').value.trim(),
+    prefix:  document.getElementById('st-prefix').value.trim()||'NIMCO',
+    volgendNummer: parseInt(document.getElementById('st-volgend').value)||1,
+    termijn: parseInt(document.getElementById('st-termijn').value)||30,
+    btwTarief: parseInt(document.getElementById('st-btwtarief').value),
+  };
+  save(KEYS.settings, s);
+  alert('✅ Instellingen opgeslagen!');
+}
+
+function exportData() {
+  const data = {
+    settings: getSettings(),
+    klanten: getKlanten(),
+    facturen: getFacturen(),
+    kosten: getKosten(),
+    exportDatum: new Date().toISOString()
+  };
+  const blob = new Blob([JSON.stringify(data,null,2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `nimco-backup-${today()}.json`;
+  a.click();
+}
+
+function importData(input) {
+  const file = input.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if(!confirm(`Data importeren uit ${file.name}? Bestaande data wordt overschreven.`)) return;
+      if(data.settings) save(KEYS.settings, data.settings);
+      if(data.klanten)  save(KEYS.klanten,  data.klanten);
+      if(data.facturen) save(KEYS.facturen, data.facturen);
+      if(data.kosten)   save(KEYS.kosten,   data.kosten);
+      alert('✅ Data succesvol geïmporteerd!');
+      renderInstellingen();
+    } catch { alert('❌ Ongeldig JSON bestand.'); }
+  };
+  reader.readAsText(file);
+  input.value = '';
+}
+
+// ══════════════════════════════════════════════
+//  E-BOEKHOUDEN IMPORT
+// ══════════════════════════════════════════════
+function parseCSV(text) {
+  // Detect delimiter: semicolon or comma
+  const firstLine = text.split('\n')[0];
+  const delim = (firstLine.match(/;/g)||[]).length > (firstLine.match(/,/g)||[]).length ? ';' : ',';
+  const lines = text.trim().split('\n');
+  const headers = lines[0].split(delim).map(h => h.trim().replace(/^"|"$/g,'').toLowerCase());
+  return lines.slice(1).filter(l=>l.trim()).map(line => {
+    // Handle quoted fields
+    const vals = [];
+    let inQ = false, cur = '';
+    for(let i=0; i<line.length; i++) {
+      if(line[i]==='"') { inQ=!inQ; }
+      else if(line[i]===delim && !inQ) { vals.push(cur.trim()); cur=''; }
+      else cur += line[i];
+    }
+    vals.push(cur.trim());
+    const obj = {};
+    headers.forEach((h,i) => obj[h] = (vals[i]||'').replace(/^"|"$/g,'').trim());
+    return obj;
+  });
+}
+
+function findCol(row, ...candidates) {
+  for(const c of candidates) {
+    const key = Object.keys(row).find(k => k.includes(c.toLowerCase()));
+    if(key && row[key]) return row[key];
+  }
+  return '';
+}
+
+function showEBResult(msg, type='ok') {
+  const el = document.getElementById('eb-import-result');
+  el.style.display = 'block';
+  el.style.background = type==='ok' ? '#D1FAE5' : type==='warn' ? '#FEF3C7' : '#FEE2E2';
+  el.style.color = type==='ok' ? '#059669' : type==='warn' ? '#D97706' : '#DC2626';
+  el.innerHTML = msg;
+}
+
+function importEBRelaties(input) {
+  const file = input.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const rows = parseCSV(e.target.result);
+      if(!rows.length) { showEBResult('❌ Geen rijen gevonden in het bestand.', 'err'); return; }
+
+      const existing = getKlanten();
+      const existingNamen = existing.map(k=>k.naam.toLowerCase());
+      let toegevoegd = 0, overgeslagen = 0;
+
+      const nieuweKlanten = [];
+      for(const row of rows) {
+        const naam = findCol(row, 'bedrijfsnaam','bedrijf','naam','company','relatie','organisatie');
+        if(!naam) { overgeslagen++; continue; }
+        if(existingNamen.includes(naam.toLowerCase())) { overgeslagen++; continue; }
+
+        nieuweKlanten.push({
+          id: uid(),
+          naam,
+          contact: findCol(row, 'contactpersoon','contact','naam','aanspreekpersoon','voornaam'),
+          email:   findCol(row, 'email','e-mail','emailadres'),
+          tel:     findCol(row, 'telefoon','tel','mobiel','phone'),
+          adres:   findCol(row, 'adres','straat','street','adres1'),
+          postcode:findCol(row, 'postcode','zip'),
+          plaats:  findCol(row, 'plaats','woonplaats','stad','city'),
+          kvk:     findCol(row, 'kvk','kvknummer','kamer','chambre'),
+          btwnr:   findCol(row, 'btw','vat','btwnummer'),
+        });
+        existingNamen.push(naam.toLowerCase());
+        toegevoegd++;
+      }
+
+      save(KEYS.klanten, [...existing, ...nieuweKlanten]);
+      showEBResult(`✅ <strong>${toegevoegd} klant${toegevoegd!==1?'en':''} geïmporteerd</strong> uit e-Boekhouden.${overgeslagen?` (${overgeslagen} overgeslagen: al aanwezig of leeg)`:''}`, 'ok');
+    } catch(err) {
+      showEBResult('❌ Fout bij importeren: ' + err.message, 'err');
+    }
+  };
+  reader.readAsText(file, 'UTF-8');
+  input.value = '';
+}
+
+function importEBFacturen(input) {
+  const file = input.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const rows = parseCSV(e.target.result);
+      if(!rows.length) { showEBResult('❌ Geen rijen gevonden in het bestand.', 'err'); return; }
+
+      const klanten = getKlanten();
+      const existing = getFacturen();
+      const existingNrs = existing.map(f=>f.nummer.toLowerCase());
+      let toegevoegd = 0, overgeslagen = 0, geenKlant = 0;
+
+      const nieuwFacturen = [];
+      for(const row of rows) {
+        const nummer = findCol(row, 'factuurnummer','nummer','invoice','factuur nr','factnr');
+        if(!nummer || existingNrs.includes(nummer.toLowerCase())) { overgeslagen++; continue; }
+
+        const relatieNaam = findCol(row, 'relatie','bedrijfsnaam','klant','debiteur','naam');
+        let klantId = '';
+        if(relatieNaam) {
+          const match = klanten.find(k => k.naam.toLowerCase() === relatieNaam.toLowerCase());
+          if(match) { klantId = match.id; }
+          else {
+            // auto-create klant
+            const nk = {id: uid(), naam: relatieNaam, contact:'', email:'', tel:'', adres:'', postcode:'', plaats:'', kvk:'', btwnr:''};
+            klanten.push(nk);
+            save(KEYS.klanten, klanten);
+            klantId = nk.id;
+            geenKlant++;
+          }
+        }
+
+        const datumRaw = findCol(row, 'factuurdatum','datum','date','invoice date');
+        const vervalRaw = findCol(row, 'vervaldatum','verval','due date','expiry');
+        const datum = parseEBDatum(datumRaw);
+        const vervaldatum = parseEBDatum(vervalRaw) || addDays(datum||today(), 30);
+
+        const bedragExcl = parseFloat((findCol(row,'bedrag excl','excl btw','netto','subtotaal','amount excl')||'0').replace(',','.').replace(/[^\d.-]/g,'')) || 0;
+        const btwBedrag  = parseFloat((findCol(row,'btw bedrag','btw','vat amount','tax')||'0').replace(',','.').replace(/[^\d.-]/g,'')) || 0;
+        const btwPct     = bedragExcl > 0 ? Math.round(btwBedrag/bedragExcl*100) : 21;
+        const normPct    = [0,9,21].reduce((prev,curr) => Math.abs(curr-btwPct)<Math.abs(prev-btwPct)?curr:prev);
+
+        const statusRaw = findCol(row,'status','betaald','paid').toLowerCase();
+        const status = statusRaw.includes('betaald')||statusRaw.includes('paid')||statusRaw==='1'||statusRaw==='yes' ? 'betaald'
+                     : statusRaw.includes('verstuurd')||statusRaw.includes('sent') ? 'verstuurd'
+                     : 'verstuurd';
+
+        const omschrijving = findCol(row,'omschrijving','description','dienst','product','omschr') || 'Geïmporteerde factuur';
+
+        nieuwFacturen.push({
+          id: uid(),
+          nummer,
+          klantId,
+          datum: datum||today(),
+          vervaldatum,
+          status,
+          betaaldatum: status==='betaald' ? (datum||today()) : '',
+          regels: [{
+            id: uid(),
+            omschrijving,
+            aantal: 1,
+            prijsExcl: bedragExcl,
+            btwPct: normPct,
+          }],
+          notities: 'Geïmporteerd vanuit e-Boekhouden.nl',
+        });
+        existingNrs.push(nummer.toLowerCase());
+        toegevoegd++;
+      }
+
+      save(KEYS.facturen, [...existing, ...nieuwFacturen]);
+      let msg = `✅ <strong>${toegevoegd} factuur${toegevoegd!==1?'en':''} geïmporteerd</strong> vanuit e-Boekhouden.`;
+      if(geenKlant) msg += `<br>⚠️ ${geenKlant} nieuwe klant${geenKlant!==1?'en':''} automatisch aangemaakt.`;
+      if(overgeslagen) msg += `<br>ℹ️ ${overgeslagen} overgeslagen (al aanwezig of leeg nummer).`;
+      msg += `<br><small style="opacity:.7">Tip: controleer de factuurregels — het CSV-formaat bevat geen losse regelomschrijvingen.</small>`;
+      showEBResult(msg, 'ok');
+    } catch(err) {
+      showEBResult('❌ Fout bij importeren: ' + err.message, 'err');
+    }
+  };
+  reader.readAsText(file, 'UTF-8');
+  input.value = '';
+}
+
+function parseEBDatum(s) {
+  if(!s) return '';
+  // dd-mm-yyyy or dd/mm/yyyy or yyyy-mm-dd
+  const m1 = s.match(/^(\d{2})[-\/](\d{2})[-\/](\d{4})$/);
+  if(m1) return `${m1[3]}-${m1[2]}-${m1[1]}`;
+  const m2 = s.match(/^(\d{4})[-\/](\d{2})[-\/](\d{2})$/);
+  if(m2) return s.slice(0,10);
+  return '';
+}
+
+function resetData() {
+  if(!confirm('Weet je zeker dat je ALLE data wilt wissen? Dit kan niet ongedaan worden gemaakt.')) return;
+  if(!confirm('Laatste bevestiging: alles wissen?')) return;
+  [KEYS.klanten, KEYS.facturen, KEYS.kosten].forEach(k=>localStorage.removeItem(k));
+  alert('Data gewist.');
+  renderInstellingen();
+}
+
+function loadSampleData() {
+  if(!confirm('Demo-data laden? Dit voegt voorbeeldklanten, facturen en kosten toe.')) return;
+
+  const k1 = {id:'k-demo-1', naam:'Innovatie BV', contact:'Jan de Vries', email:'jan@innovatie.nl', tel:'010-1234567', adres:'Coolsingel 1', postcode:'3011 AD', plaats:'Rotterdam', kvk:'12345678', btwnr:'NL123456789B01'};
+  const k2 = {id:'k-demo-2', naam:'Tech Solutions', contact:'Emma Bakker', email:'emma@techsolutions.nl', tel:'020-9876543', adres:'Damrak 5', postcode:'1012 LG', plaats:'Amsterdam', kvk:'87654321', btwnr:'NL987654321B01'};
+  const k3 = {id:'k-demo-3', naam:'Retail Groep NL', contact:'Pieter Smit', email:'p.smit@retailgroep.nl', tel:'030-5556666', adres:'Vredenburg 10', postcode:'3511 BA', plaats:'Utrecht', kvk:'11223344', btwnr:''};
+
+  const f1 = {id:'f-demo-1', nummer:'NIMCO-2026-001', klantId:'k-demo-1', datum:'2026-01-15', vervaldatum:'2026-02-14', status:'betaald', betaaldatum:'2026-02-10',
+    regels:[{id:uid(), omschrijving:'AI Advies & Strategie (dag 1)', aantal:1, prijsExcl:1200, btwPct:21},{id:uid(), omschrijving:'AI Advies & Strategie (dag 2)', aantal:1, prijsExcl:1200, btwPct:21}], notities:''};
+  const f2 = {id:'f-demo-2', nummer:'NIMCO-2026-002', klantId:'k-demo-2', datum:'2026-02-03', vervaldatum:'2026-03-05', status:'betaald', betaaldatum:'2026-02-28',
+    regels:[{id:uid(), omschrijving:'Workshop AI voor Management (halve dag)', aantal:1, prijsExcl:1450, btwPct:21},{id:uid(), omschrijving:'Reiskosten', aantal:1, prijsExcl:85, btwPct:0}], notities:''};
+  const f3 = {id:'f-demo-3', nummer:'NIMCO-2026-003', klantId:'k-demo-3', datum:'2026-03-01', vervaldatum:'2026-03-31', status:'verstuurd', betaaldatum:'',
+    regels:[{id:uid(), omschrijving:'Interim Management (per maand)', aantal:1, prijsExcl:4500, btwPct:21}], notities:'Eerste maand van een 3-maands contract.'};
+  const f4 = {id:'f-demo-4', nummer:'NIMCO-2026-004', klantId:'k-demo-1', datum:'2026-03-10', vervaldatum:'2026-04-09', status:'concept', betaaldatum:'',
+    regels:[{id:uid(), omschrijving:'AI-Implementatieplan opstellen', aantal:5, prijsExcl:950, btwPct:21}], notities:''};
+
+  const ko = [
+    {id:uid(), datum:'2026-01-05', omschrijving:'Microsoft 365 Business', categorie:'Abonnementen', leverancier:'Microsoft', bedrag:12.50, btwpct:21, betaald:true},
+    {id:uid(), datum:'2026-01-10', omschrijving:'Treinkaartje Rotterdam–Amsterdam', categorie:'Reiskosten', leverancier:'NS', bedrag:18.70, btwpct:0, betaald:true},
+    {id:uid(), datum:'2026-02-01', omschrijving:'LinkedIn Premium', categorie:'Marketing', leverancier:'LinkedIn', bedrag:39.99, btwpct:21, betaald:true},
+    {id:uid(), datum:'2026-02-15', omschrijving:'Laptop stand & toetsenbord', categorie:'Apparatuur', leverancier:'Coolblue', bedrag:89.00, btwpct:21, betaald:true},
+    {id:uid(), datum:'2026-03-01', omschrijving:'ChatGPT Plus', categorie:'Abonnementen', leverancier:'OpenAI', bedrag:17.00, btwpct:0, betaald:true},
+    {id:uid(), datum:'2026-03-05', omschrijving:'Visitekaartjes drukwerk', categorie:'Marketing', leverancier:'Vistaprint', bedrag:34.50, btwpct:21, betaald:false},
+  ];
+
+  const existingKlanten = getKlanten();
+  const existingFacturen = getFacturen();
+  const existingKosten = getKosten();
+
+  save(KEYS.klanten, [...existingKlanten, k1, k2, k3]);
+  save(KEYS.facturen, [...existingFacturen, f1, f2, f3, f4]);
+  save(KEYS.kosten, [...existingKosten, ...ko]);
+
+  const s = getSettings();
+  if(!s.naam || s.naam==='Roel Nentjes') {
+    s.naam = 'Roel Nentjes';
+    s.bedrijf = 'NIMCO';
+    s.adres = 'Nader te bepalen';
+    s.postcode = '';
+    s.plaats = 'Rotterdam';
+    s.kvk = '93012345';
+    s.btwnummer = 'NL001234567B01';
+    s.iban = 'NL91 ABNA 0417 1643 00';
+    s.bic = 'ABNANL2A';
+    s.email = 'roel@nentjes.nl';
+    s.tel = '';
+    s.website = 'www.nentjes.nl';
+    s.prefix = 'NIMCO';
+    s.volgendNummer = 5;
+    s.termijn = 30;
+    s.btwTarief = 21;
+    save(KEYS.settings, s);
+  }
+
+  alert('✅ Demo-data geladen! Je kunt nu de app verkennen.');
+  showView('dashboard');
+}
+
+// ══════════════════════════════════════════════
+//  MODAL HELPERS
+// ══════════════════════════════════════════════
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+// Close modals on backdrop click
+document.querySelectorAll('.modal-wrap').forEach(w=>{
+  w.addEventListener('click', e=>{ if(e.target===w) w.classList.remove('open'); });
+});
+document.getElementById('factuur-preview-wrap').addEventListener('click', e=>{
+  if(e.target === document.getElementById('factuur-preview-wrap')) closePreview();
+});
+</script>
+</body>
+</html>

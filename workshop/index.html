@@ -131,6 +131,45 @@
         .reveal { opacity: 0; transform: translateY(30px); transition: all 0.7s ease; }
         .reveal.visible { opacity: 1; transform: translateY(0); }
 
+        /* AANKOMENDE WORKSHOPS */
+        .upcoming { background: var(--bg-secondary); }
+        .workshop-cards { display: grid; gap: 1rem; }
+        .workshop-card {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 14px; padding: 1.75rem;
+            display: grid; grid-template-columns: auto 1fr auto;
+            gap: 1.5rem; align-items: center;
+            transition: all 0.3s;
+        }
+        .workshop-card:hover { border-color: rgba(232,135,30,0.25); transform: translateY(-2px); }
+        .workshop-card.status-vol { opacity: 0.65; }
+        .wc-date-box {
+            background: var(--bg-primary); border: 1px solid var(--border);
+            border-radius: 10px; padding: 0.75rem 1rem;
+            text-align: center; min-width: 70px;
+        }
+        .wc-day { font-family: var(--font-display); font-size: 1.8rem; color: var(--accent); line-height: 1; }
+        .wc-month { font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; }
+        .wc-title { font-size: 1.05rem; font-weight: 600; margin-bottom: 0.3rem; }
+        .wc-meta { display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; margin-top: 0.4rem; }
+        .wc-meta-item { color: var(--text-secondary); font-size: 0.85rem; display: flex; align-items: center; gap: 0.3rem; }
+        .wc-badge { font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 4px; }
+        .badge-open { background: rgba(34,197,94,0.12); color: #22c55e; }
+        .badge-vol { background: rgba(239,68,68,0.12); color: #ef4444; }
+        .badge-niveau { background: rgba(95,168,211,0.12); color: var(--blue); }
+        .wc-desc { color: var(--text-secondary); font-size: 0.88rem; margin-top: 0.5rem; line-height: 1.5; }
+        .wc-spots { font-size: 0.82rem; color: var(--text-muted); margin-top: 0.3rem; }
+        .wc-spots strong { color: var(--text-primary); }
+        .no-workshops {
+            text-align: center; padding: 3rem 2rem;
+            background: var(--bg-card); border: 1px dashed var(--border);
+            border-radius: 12px; color: var(--text-secondary);
+        }
+        @media (max-width: 600px) {
+            .workshop-card { grid-template-columns: 1fr; }
+            .wc-date-box { display: flex; gap: 0.5rem; align-items: baseline; width: fit-content; }
+        }
+
         @media (max-width: 768px) {
             .nav-links { display: none; position: absolute; top: 100%; left: 0; right: 0; background: var(--bg-secondary); flex-direction: column; padding: 1.5rem; gap: 1rem; border-bottom: 1px solid var(--border); }
             .nav-links.open { display: flex; }
@@ -178,16 +217,29 @@
 
 <div class="divider"></div>
 
+<!-- AANKOMENDE WORKSHOPS -->
+<section class="upcoming">
+    <div class="container">
+        <div class="section-label reveal">Agenda</div>
+        <h2 class="section-title reveal">Aankomende workshops</h2>
+        <div id="upcoming-workshops-list" class="workshop-cards reveal">
+            <!-- Dynamisch geladen vanuit workshops-data.js -->
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
 <!-- INTRO -->
 <section style="background: var(--bg-primary);">
     <div class="container">
         <div class="reveal">
             <p style="color: var(--text-secondary); font-size: 1.1rem; max-width: 700px; margin-bottom: 1.5rem;">
-                Na de presentatie "Ontdek de Patronen" weet uw publiek <strong style="color: var(--text-primary);">wat</strong> AI kan. 
+                Na de presentatie "Ontdek de Patronen" weet uw publiek <strong style="color: var(--text-primary);">wat</strong> AI kan.
                 In de workshop ontdekken ze <strong style="color: var(--text-primary);">hoe</strong> ze het zelf inzetten.
             </p>
             <p style="color: var(--text-secondary); font-size: 1.1rem; max-width: 700px;">
-                Deelnemers werken met echte AI-tools aan echte vraagstukken. Geen theorie, maar praktijk — 
+                Deelnemers werken met echte AI-tools aan echte vraagstukken. Geen theorie, maar praktijk —
                 met directe toepasbaarheid in hun eigen werk en leven.
             </p>
         </div>
@@ -227,6 +279,12 @@
                 <h3>Creatieve AI-toepassingen</h3>
                 <p>Beeldgeneratie, muziek, video en podcasts. Deelnemers creëren hun eigen AI-content en ontdekken de mogelijkheden — en beperkingen.</p>
                 <span class="module-tag">Creatief</span>
+            </div>
+            <div class="module-card reveal">
+                <div class="module-number">05</div>
+                <h3>Jaarplan in een uur met NotebookLM</h3>
+                <p>Interview een medewerker of afdeling, neem het gesprek op en laat de tekst structureren door ChatGPT of Gemini. Voed die structuur aan <a href="https://notebooklm.google.com" target="_blank" style="color: var(--accent);">NotebookLM</a> — inclusief huisstijldocumenten — en genereer in één uur een compleet jaarplan waar je anders dagen of weken over doet.</p>
+                <span class="module-tag">Geavanceerd</span>
             </div>
         </div>
 
@@ -345,13 +403,78 @@
     <p>&copy; 2026 Roel Nentjes · <a href="../index.html">Home</a> · <a href="../presentatie/index.html">Presentatie</a> · <a href="../index.html#contact">Contact</a></p>
 </footer>
 
+<script src="../workshops-data.js"></script>
 <script>
+// Scroll animation
 const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) entry.target.classList.add('visible');
     });
 }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
 document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// Render aankomende workshops
+(function renderUpcoming() {
+    const container = document.getElementById('upcoming-workshops-list');
+    if (!container) return;
+
+    const now = new Date();
+    now.setHours(0, 0, 0, 0);
+
+    // Filter toekomstige en geef huidige als eerst
+    const data = (typeof workshopsData !== 'undefined' ? workshopsData : [])
+        .filter(w => w.status !== 'geannuleerd' && new Date(w.datum + 'T00:00:00') >= now)
+        .sort((a, b) => new Date(a.datum) - new Date(b.datum));
+
+    if (data.length === 0) {
+        container.innerHTML = `
+            <div class="no-workshops">
+                <p style="font-size:1.1rem;margin-bottom:0.5rem">Op dit moment zijn er geen open workshopdatums.</p>
+                <p style="font-size:0.9rem">Interesse? <a href="../index.html#contact" style="color:var(--accent)">Neem contact op</a> voor een workshop op maat.</p>
+            </div>`;
+        return;
+    }
+
+    const months = ['jan','feb','mrt','apr','mei','jun','jul','aug','sep','okt','nov','dec'];
+
+    container.innerHTML = data.map(w => {
+        const d = new Date(w.datum + 'T12:00:00');
+        const day = d.getDate();
+        const month = months[d.getMonth()];
+        const spotsLow = w.beschikbaar <= 3;
+        return `
+        <div class="workshop-card status-${w.status}">
+            <div class="wc-date-box">
+                <div class="wc-day">${day}</div>
+                <div class="wc-month">${month}</div>
+            </div>
+            <div>
+                <div class="wc-title">${esc(w.titel)}</div>
+                <div class="wc-meta">
+                    ${w.tijd ? `<span class="wc-meta-item">⏱ ${esc(w.tijd)}</span>` : ''}
+                    <span class="wc-meta-item">📍 ${esc(w.locatie)}</span>
+                    ${w.prijs ? `<span class="wc-meta-item">💰 ${esc(w.prijs)}</span>` : ''}
+                    <span class="wc-badge badge-${w.status}">${w.status === 'open' ? '✓ Open' : '✗ Vol'}</span>
+                    <span class="wc-badge badge-niveau">${esc(w.niveau)}</span>
+                </div>
+                <div class="wc-desc">${esc(w.beschrijving)}</div>
+                <div class="wc-spots" ${spotsLow ? 'style="color:#ef4444"' : ''}>
+                    <strong>${w.beschikbaar}</strong> van de ${w.max} plaatsen nog beschikbaar
+                </div>
+            </div>
+            <div>
+                ${w.status === 'open'
+                    ? `<a href="${esc(w.link)}" class="btn btn-primary">Aanmelden →</a>`
+                    : `<span class="btn btn-outline" style="opacity:0.5;cursor:default">Vol</span>`
+                }
+            </div>
+        </div>`;
+    }).join('');
+})();
+
+function esc(s) {
+    return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
 </script>
 
 </body>
