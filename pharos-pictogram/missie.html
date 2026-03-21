@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pharos — Missie & Visie</title>
+<style>
+  :root { --pp:#3d2b6e;--ppd:#2d1b5e;--ppm:#6b4f9e;--pl:#d0c4e8;--pm:#b01458;--vg:#f5c842;--vgb:#1a3e6e; }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--ppd);font-family:sans-serif;color:var(--pl);overflow-x:hidden;}
+  header{background:var(--ppd);border-bottom:3px solid var(--pm);display:flex;align-items:center;padding:10px 24px;gap:20px;position:sticky;top:0;z-index:100;flex-wrap:wrap;}
+  .logo-wrap{display:flex;align-items:center;gap:12px;text-decoration:none;}
+  .logo-circle{width:48px;height:48px;background:var(--pm);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:24px;color:white;flex-shrink:0;}
+  .back-btn{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--pl);background:var(--ppm);padding:8px 14px;border-radius:10px;font-size:13px;margin-left:auto;transition:background 0.2s;}
+  .back-btn:hover{background:var(--pm);}
+  .back-btn svg{width:22px;height:22px;}
+  nav{display:flex;gap:6px;flex-wrap:wrap;}
+  .nav-item{display:flex;flex-direction:column;align-items:center;text-decoration:none;color:var(--pl);padding:4px 8px;border-radius:8px;transition:background 0.2s;gap:2px;}
+  .nav-item:hover{background:var(--ppm);}
+  .nav-item svg{width:26px;height:26px;}
+  .nav-label{font-size:9px;opacity:0.85;text-align:center;}
+  .hero-wrap{width:100%;overflow:hidden;background:#1a0d00;}
+  .hero-wrap svg{display:block;width:100%;height:auto;}
+  .panels-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;padding:32px;max-width:1280px;margin:0 auto;}
+  .panel{background:var(--pp);border-radius:16px;overflow:hidden;border:2px solid var(--ppm);box-shadow:0 4px 18px rgba(0,0,0,0.4);}
+  .panel svg{width:100%;height:auto;display:block;}
+  .subpages-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;padding:24px 32px 48px;max-width:1280px;margin:0 auto;}
+  .subpage-link{background:var(--pp);border-radius:12px;overflow:hidden;text-decoration:none;border:2px solid var(--ppm);transition:transform 0.2s,box-shadow 0.2s;display:block;box-shadow:0 3px 12px rgba(0,0,0,0.35);}
+  .subpage-link:hover{transform:translateY(-4px);border-color:var(--vg);box-shadow:0 8px 24px rgba(245,200,66,0.3);}
+  .subpage-link svg{width:100%;height:auto;display:block;}
+  footer{background:var(--ppd);border-top:3px solid var(--pm);padding:30px 32px 20px;}
+  .footer-row{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-bottom:16px;}
+  .footer-row a{color:var(--pl);opacity:0.8;transition:opacity 0.2s;}
+  .footer-row a:hover{opacity:1;}
+  .footer-row svg{width:28px;height:28px;}
+  @media(max-width:900px){.panels-grid,.subpages-grid{grid-template-columns:1fr;padding:16px;}}
+</style>
+</head>
+<body>
+<header>
+  <a href="index.html" class="logo-wrap" data-tip="Home">
+    <div class="logo-circle">P</div>
+    <svg viewBox="0 0 120 36" width="110" height="34" fill="none"><path d="M4 26 Q14 10 24 22 Q34 34 44 18 Q54 4 64 18 Q74 32 84 16 Q94 2 104 18 Q114 32 120 22" stroke="#b01458" stroke-width="3" fill="none"/></svg>
+  </a>
+  <nav>
+    <a href="laaggeletterdheid.html" class="nav-item" data-tip="Kennis"><svg viewBox="0 0 26 26" fill="none"><rect x="4" y="3" width="14" height="18" rx="2" fill="#d0c4e8" opacity="0.15" stroke="#d0c4e8" stroke-width="1.5"/><line x1="7" y1="8" x2="15" y2="8" stroke="#d0c4e8" stroke-width="1.5"/><line x1="7" y1="11" x2="15" y2="11" stroke="#d0c4e8" stroke-width="1.5"/></svg><span class="nav-label">Kennis</span></a>
+    <a href="samenwerken.html" class="nav-item" data-tip="Samenwerken"><svg viewBox="0 0 26 26" fill="none"><circle cx="10" cy="10" r="5" fill="#d0c4e8" opacity="0.7"/><circle cx="18" cy="10" r="5" fill="#d0c4e8" opacity="0.7"/><line x1="10" y1="15" x2="18" y2="15" stroke="#b01458" stroke-width="2"/></svg><span class="nav-label">Samen</span></a>
+    <a href="ehealth.html" class="nav-item" data-tip="e-Health"><svg viewBox="0 0 26 26" fill="none"><rect x="7" y="2" width="12" height="22" rx="2.5" stroke="#d0c4e8" stroke-width="1.5" fill="#d0c4e8" opacity="0.1"/><circle cx="13" cy="20" r="2" fill="#b01458"/></svg><span class="nav-label">e-Health</span></a>
+    <a href="preventie.html" class="nav-item" data-tip="Preventie"><svg viewBox="0 0 26 26" fill="none"><path d="M13 3 L21 7 L21 16 Q21 22 13 25 Q5 22 5 16 L5 7 Z" fill="#4a8a3a" opacity="0.5" stroke="#4a8a3a" stroke-width="1.5"/></svg><span class="nav-label">Preventie</span></a>
+    <a href="spuk.html" class="nav-item" data-tip="SPUK"><svg viewBox="0 0 26 26" fill="none"><rect x="9" y="2" width="8" height="8" rx="1" fill="#d4c8b0" stroke="#d4c8b0" stroke-width="1"/><line x1="13" y1="10" x2="13" y2="17" stroke="#f5c842" stroke-width="2.5"/><circle cx="13" cy="20" r="4" fill="#f5c842" opacity="0.8"/></svg><span class="nav-label">SPUK</span></a>
+    <a href="#" class="nav-item" data-tip="Contact"><svg viewBox="0 0 26 26" fill="none"><rect x="2" y="6" width="22" height="16" rx="2" stroke="#d0c4e8" stroke-width="1.5" fill="#d0c4e8" opacity="0.1"/><polyline points="2,6 13,15 24,6" stroke="#d0c4e8" stroke-width="1.5" fill="none"/></svg><span class="nav-label">Contact</span></a>
+    <a href="#" class="nav-item" data-tip="Zoeken"><svg viewBox="0 0 26 26" fill="none"><circle cx="11" cy="11" r="7" stroke="#d0c4e8" stroke-width="1.5" fill="#d0c4e8" opacity="0.1"/><line x1="16" y1="16" x2="23" y2="23" stroke="#b01458" stroke-width="2.5" stroke-linecap="round"/></svg><span class="nav-label">Zoeken</span></a>
+  </nav>
+  <a href="index.html" class="back-btn" data-tip="Terug naar home">
+    <svg viewBox="0 0 22 22" fill="none"><polyline points="14,4 6,11 14,18" stroke="#d0c4e8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <svg viewBox="0 0 22 22" fill="none"><path d="M3 11 L11 4 L19 11 L19 19 L14 19 L14 14 L8 14 L8 19 L3 19 Z" fill="#d0c4e8" opacity="0.8"/></svg>
+  </a>
+</header>
+
+<!-- HERO: Lighthouse Mission — Rembrandt style -->
+<div class="hero-wrap">
+<svg viewBox="0 0 1200 500" xmlns="http://www.w3.org/2000/svg" aria-label="Pharos missie: gelijke gezondheid voor iedereen">
+  <defs>
+    <filter id="rembrandt"><feGaussianBlur stdDeviation="12" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <filter id="glow2"><feGaussianBlur stdDeviation="6" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <filter id="rough"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="4" seed="8" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="7"/></filter>
+    <radialGradient id="beamCenter" cx="50%" cy="80%" r="90%">
+      <stop offset="0%" stop-color="#f5c842" stop-opacity="0.35"/>
+      <stop offset="50%" stop-color="#f5c842" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#f5c842" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="darkScene" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#3d1a00"/>
+      <stop offset="100%" stop-color="#1a0d00"/>
+    </radialGradient>
+    <linearGradient id="scaleBg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1a0d00"/>
+      <stop offset="100%" stop-color="#3d2b6e"/>
+    </linearGradient>
+    <radialGradient id="lampGlow2" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="25%" stop-color="#f5c842" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#f5c842" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Dark Rembrandt background -->
+  <rect width="1200" height="500" fill="url(#scaleBg)"/>
+  <!-- dark zones left -->
+  <rect x="0" y="0" width="340" height="500" fill="#1a0d00" opacity="0.6"/>
+  <rect x="860" y="0" width="340" height="500" fill="#0d0500" opacity="0.3"/>
+
+  <!-- Dramatic beam of light from lighthouse -->
+  <ellipse cx="600" cy="420" rx="500" ry="320" fill="url(#beamCenter)"/>
+
+  <!-- VAN GOGH ROUGH SKY (dark swirls) -->
+  <g filter="url(#rough)" opacity="0.6">
+    <path d="M0 80 Q100 45 220 75 Q340 105 460 60 Q580 15 700 60 Q820 105 940 65 Q1060 28 1200 70" stroke="#3d2510" stroke-width="32" fill="none"/>
+    <path d="M0 130 Q120 95 250 125 Q380 155 500 115 Q620 75 750 115 Q880 150 1000 118 Q1100 90 1200 118" stroke="#2d1808" stroke-width="24" fill="none"/>
+  </g>
+
+  <!-- SILHOUETTES LEFT (people in darkness, reaching toward light) -->
+  <!-- Person 1 far left - isolated, drooping -->
+  <g opacity="0.65">
+    <ellipse cx="60" cy="360" rx="16" ry="26" fill="#1a1030"/>
+    <circle cx="60" cy="330" r="14" fill="#1a1030"/>
+    <path d="M48 340 Q38 355 36 368" stroke="#1a1030" stroke-width="10" stroke-linecap="round" fill="none"/>
+    <path d="M72 340 Q82 356 84 368" stroke="#1a1030" stroke-width="10" stroke-linecap="round" fill="none"/>
+    <!-- sad face hint -->
+    <path d="M54 335 Q60 331 66 335" stroke="#3a2020" stroke-width="2" fill="none"/>
+  </g>
+  <!-- Person 2 left - reaching toward light -->
+  <g opacity="0.55">
+    <ellipse cx="130" cy="355" rx="16" ry="26" fill="#1a1030"/>
+    <circle cx="130" cy="325" r="14" fill="#1a1030"/>
+    <!-- arm reaching right (toward light) -->
+    <path d="M145 335 Q165 328 175 322" stroke="#1a1030" stroke-width="10" stroke-linecap="round" fill="none"/>
+    <path d="M115 340 Q105 360 106 375" stroke="#1a1030" stroke-width="10" stroke-linecap="round" fill="none"/>
+  </g>
+  <!-- Person 3 far left background -->
+  <g opacity="0.4">
+    <ellipse cx="25" cy="380" rx="10" ry="17" fill="#111020"/>
+    <circle cx="25" cy="360" r="9" fill="#111020"/>
+  </g>
+
+  <!-- LIGHTHOUSE - large, imposing, magenta - center -->
+  <g filter="url(#glow2)">
+    <!-- tower -->
+    <polygon points="552,480 540,220 660,220 648,480" fill="#b01458"/>
+    <!-- stripe bands -->
+    <rect x="543" y="295" width="114" height="18" fill="white" opacity="0.9" rx="2"/>
+    <rect x="546" y="355" width="108" height="16" fill="white" opacity="0.85" rx="2"/>
+    <rect x="549" y="410" width="102" height="14" fill="white" opacity="0.8" rx="2"/>
+    <!-- P on tower -->
+    <rect x="576" y="430" width="7" height="36" fill="white" opacity="0.85"/>
+    <path d="M583 430 Q600 430 600 440 Q600 450 583 452" stroke="white" stroke-width="4" fill="none"/>
+    <!-- lamp room -->
+    <rect x="532" y="196" width="136" height="32" fill="#f5c842" rx="4"/>
+    <!-- lamp glow -->
+    <circle cx="600" cy="210" r="80" fill="url(#lampGlow2)" filter="url(#rembrandt)"/>
+    <!-- lamp room frame -->
+    <rect x="529" y="193" width="142" height="38" fill="none" stroke="#a08020" stroke-width="4" rx="5"/>
+    <!-- roof peak -->
+    <polygon points="524,194 676,194 648,168 552,168" fill="#a08020"/>
+    <!-- top spike -->
+    <line x1="600" y1="168" x2="600" y2="148" stroke="#a08020" stroke-width="4"/>
+    <circle cx="600" cy="144" r="6" fill="#f5c842"/>
+  </g>
+
+  <!-- LIGHT BEAMS (dramatic Rembrandt-style triangular shafts) -->
+  <!-- Left beam - illuminating dark silhouettes -->
+  <polygon points="544,205 544,235 50,460 30,420" fill="#f5c842" opacity="0.12"/>
+  <!-- Right beam - illuminating bright scene -->
+  <polygon points="656,205 656,235 1150,448 1170,410" fill="#f5c842" opacity="0.14"/>
+
+  <!-- PEOPLE IN THE LIGHT (right side, now illuminated and upright) -->
+  <!-- Person A - standing tall, happy, in beam -->
+  <g>
+    <ellipse cx="790" cy="420" rx="18" ry="30" fill="#5a8a40"/>
+    <circle cx="790" cy="385" r="20" fill="#c9b090"/>
+    <path d="M773 379 Q781 362 790 360 Q799 362 807 379" fill="#3a2010"/>
+    <!-- happy face -->
+    <circle cx="783" cy="382" r="4" fill="#3a2010"/>
+    <circle cx="797" cy="382" r="4" fill="#3a2010"/>
+    <circle cx="785" cy="380" r="1.5" fill="white"/>
+    <circle cx="799" cy="380" r="1.5" fill="white"/>
+    <path d="M778 392 Q790 402 802 392" stroke="#8a3015" stroke-width="2.5" fill="none"/>
+    <circle cx="776" cy="390" r="5" fill="#e07060" opacity="0.5"/>
+    <circle cx="804" cy="390" r="5" fill="#e07060" opacity="0.5"/>
+    <!-- arms relaxed/happy -->
+    <path d="M773 395 Q760 405 758 418" stroke="#5a8a40" stroke-width="10" stroke-linecap="round" fill="none"/>
+    <path d="M807 395 Q820 405 822 418" stroke="#5a8a40" stroke-width="10" stroke-linecap="round" fill="none"/>
+    <!-- heart above -->
+    <path d="M782 360 Q785 354 788 358 Q792 354 795 358 Q795 364 788 370 Q782 364 782 360 Z" fill="#cc2060" opacity="0.9"/>
+  </g>
+  <!-- Person B - different skin, healthy, together -->
+  <g>
+    <ellipse cx="850" cy="418" rx="18" ry="30" fill="#b01458" opacity="0.8"/>
+    <circle cx="850" cy="383" r="20" fill="#b87040"/>
+    <path d="M833 377 Q841 360 850 358 Q859 360 867 377" fill="#1a1008"/>
+    <circle cx="843" cy="380" r="4" fill="#1a1008"/>
+    <circle cx="857" cy="380" r="4" fill="#1a1008"/>
+    <path d="M837 390 Q850 400 863 390" stroke="#8a3015" stroke-width="2.5" fill="none"/>
+    <circle cx="835" cy="388" r="5" fill="#e07060" opacity="0.5"/>
+    <circle cx="865" cy="388" r="5" fill="#e07060" opacity="0.5"/>
+    <path d="M833 393 Q822 403 820 416" stroke="#b01458" stroke-width="10" stroke-linecap="round" fill="none" opacity="0.8"/>
+    <path d="M867 393 Q878 403 880 416" stroke="#b01458" stroke-width="10" stroke-linecap="round" fill="none" opacity="0.8"/>
+  </g>
+  <!-- Group of 3 in background right -->
+  <g opacity="0.75">
+    <ellipse cx="950" cy="390" rx="13" ry="20" fill="#6a8a40"/>
+    <circle cx="950" cy="366" r="12" fill="#c9b090"/>
+    <path d="M943 368 Q950 392 957 390" stroke="#6a8a40" stroke-width="9" stroke-linecap="round" fill="none"/>
+    <ellipse cx="990" cy="393" rx="12" ry="20" fill="#4a6090"/>
+    <circle cx="990" cy="370" r="12" fill="#d4a090"/>
+    <ellipse cx="970" cy="405" rx="9" ry="16" fill="#e0a030"/>
+    <circle cx="970" cy="387" r="10" fill="#e0b898"/>
+    <!-- shared heart above group -->
+    <path d="M963 355 Q966 349 969 353 Q972 349 975 353 Q975 358 969 364 Q963 358 963 355 Z" fill="#cc2060"/>
+    <path d="M969 355 Q972 349 975 353 Q978 349 981 353 Q981 358 975 364 Q969 358 969 355 Z" fill="#cc2060"/>
+  </g>
+
+  <!-- LARGE SCALE/BALANCE SYMBOL at bottom right -->
+  <!-- Scale stand -->
+  <line x1="1060" y1="310" x2="1060" y2="420" stroke="#f5c842" stroke-width="4"/>
+  <line x1="980" y1="370" x2="1140" y2="340" stroke="#f5c842" stroke-width="5"/>
+  <!-- left pan strings + pan (heavier, lower) -->
+  <line x1="1000" y1="374" x2="985" y2="400" stroke="#f5c842" stroke-width="2.5"/>
+  <line x1="965" y1="370" x2="980" y2="400" stroke="#f5c842" stroke-width="2.5"/>
+  <ellipse cx="982" cy="404" rx="24" ry="6" fill="#f5c842" opacity="0.4"/>
+  <!-- sick figure in pan -->
+  <ellipse cx="982" cy="416" rx="12" ry="18" fill="#3d2b6e" opacity="0.7"/>
+  <circle cx="982" cy="396" r="10" fill="#c9a882" opacity="0.7"/>
+  <path d="M976 400 Q982 405 988 400" stroke="#8a4030" stroke-width="1.5" fill="none" opacity="0.7"/>
+  <!-- right pan strings + pan (lighter, higher = freed) -->
+  <line x1="1120" y1="344" x2="1135" y2="368" stroke="#f5c842" stroke-width="2.5"/>
+  <line x1="1160" y1="340" x2="1148" y2="366" stroke="#f5c842" stroke-width="2.5"/>
+  <ellipse cx="1142" cy="372" rx="24" ry="6" fill="#f5c842" opacity="0.4"/>
+  <!-- healthy figure in pan -->
+  <ellipse cx="1142" cy="384" rx="12" ry="18" fill="#4a8a3a" opacity="0.8"/>
+  <circle cx="1142" cy="364" r="10" fill="#c9b090" opacity="0.8"/>
+  <path d="M1136 370 Q1142 375 1148 370" stroke="#4a8a60" stroke-width="1.5" fill="none" opacity="0.8"/>
+  <!-- equal sign arrow -->
+  <path d="M1060 295 Q1080 278 1100 290" stroke="#b01458" stroke-width="3.5" fill="none"/>
+  <polygon points="1100,283 1112,290 1100,297" fill="#b01458"/>
+  <!-- Pharos P at center -->
+  <circle cx="1060" cy="310" r="18" fill="#b01458"/>
+  <text x="1052" y="316" font-size="16" fill="white" font-weight="bold">P</text>
+
+  <!-- GROUND LINE -->
+  <rect x="0" y="480" width="1200" height="20" fill="#1a0d00"/>
+  <rect x="0" y="460" width="600" height="20" fill="#1a1030"/>
+  <rect x="540" y="460" width="200" height="20" fill="#4a7c3a"/>
+  <rect x="600" y="460" width="600" height="20" fill="#2d5020"/>
+</svg>
+</div>
+
+<!-- STORY PANELS -->
+<div class="panels-grid">
+
+  <!-- Panel 1: The Problem -->
+  <div class="panel">
+    <svg viewBox="0 0 400 380" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="p1bg" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#1a0d00"/><stop offset="100%" stop-color="#2d1b6e"/>
+        </linearGradient>
+        <radialGradient id="spotlight" cx="50%" cy="35%" r="60%">
+          <stop offset="0%" stop-color="#c86028" stop-opacity="0.4"/>
+          <stop offset="100%" stop-color="#1a0d00" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+      <rect width="400" height="380" fill="url(#p1bg)"/>
+      <rect width="400" height="380" fill="url(#spotlight)"/>
+
+      <!-- LEFT (rich/privileged person) -->
+      <!-- large house background -->
+      <rect x="8" y="160" width="130" height="100" fill="#6a8060" opacity="0.7" rx="2"/>
+      <polygon points="0,162 144,162 72,130" fill="#4a6040" opacity="0.7"/>
+      <!-- windows -->
+      <rect x="20" y="178" width="22" height="18" fill="#a0c8d0" rx="2"/>
+      <rect x="54" y="178" width="22" height="18" fill="#a0c8d0" rx="2"/>
+      <rect x="88" y="178" width="22" height="18" fill="#a0c8d0" rx="2"/>
+      <!-- PRIVILEGED PERSON (left, bright) -->
+      <ellipse cx="72" cy="305" rx="18" ry="28" fill="#5a8040"/>
+      <circle cx="72" cy="270" r="18" fill="#c9b090"/>
+      <path d="M57 265 Q65 250 72 248 Q79 250 87 265" fill="#8a6428"/>
+      <circle cx="65" cy="267" r="3.5" fill="#3a2010"/>
+      <circle cx="79" cy="267" r="3.5" fill="#3a2010"/>
+      <path d="M65 277 Q72 284 79 277" stroke="#8a4020" stroke-width="2" fill="none"/>
+      <!-- readable signs around them -->
+      <rect x="100" y="255" width="42" height="30" fill="white" opacity="0.9" rx="3"/>
+      <path d="M105 263 Q120 263 135 263" stroke="#333" stroke-width="3"/>
+      <path d="M105 270 Q120 270 130 270" stroke="#333" stroke-width="2.5"/>
+      <!-- doctor nearby (easy access) -->
+      <ellipse cx="148" cy="308" rx="12" ry="18" fill="white" opacity="0.6"/>
+      <circle cx="148" cy="287" r="11" fill="#c9b090" opacity="0.7"/>
+      <!-- healthy food symbol -->
+      <circle cx="110" cy="318" r="8" fill="#4a8a3a" opacity="0.7"/>
+      <path d="M106 318 Q110 313 114 318" stroke="white" stroke-width="1.5" fill="none"/>
+
+      <!-- DIVIDER LINE (dramatic contrast) -->
+      <line x1="200" y1="60" x2="200" y2="380" stroke="#cc2020" stroke-width="3" stroke-dasharray="12,6" opacity="0.6"/>
+
+      <!-- RIGHT (disadvantaged person) -->
+      <!-- tiny cramped space -->
+      <rect x="218" y="195" width="80" height="80" fill="#1c1240" rx="2"/>
+      <rect x="228" y="208" width="12" height="10" fill="#1e1440" rx="1"/>
+      <rect x="248" y="208" width="12" height="10" fill="#1e1440" rx="1"/>
+      <rect x="268" y="208" width="12" height="10" fill="#1e1440" rx="1"/>
+      <!-- DISADVANTAGED PERSON (right, dark) -->
+      <ellipse cx="316" cy="308" rx="18" ry="28" fill="#4a3570"/>
+      <circle cx="316" cy="272" r="19" fill="#c9a882"/>
+      <path d="M300 266 Q308 249 316 247 Q324 249 332 266" fill="#3a2010"/>
+      <!-- confused sad eyes -->
+      <line x1="307" y1="270" x2="313" y2="270" stroke="#3a2010" stroke-width="3"/>
+      <line x1="319" y1="269" x2="325" y2="270" stroke="#3a2010" stroke-width="3"/>
+      <path d="M308 282 Q316 277 324 282" stroke="#8a4030" stroke-width="2" fill="none"/>
+      <!-- confusing signs (squiggly) -->
+      <rect x="338" y="255" width="44" height="32" fill="#2a1840" opacity="0.9" rx="3" stroke="#3d2550" stroke-width="1"/>
+      <path d="M343 263 Q352 259 358 263 Q364 266 370 263" stroke="#6b4f9e" stroke-width="2" fill="none"/>
+      <path d="M343 270 Q356 266 366 270" stroke="#6b4f9e" stroke-width="2" fill="none"/>
+      <!-- question marks -->
+      <text x="303" y="248" font-size="14" fill="#6b4f9e" font-weight="bold">?</text>
+      <text x="334" y="244" font-size="17" fill="#8b6fbe" font-weight="bold">?</text>
+      <!-- sweat drop -->
+      <path d="M332 258 Q336 250 340 258 Q340 265 336 267 Q332 265 332 258 Z" fill="#4488cc" opacity="0.7"/>
+      <!-- unhealthy food symbol -->
+      <path d="M280 316 Q284 308 292 308 Q300 308 304 316" stroke="#f0a030" stroke-width="2" fill="none"/>
+      <rect x="280" y="316" width="24" height="14" fill="#f0a030" rx="1" opacity="0.7"/>
+      <line x1="276" y1="316" x2="308" y2="330" stroke="#cc2020" stroke-width="2"/>
+      <line x1="276" y1="316" x2="308" y2="316" stroke="#cc2020" stroke-width="2"/>
+
+      <!-- Labels: 2 house icons contrasting -->
+      <!-- big house left -->
+      <polygon points="30,365 140,365 85,345" fill="#6a8060" opacity="0.5"/>
+      <rect x="40" y="365" width="90" height="12" fill="#6a8060" opacity="0.4"/>
+      <!-- small house right -->
+      <polygon points="228,372 288,372 258,360" fill="#2a1840" opacity="0.6"/>
+      <rect x="233" y="372" width="50" height="8" fill="#1c1240" opacity="0.5"/>
+    </svg>
+  </div>
+
+  <!-- Panel 2: Pharos at Work -->
+  <div class="panel">
+    <svg viewBox="0 0 400 380" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="p2bg" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#2d1b5e"/><stop offset="100%" stop-color="#5a1a40"/>
+        </linearGradient>
+        <linearGradient id="beamDiag" x1="1" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#f5c842" stop-opacity="0.35"/>
+          <stop offset="100%" stop-color="#f5c842" stop-opacity="0.05"/>
+        </linearGradient>
+      </defs>
+      <rect width="400" height="380" fill="url(#p2bg)"/>
+      <!-- Diagonal beam of light (top-right to bottom-left) -->
+      <polygon points="320,0 400,0 400,80 80,380 0,380 0,310" fill="url(#beamDiag)"/>
+      <!-- Pharos lighthouse (top right, small) -->
+      <polygon points="348,45 342,10 368,10 362,45" fill="#b01458"/>
+      <rect x="340" y="6" width="30" height="8" fill="#f5c842" rx="2"/>
+      <circle cx="355" cy="10" r="12" fill="#f5c842" opacity="0.4"/>
+      <!-- Researchers at table (round table, working together) -->
+      <ellipse cx="200" cy="200" rx="90" ry="55" fill="#3d2b6e" opacity="0.6" stroke="#6b4f9e" stroke-width="2"/>
+      <!-- Laptop/tablet symbols on table -->
+      <rect x="155" y="175" width="26" height="20" fill="#2a4080" rx="2" stroke="#4a6098" stroke-width="1.5"/>
+      <rect x="156" y="176" width="24" height="16" fill="#1a3060"/>
+      <line x1="156" y1="195" x2="180" y2="195" stroke="#3a5080" stroke-width="2"/>
+      <!-- Magnifying glass on table -->
+      <circle cx="218" cy="188" r="10" fill="none" stroke="#f5c842" stroke-width="2.5"/>
+      <line x1="225" y1="195" x2="232" y2="202" stroke="#f5c842" stroke-width="3" stroke-linecap="round"/>
+      <!-- Policy scroll on table -->
+      <rect x="228" y="178" width="22" height="28" fill="#c8c0a0" rx="2"/>
+      <path d="M232 185 Q240 183 244 185" stroke="#666" stroke-width="1.5" fill="none"/>
+      <path d="M232 191 Q240 189 244 191" stroke="#666" stroke-width="1.5" fill="none"/>
+      <circle cx="236" cy="200" r="4" fill="#b01458" opacity="0.7"/>
+      <!-- Researcher 1 (with magnifying glass symbol - Pharos P) -->
+      <ellipse cx="200" cy="258" rx="16" ry="22" fill="#b01458"/>
+      <circle cx="200" cy="234" r="15" fill="#c9b090"/>
+      <path d="M188 230 Q194 218 200 216 Q206 218 212 230" fill="#3a2010"/>
+      <circle cx="194" cy="232" r="3" fill="#3a2010"/>
+      <circle cx="206" cy="232" r="3" fill="#3a2010"/>
+      <path d="M194 242 Q200 248 206 242" stroke="#8a4020" stroke-width="2" fill="none"/>
+      <!-- P on chest (Pharos) -->
+      <circle cx="200" cy="252" r="6" fill="#f5c842" opacity="0.8"/>
+      <text x="196" y="257" font-size="7" fill="#3d2b6e" font-weight="bold">P</text>
+      <!-- Researcher 2 -->
+      <ellipse cx="130" cy="255" rx="14" ry="20" fill="#4a6090"/>
+      <circle cx="130" cy="233" r="13" fill="#b87040"/>
+      <path d="M120 229 Q125 220 130 218 Q135 220 140 229" fill="#3a2010"/>
+      <circle cx="124" cy="230" r="3" fill="#3a2010"/>
+      <circle cx="136" cy="230" r="3" fill="#3a2010"/>
+      <path d="M124 240 Q130 246 136 240" stroke="#8a4020" stroke-width="1.5" fill="none"/>
+      <!-- Researcher 3 -->
+      <ellipse cx="270" cy="255" rx="14" ry="20" fill="#5a8040"/>
+      <circle cx="270" cy="233" r="13" fill="#c9a882"/>
+      <path d="M260 229 Q265 220 270 218 Q275 220 280 229" fill="#8a6428"/>
+      <circle cx="264" cy="230" r="3" fill="#3a2010"/>
+      <circle cx="276" cy="230" r="3" fill="#3a2010"/>
+      <path d="M264 240 Q270 246 276 240" stroke="#8a4020" stroke-width="1.5" fill="none"/>
+      <!-- BRIDGE symbol (connecting two land pieces) -->
+      <rect x="20" y="340" width="80" height="20" fill="#5a7040" rx="2"/>
+      <path d="M20 340 Q60 310 100 340" stroke="#8a9060" stroke-width="4" fill="none"/>
+      <line x1="40" y1="340" x2="40" y2="315" stroke="#6a8050" stroke-width="3"/>
+      <line x1="80" y1="340" x2="80" y2="315" stroke="#6a8050" stroke-width="3"/>
+      <rect x="280" y="340" width="100" height="20" fill="#3d2b6e" rx="2"/>
+      <path d="M280 340 Q330 310 380 340" stroke="#6b4f9e" stroke-width="4" fill="none"/>
+      <line x1="300" y1="340" x2="300" y2="315" stroke="#8b6fae" stroke-width="3"/>
+      <line x1="350" y1="340" x2="350" y2="315" stroke="#8b6fae" stroke-width="3"/>
+      <!-- gap being bridged -->
+      <rect x="100" y="350" width="180" height="10" fill="#b01458" opacity="0.6"/>
+      <!-- arrows from lighthouse beam illuminating -->
+      <path d="M355 35 Q280 150 220 195" stroke="#f5c842" stroke-width="2.5" stroke-dasharray="8,5" fill="none" opacity="0.7"/>
+    </svg>
+  </div>
+
+  <!-- Panel 3: Equal Health -->
+  <div class="panel">
+    <svg viewBox="0 0 400 380" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="p3bg" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#1a3050"/><stop offset="60%" stop-color="#4a6828"/><stop offset="100%" stop-color="#3d7a30"/>
+        </linearGradient>
+        <radialGradient id="sunTop" cx="80%" cy="15%" r="40%">
+          <stop offset="0%" stop-color="#f5c842" stop-opacity="0.5"/>
+          <stop offset="100%" stop-color="#f5c842" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+      <rect width="400" height="380" fill="url(#p3bg)"/>
+      <rect width="400" height="380" fill="url(#sunTop)"/>
+      <!-- sun -->
+      <circle cx="340" cy="50" r="35" fill="#f5c842" opacity="0.9"/>
+      <line x1="340" y1="10" x2="340" y2="3" stroke="#f5c842" stroke-width="3"/>
+      <line x1="305" y1="50" x2="298" y2="50" stroke="#f5c842" stroke-width="3"/>
+      <line x1="375" y1="50" x2="382" y2="50" stroke="#f5c842" stroke-width="3"/>
+      <line x1="315" y1="25" x2="308" y2="18" stroke="#f5c842" stroke-width="2.5"/>
+      <line x1="365" y1="25" x2="372" y2="18" stroke="#f5c842" stroke-width="2.5"/>
+
+      <!-- Both people side by side, EQUAL, healthy -->
+      <!-- PERSON LEFT (formerly rich, still happy) -->
+      <ellipse cx="110" cy="300" rx="18" ry="28" fill="#5a8040"/>
+      <circle cx="110" cy="265" r="20" fill="#c9b090"/>
+      <path d="M93 259 Q102 242 110 240 Q118 242 127 259" fill="#8a6428"/>
+      <circle cx="103" cy="262" r="4" fill="#3a2010"/>
+      <circle cx="117" cy="262" r="4" fill="#3a2010"/>
+      <circle cx="105" cy="260" r="1.5" fill="white"/>
+      <circle cx="119" cy="260" r="1.5" fill="white"/>
+      <path d="M103 274 Q110 282 117 274" stroke="#8a3015" stroke-width="2.5" fill="none"/>
+      <circle cx="100" cy="272" r="5" fill="#e07060" opacity="0.5"/>
+      <circle cx="120" cy="272" r="5" fill="#e07060" opacity="0.5"/>
+      <!-- arms open/welcoming -->
+      <path d="M94 272 Q78 280 74 292" stroke="#5a8040" stroke-width="10" stroke-linecap="round" fill="none"/>
+      <path d="M126 272 Q142 282 146 295" stroke="#5a8040" stroke-width="10" stroke-linecap="round" fill="none"/>
+      <!-- equal size house left -->
+      <rect x="18" y="175" width="90" height="68" fill="#5a8060" opacity="0.7" rx="2"/>
+      <polygon points="10,177 116,177 63,150" fill="#3a6040" opacity="0.7"/>
+      <rect x="30" y="192" width="18" height="14" fill="#a0c8d0" rx="2"/>
+      <rect x="60" y="192" width="18" height="14" fill="#a0c8d0" rx="2"/>
+      <rect x="90" y="192" width="12" height="14" fill="#a0c8d0" rx="2"/>
+      <!-- heart above person left -->
+      <path d="M102 238 Q105 232 108 236 Q111 232 114 236 Q114 242 108 248 Q102 242 102 238 Z" fill="#cc2060"/>
+      <!-- doctor (accessible healthcare) visible -->
+      <ellipse cx="55" cy="290" rx="10" ry="16" fill="white" opacity="0.6"/>
+      <circle cx="55" cy="272" r="10" fill="#c9b090" opacity="0.7"/>
+      <!-- stethoscope hint -->
+      <path d="M50 278 Q46 285 48 290" stroke="#2060c0" stroke-width="2" fill="none" opacity="0.6"/>
+      <!-- pictogram sign (readable info) -->
+      <rect x="148" y="260" width="32" height="24" fill="white" opacity="0.85" rx="2"/>
+      <path d="M151 268 Q157 265 164 268 Q170 270 175 268" stroke="#3a6a3a" stroke-width="2.5"/>
+      <path d="M151 274 Q157 271 164 274 Q170 276 175 274" stroke="#3a6a3a" stroke-width="2.5"/>
+      <!-- lightbulb above -->
+      <circle cx="165" cy="252" r="9" fill="#f5c842" opacity="0.8"/>
+      <rect x="160" y="260" width="10" height="3" fill="#a08020" rx="1"/>
+
+      <!-- PERSON RIGHT (formerly disadvantaged, now equal) -->
+      <ellipse cx="290" cy="300" rx="18" ry="28" fill="#e05a20"/>
+      <circle cx="290" cy="265" r="20" fill="#b87040"/>
+      <path d="M273 259 Q282 242 290 240 Q298 242 307 259" fill="#1a1008"/>
+      <circle cx="283" cy="262" r="4" fill="#1a1008"/>
+      <circle cx="297" cy="262" r="4" fill="#1a1008"/>
+      <circle cx="285" cy="260" r="1.5" fill="white"/>
+      <circle cx="299" cy="260" r="1.5" fill="white"/>
+      <path d="M283 274 Q290 282 297 274" stroke="#8a3015" stroke-width="2.5" fill="none"/>
+      <circle cx="280" cy="272" r="5" fill="#e07060" opacity="0.5"/>
+      <circle cx="300" cy="272" r="5" fill="#e07060" opacity="0.5"/>
+      <path d="M274 272 Q258 282 254 295" stroke="#e05a20" stroke-width="10" stroke-linecap="round" fill="none"/>
+      <path d="M306 272 Q322 284 326 297" stroke="#e05a20" stroke-width="10" stroke-linecap="round" fill="none"/>
+      <!-- equal size house right (SAME SIZE as left!) -->
+      <rect x="296" y="175" width="90" height="68" fill="#5a8060" opacity="0.7" rx="2"/>
+      <polygon points="288,177 394,177 341,150" fill="#3a6040" opacity="0.7"/>
+      <rect x="308" y="192" width="18" height="14" fill="#a0c8d0" rx="2"/>
+      <rect x="338" y="192" width="18" height="14" fill="#a0c8d0" rx="2"/>
+      <rect x="368" y="192" width="14" height="14" fill="#a0c8d0" rx="2"/>
+      <!-- heart above right -->
+      <path d="M282 238 Q285 232 288 236 Q291 232 294 236 Q294 242 288 248 Q282 242 282 238 Z" fill="#cc2060"/>
+      <!-- pictogram sign right (also readable) -->
+      <rect x="222" y="260" width="32" height="24" fill="white" opacity="0.85" rx="2"/>
+      <path d="M225 268 Q231 265 238 268 Q244 270 249 268" stroke="#3a6a3a" stroke-width="2.5"/>
+      <path d="M225 274 Q231 271 238 274 Q244 276 249 274" stroke="#3a6a3a" stroke-width="2.5"/>
+      <!-- lightbulb above -->
+      <circle cx="238" cy="252" r="9" fill="#f5c842" opacity="0.8"/>
+      <rect x="233" y="260" width="10" height="3" fill="#a08020" rx="1"/>
+      <!-- EQUAL sign between them (the key visual) -->
+      <line x1="190" y1="290" x2="212" y2="290" stroke="#f5c842" stroke-width="4"/>
+      <line x1="190" y1="298" x2="212" y2="298" stroke="#f5c842" stroke-width="4"/>
+      <!-- Green plants growing everywhere -->
+      <line x1="200" y1="365" x2="200" y2="345" stroke="#4a8a3a" stroke-width="2"/>
+      <ellipse cx="193" cy="341" rx="7" ry="9" fill="#3a9030"/>
+      <ellipse cx="207" cy="343" rx="6" ry="8" fill="#4aaa38"/>
+      <line x1="160" y1="368" x2="160" y2="352" stroke="#4a8a3a" stroke-width="2"/>
+      <ellipse cx="154" cy="349" rx="6" ry="7" fill="#3a9030" opacity="0.8"/>
+      <line x1="240" y1="368" x2="240" y2="350" stroke="#4a8a3a" stroke-width="2"/>
+      <ellipse cx="246" cy="347" rx="6" ry="7" fill="#4aaa38" opacity="0.8"/>
+    </svg>
+  </div>
+</div>
+
+<!-- NAVIGATION TO OTHER PAGES -->
+<div style="padding:0 32px 16px;max-width:1280px;margin:0 auto;">
+  <svg viewBox="0 0 40 16" width="40" height="16"><path d="M2 8 Q10 3 18 8 Q26 13 34 8" stroke="#b01458" stroke-width="2" fill="none"/></svg>
+</div>
+<div class="subpages-grid">
+  <a href="index.html" class="subpage-link" data-tip="Home">
+    <svg viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg">
+      <rect width="200" height="80" fill="#2d1b5e"/>
+      <polygon points="100,10 130,35 120,35 120,60 80,60 80,35 70,35" fill="#b01458" opacity="0.8"/>
+      <line x1="100" y1="30" x2="100" y2="60" stroke="#f5c842" stroke-width="2.5"/>
+      <circle cx="100" cy="38" r="5" fill="#f5c842" opacity="0.8"/>
+      <path d="M50 50 Q70 35 90 50 Q110 35 130 50 Q150 35 170 50" stroke="#b01458" stroke-width="2" fill="none"/>
+    </svg>
+  </a>
+  <a href="laaggeletterdheid.html" class="subpage-link" data-tip="Laaggeletterdheid">
+    <svg viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg">
+      <rect width="200" height="80" fill="#3d2b1e"/>
+      <rect x="20" y="15" width="55" height="70" fill="white" opacity="0.8" transform="rotate(-10,47,50)"/>
+      <path d="M25 35 Q42 31 55 35" stroke="#999" stroke-width="2" fill="none"/>
+      <path d="M25 44 Q42 40 55 44" stroke="#999" stroke-width="2" fill="none"/>
+      <path d="M100 40 L130 40" stroke="#b01458" stroke-width="4"/>
+      <polygon points="130,34 144,40 130,46" fill="#b01458"/>
+      <circle cx="168" cy="35" r="16" fill="#f5c842" opacity="0.85"/>
+      <path d="M162 33 Q168 27 174 33 Q174 40 168 45 Q162 40 162 33 Z" fill="#c89a00"/>
+    </svg>
+  </a>
+  <a href="samenwerken.html" class="subpage-link" data-tip="Samenwerken">
+    <svg viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg">
+      <rect width="200" height="80" fill="#3d1a2a"/>
+      <circle cx="100" cy="42" r="10" fill="#cc2060" opacity="0.8"/>
+      <circle cx="68" cy="30" r="8" fill="#6b4f9e" opacity="0.7"/>
+      <circle cx="132" cy="30" r="8" fill="#4a8a3a" opacity="0.7"/>
+      <circle cx="68" cy="56" r="8" fill="#e05a20" opacity="0.7"/>
+      <circle cx="132" cy="56" r="8" fill="#3060a0" opacity="0.7"/>
+      <line x1="74" y1="34" x2="92" y2="42" stroke="#b01458" stroke-width="2" opacity="0.6"/>
+      <line x1="126" y1="34" x2="108" y2="42" stroke="#b01458" stroke-width="2" opacity="0.6"/>
+      <line x1="74" y1="52" x2="92" y2="44" stroke="#b01458" stroke-width="2" opacity="0.6"/>
+      <line x1="126" y1="52" x2="108" y2="44" stroke="#b01458" stroke-width="2" opacity="0.6"/>
+    </svg>
+  </a>
+  <a href="ehealth.html" class="subpage-link" data-tip="e-Health">
+    <svg viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg">
+      <rect width="200" height="80" fill="#1a2a40"/>
+      <rect x="75" y="8" width="50" height="88" fill="#f0f0f0" rx="8" stroke="#4a8a3a" stroke-width="2"/>
+      <rect x="80" y="15" width="40" height="56" fill="white" rx="2"/>
+      <rect x="83" y="18" width="16" height="16" fill="#cc2060" rx="3"/>
+      <path d="M87 25 Q90 22 92 25 Q95 22 97 25 Q97 29 92 33 Q87 29 87 25 Z" fill="white"/>
+      <rect x="101" y="18" width="16" height="16" fill="#3060a0" rx="3"/>
+      <circle cx="120" cy="60" r="5" fill="#b01458" opacity="0.6"/>
+    </svg>
+  </a>
+  <a href="preventie.html" class="subpage-link" data-tip="Preventie">
+    <svg viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg">
+      <rect width="200" height="80" fill="#1a2a1a"/>
+      <path d="M100 10 L130 26 L130 52 Q130 70 100 78 Q70 70 70 52 L70 26 Z" fill="#4a8a3a" opacity="0.7"/>
+      <path d="M85 45 Q94 55 98 50 Q106 38 118 35" stroke="white" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="152" cy="40" r="14" fill="none" stroke="#f5c842" stroke-width="2.5"/>
+      <line x1="162" y1="50" x2="170" y2="58" stroke="#f5c842" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="152" cy="40" r="3" fill="#cc2020"/>
+    </svg>
+  </a>
+  <a href="spuk.html" class="subpage-link" data-tip="SPUK-regeling">
+    <svg viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg">
+      <rect width="200" height="80" fill="#1a2030"/>
+      <rect x="75" y="5" width="50" height="35" fill="#d4c8b0" rx="2"/>
+      <rect x="82" y="11" width="5" height="25" fill="#c4b8a0"/>
+      <rect x="92" y="11" width="5" height="25" fill="#c4b8a0"/>
+      <rect x="102" y="11" width="5" height="25" fill="#c4b8a0"/>
+      <rect x="112" y="11" width="5" height="25" fill="#c4b8a0"/>
+      <polygon points="68,7 132,7 100,0" fill="#c4b8a0"/>
+      <line x1="100" y1="40" x2="100" y2="52" stroke="#f5c842" stroke-width="3"/>
+      <line x1="100" y1="52" x2="60" y2="62" stroke="#f5c842" stroke-width="2"/>
+      <line x1="100" y1="52" x2="140" y2="62" stroke="#f5c842" stroke-width="2"/>
+      <circle cx="60" cy="68" r="7" fill="#f5c842" opacity="0.6"/>
+      <text x="56" y="73" font-size="9" fill="#8a6020" font-weight="bold">€</text>
+      <circle cx="100" cy="68" r="7" fill="#f5c842" opacity="0.6"/>
+      <text x="96" y="73" font-size="9" fill="#8a6020" font-weight="bold">€</text>
+      <circle cx="140" cy="68" r="7" fill="#f5c842" opacity="0.6"/>
+      <text x="136" y="73" font-size="9" fill="#8a6020" font-weight="bold">€</text>
+    </svg>
+  </a>
+</div>
+
+<footer>
+  <div class="footer-row">
+    <a href="index.html" data-tip="Home"><svg viewBox="0 0 28 28" fill="none"><path d="M3 13 L14 4 L25 13 L25 24 L19 24 L19 18 L9 18 L9 24 L3 24 Z" fill="#d0c4e8" opacity="0.7"/></svg></a>
+    <a href="laaggeletterdheid.html" data-tip="Laaggeletterdheid"><svg viewBox="0 0 28 28" fill="none"><rect x="4" y="3" width="13" height="19" rx="2" stroke="#d0c4e8" stroke-width="1.5" fill="#d0c4e8" opacity="0.1"/><circle cx="20" cy="18" r="6" fill="#f5c842" opacity="0.6"/></svg></a>
+    <a href="samenwerken.html" data-tip="Samenwerken"><svg viewBox="0 0 28 28" fill="none"><circle cx="9" cy="11" r="5" fill="#d0c4e8" opacity="0.7"/><circle cx="19" cy="11" r="5" fill="#d0c4e8" opacity="0.7"/><line x1="9" y1="16" x2="19" y2="16" stroke="#b01458" stroke-width="2"/></svg></a>
+    <a href="ehealth.html" data-tip="e-Health"><svg viewBox="0 0 28 28" fill="none"><rect x="8" y="3" width="12" height="22" rx="2.5" stroke="#d0c4e8" stroke-width="1.5" fill="#d0c4e8" opacity="0.1"/><circle cx="14" cy="21" r="2" fill="#b01458"/></svg></a>
+    <a href="preventie.html" data-tip="Preventie"><svg viewBox="0 0 28 28" fill="none"><path d="M14 3 L23 8 L23 17 Q23 24 14 27 Q5 24 5 17 L5 8 Z" fill="#4a8a3a" opacity="0.5" stroke="#4a8a3a" stroke-width="1.5"/></svg></a>
+    <a href="spuk.html" data-tip="SPUK"><svg viewBox="0 0 28 28" fill="none"><rect x="10" y="3" width="8" height="8" rx="1" fill="#d4c8b0" stroke="#d4c8b0" stroke-width="1"/><line x1="14" y1="11" x2="14" y2="18" stroke="#f5c842" stroke-width="2.5"/><circle cx="14" cy="21" r="4" fill="#f5c842" opacity="0.8"/></svg></a>
+    <a href="#" data-tip="Privacy"><svg viewBox="0 0 28 28" fill="none"><rect x="7" y="13" width="14" height="12" rx="2" stroke="#d0c4e8" stroke-width="1.5" fill="#d0c4e8" opacity="0.1"/><path d="M10 13 Q10 7 14 7 Q18 7 18 13" stroke="#d0c4e8" stroke-width="2" fill="none"/></svg></a>
+    <a href="#" data-tip="Toegankelijk"><svg viewBox="0 0 28 28" fill="none"><circle cx="14" cy="7" r="3" fill="#d0c4e8" opacity="0.8"/><line x1="14" y1="10" x2="14" y2="17" stroke="#d0c4e8" stroke-width="2"/><line x1="9" y1="13" x2="19" y2="13" stroke="#d0c4e8" stroke-width="2"/><line x1="14" y1="17" x2="10" y2="26" stroke="#d0c4e8" stroke-width="2"/><line x1="14" y1="17" x2="18" y2="26" stroke="#d0c4e8" stroke-width="2"/></svg></a>
+  </div>
+</footer>
+</body>
+</html>
