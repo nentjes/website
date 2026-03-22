@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pharos — Contact</title>
+<style>
+  :root{--pp:#3d2b6e;--ppd:#2d1b5e;--ppm:#6b4f9e;--pl:#d0c4e8;--pm:#b01458;--vg:#f5c842;--vgb:#1a3e6e;}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--ppd);font-family:sans-serif;color:var(--pl);overflow-x:hidden;}
+  header{background:var(--ppd);border-bottom:3px solid var(--pm);display:flex;align-items:center;padding:10px 24px;gap:20px;position:sticky;top:0;z-index:100;flex-wrap:wrap;}
+  .logo-wrap{display:flex;align-items:center;gap:12px;text-decoration:none;}
+  .logo-circle{width:48px;height:48px;background:var(--pm);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:24px;color:white;flex-shrink:0;}
+  .back-btn{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--pl);background:var(--ppm);padding:8px 14px;border-radius:10px;margin-left:auto;transition:background 0.2s;}
+  .back-btn:hover{background:var(--pm);}
+  .back-btn svg{width:22px;height:22px;}
+  nav{display:flex;gap:6px;flex-wrap:wrap;}
+  .nav-item{display:flex;flex-direction:column;align-items:center;text-decoration:none;color:var(--pl);padding:4px 8px;border-radius:8px;transition:background 0.2s;gap:2px;}
+  .nav-item:hover{background:var(--ppm);}
+  .nav-item.active{box-shadow:0 0 0 2px var(--pm);background:rgba(176,20,88,0.18);border-radius:10px;}
+  .nav-item.active .nav-label{color:var(--pm);font-weight:700;opacity:1;}
+  .nav-item.active svg{opacity:1;}
+  .nav-item svg{width:26px;height:26px;}
+  .nav-label{font-size:9px;opacity:0.85;text-align:center;}
+
+  /* ── PHAROS TOOLTIP ── */
+  [data-tip]{position:relative;}
+  [data-tip]::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 10px);left:50%;transform:translateX(-50%);background:#2d1b5e;color:#e8e0f5;padding:10px 14px;border-radius:10px;font-size:13px;line-height:1.55;max-width:300px;width:max-content;white-space:normal;pointer-events:none;opacity:0;transition:opacity 0.25s;z-index:9999;text-align:left;border:1px solid #b01458;box-shadow:0 6px 20px rgba(0,0,0,0.55);font-family:system-ui,-apple-system,sans-serif;}
+  [data-tip]:hover::after{opacity:1;}
+  [data-tip]:first-child::after,.logo-wrap::after{left:0;transform:none;}
+  header [data-tip]::after{bottom:auto;top:calc(100% + 8px);left:50%;transform:translateX(-50%);}
+
+  .hero-wrap{width:100%;overflow:hidden;}
+  .hero-wrap svg{display:block;width:100%;height:auto;}
+
+  /* ── CONTACT KAARTEN ── */
+  .contact-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;padding:32px;max-width:1000px;margin:0 auto;}
+  .contact-card{display:block;text-decoration:none;background:var(--pp);border-radius:16px;overflow:hidden;border:2px solid var(--ppm);box-shadow:0 6px 20px rgba(0,0,0,0.4);transition:transform 0.25s,border-color 0.25s;}
+  .contact-card:hover{transform:translateY(-6px);border-color:var(--vg);}
+  .contact-card svg{width:100%;height:auto;display:block;}
+
+  /* ── ADRES KAART (breed) ── */
+  .contact-wide{grid-column:1/-1;}
+  .contact-wide svg{display:block;width:100%;height:auto;}
+
+  footer{background:var(--ppd);border-top:3px solid var(--pm);padding:28px 32px 18px;}
+  .footer-row{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;}
+  .footer-row a{color:var(--pl);opacity:0.8;transition:opacity 0.2s;}
+  .footer-row a:hover{opacity:1;}
+  .footer-row svg{width:28px;height:28px;}
+  @media(max-width:700px){.contact-grid{grid-template-columns:1fr;}.contact-wide{grid-column:1;}}
+</style>
+</head>
+<body>
+<header>
+  <a href="index.html" class="logo-wrap" data-tip="Pharos — Gezondheid en kwaliteit van zorg voor iedereen in Nederland">
+    <div class="logo-circle">P</div>
+    <svg viewBox="0 0 120 36" width="110" height="34" fill="none"><path d="M4 26 Q14 10 24 22 Q34 34 44 18 Q54 4 64 18 Q74 32 84 16 Q94 2 104 18 Q114 32 120 22" stroke="#b01458" stroke-width="3" fill="none"/></svg>
+  </a>
+  <nav>
+    <a href="index.html" class="nav-item" data-tip="Pharos — Gezondheid en kwaliteit van zorg voor iedereen in Nederland">
+      <svg viewBox="0 0 26 26" fill="none"><polygon points="13,3 22,10 22,22 4,22 4,10" fill="#d0c4e8" fill-opacity="0.15" stroke="#d0c4e8" stroke-width="1.5"/><rect x="10" y="14" width="6" height="8" fill="#b01458" opacity="0.8"/><line x1="13" y1="3" x2="13" y2="8" stroke="#f5c842" stroke-width="2" stroke-linecap="round"/></svg>
+      <span class="nav-label">Home</span>
+    </a>
+    <a href="missie.html" class="nav-item" data-tip="Missie en visie — Onze missie: het terugdringen van grote gezondheidsverschillen. Ons uitgangspunt: gezondheid en kwaliteit van zorg voor iedereen in Nederland.">
+      <svg viewBox="0 0 26 26" fill="none"><circle cx="13" cy="13" r="10" stroke="#d0c4e8" stroke-width="1.5" fill="#d0c4e8" fill-opacity="0.1"/><line x1="13" y1="11" x2="13" y2="19" stroke="#d0c4e8" stroke-width="2.5"/><circle cx="13" cy="8" r="1.8" fill="#b01458"/></svg>
+      <span class="nav-label">Missie</span>
+    </a>
+    <a href="laaggeletterdheid.html" class="nav-item" data-tip="Gezondheidsvaardigheden en laaggeletterdheid — Ruim 2,5 miljoen Nederlanders hebben moeite met lezen en schrijven. Dit beïnvloedt sterk hoe zij omgaan met hun gezondheid.">
+      <svg viewBox="0 0 26 26" fill="none"><rect x="4" y="3" width="14" height="18" rx="2" fill="#d0c4e8" fill-opacity="0.15" stroke="#d0c4e8" stroke-width="1.5"/><line x1="7" y1="8" x2="15" y2="8" stroke="#d0c4e8" stroke-width="1.5"/><line x1="7" y1="12" x2="13" y2="12" stroke="#d0c4e8" stroke-width="1.5"/><path d="M17 13 Q22 10 22 17 Q22 22 17 22" stroke="#f5c842" stroke-width="1.5" fill="none"/></svg>
+      <span class="nav-label">Kennis</span>
+    </a>
+    <a href="samenwerken.html" class="nav-item" data-tip="Samenwerken — Pharos helpt organisaties hun communicatie, processen en beleid zo in te richten dat iedereen passende zorg krijgt.">
+      <svg viewBox="0 0 26 26" fill="none"><circle cx="9" cy="10" r="4.5" fill="#d0c4e8" fill-opacity="0.2" stroke="#d0c4e8" stroke-width="1.5"/><circle cx="17" cy="10" r="4.5" fill="#d0c4e8" fill-opacity="0.2" stroke="#d0c4e8" stroke-width="1.5"/><path d="M3 22 Q3 16 9 16 Q13 16 13 19 Q13 16 17 16 Q23 16 23 22" stroke="#d0c4e8" stroke-width="1.5" fill="none"/><line x1="9" y1="10" x2="17" y2="10" stroke="#b01458" stroke-width="1.5"/></svg>
+      <span class="nav-label">Samen</span>
+    </a>
+    <a href="ehealth.html" class="nav-item" data-tip="e-health en digitale zorg — Digitale vernieuwingen zoals AI en apps veranderen de zorg razendsnel. Maar deze oplossingen zijn niet voor iedereen toegankelijk, begrijpelijk of gebruiksvriendelijk.">
+      <svg viewBox="0 0 26 26" fill="none"><rect x="7" y="2" width="12" height="22" rx="2.5" stroke="#d0c4e8" stroke-width="1.5" fill="#d0c4e8" fill-opacity="0.1"/><circle cx="13" cy="20" r="1.8" fill="#b01458"/><line x1="10" y1="7" x2="16" y2="7" stroke="#d0c4e8" stroke-width="1.5"/><line x1="10" y1="11" x2="16" y2="11" stroke="#d0c4e8" stroke-width="1"/></svg>
+      <span class="nav-label">e-Health</span>
+    </a>
+    <a href="preventie.html" class="nav-item" data-tip="Preventie — 16 succesfactoren voor preventiebeleid dat gezondheidsverschillen verkleint. Pharos ondersteunt gemeenten en zorgorganisaties bij effectieve preventie.">
+      <svg viewBox="0 0 26 26" fill="none"><path d="M13 3 L21 7 L21 16 Q21 22 13 25 Q5 22 5 16 L5 7 Z" fill="#4a8a3a" fill-opacity="0.25" stroke="#d0c4e8" stroke-width="1.5"/><path d="M9 13 L12 16 L17 10" stroke="#f5c842" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span class="nav-label">Preventie</span>
+    </a>
+    <a href="spuk.html" class="nav-item" data-tip="SPUK-regeling — Hoe gemeenten stevig kunnen inzetten op het terugdringen van vermijdbare gezondheidsverschillen bij kwetsbare groepen.">
+      <svg viewBox="0 0 26 26" fill="none"><rect x="5" y="11" width="16" height="12" rx="1" fill="#d0c4e8" fill-opacity="0.15" stroke="#d0c4e8" stroke-width="1.5"/><polygon points="3,12 13,4 23,12" fill="#d0c4e8" fill-opacity="0.2" stroke="#d0c4e8" stroke-width="1.5"/><rect x="10" y="16" width="6" height="7" fill="#b01458" opacity="0.7"/></svg>
+      <span class="nav-label">SPUK</span>
+    </a>
+    <a href="contact.html" class="nav-item active" aria-current="page" data-tip="Contact — Neem contact op met Pharos: info@pharos.nl">
+      <svg viewBox="0 0 26 26" fill="none"><rect x="2" y="6" width="22" height="16" rx="2" stroke="#d0c4e8" stroke-width="1.5" fill="#d0c4e8" fill-opacity="0.1"/><polyline points="2,8 13,15 24,8" stroke="#d0c4e8" stroke-width="1.5" fill="none"/></svg>
+      <span class="nav-label">Contact</span>
+    </a>
+    <a href="zoeken.html" class="nav-item" data-tip="Zoek in alle kennis, publicaties en nieuws van Pharos">
+      <svg viewBox="0 0 26 26" fill="none"><circle cx="11" cy="11" r="7" stroke="#d0c4e8" stroke-width="1.5" fill="#d0c4e8" fill-opacity="0.1"/><line x1="16" y1="16" x2="23" y2="23" stroke="#b01458" stroke-width="2.5" stroke-linecap="round"/></svg>
+      <span class="nav-label">Zoeken</span>
+    </a>
+  </nav>
+  <a href="index.html" class="back-btn" data-tip="Terug naar de startpagina van Pharos Beeldtaal"><svg viewBox="0 0 22 22" fill="none"><polyline points="14,4 6,11 14,18" stroke="#d0c4e8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg><svg viewBox="0 0 22 22" fill="none"><path d="M3 11 L11 4 L19 11 L19 19 L14 19 L14 14 L8 14 L8 19 L3 19 Z" fill="#d0c4e8" opacity="0.8"/></svg></a>
+</header>
+
+<!-- HERO: twee mensen geven en ontvangen een bericht/brief -->
+<div class="hero-wrap">
+<svg viewBox="0 0 1200 300" xmlns="http://www.w3.org/2000/svg" aria-label="Contact: mensen verbinden met Pharos">
+  <defs>
+    <linearGradient id="cbg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0d0520"/>
+      <stop offset="50%" stop-color="#1a0a3a"/>
+      <stop offset="100%" stop-color="#0d0520"/>
+    </linearGradient>
+    <radialGradient id="cglow1" cx="30%" cy="50%" r="35%">
+      <stop offset="0%" stop-color="#b01458" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#b01458" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="cglow2" cx="70%" cy="50%" r="35%">
+      <stop offset="0%" stop-color="#3d2b6e" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#3d2b6e" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="cenvglow"><feGaussianBlur stdDeviation="10" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+
+  <rect width="1200" height="300" fill="url(#cbg)"/>
+  <ellipse cx="360" cy="150" rx="320" ry="180" fill="url(#cglow1)"/>
+  <ellipse cx="840" cy="150" rx="320" ry="180" fill="url(#cglow2)"/>
+
+  <!-- Grond -->
+  <rect x="0" y="255" width="1200" height="45" fill="#1a0a30" opacity="0.5"/>
+
+  <!-- LINKS: burger / bezoeker — stuurt bericht -->
+  <!-- Figuur 1 -->
+  <circle cx="200" cy="155" r="35" fill="#d49060"/>
+  <path d="M168 195 Q200 182 232 195 L240 255 L160 255Z" fill="#6a3010"/>
+  <!-- Arm uitgestoken met brief -->
+  <line x1="232" y1="190" x2="310" y2="160" stroke="#d49060" stroke-width="8" stroke-linecap="round"/>
+  <!-- Brief/envelop in hand -->
+  <rect x="308" y="142" width="56" height="40" rx="4" fill="#e8e0f5"/>
+  <polyline points="308,144 336,164 364,144" stroke="#b01458" stroke-width="2" fill="none"/>
+  <rect x="308" y="142" width="56" height="40" rx="4" fill="none" stroke="#b01458" stroke-width="2"/>
+
+  <!-- Animatie: brief vliegt van links naar rechts -->
+  <!-- Vliegende envelop 1 (midden-links) -->
+  <rect x="480" y="118" width="44" height="32" rx="4" fill="#d0c4e8" opacity="0.5"/>
+  <polyline points="480,120 502,134 524,120" stroke="#6b4f9e" stroke-width="1.5" fill="none" opacity="0.5"/>
+  <!-- Vleugellijntjes eromheen -->
+  <path d="M468 112 Q476 106 484 112" stroke="#f5c842" stroke-width="1.5" fill="none" opacity="0.4"/>
+  <path d="M530 124 Q538 118 546 124" stroke="#f5c842" stroke-width="1.5" fill="none" opacity="0.3"/>
+
+  <!-- Vliegende envelop 2 (midden) -->
+  <rect x="570" y="130" width="50" height="36" rx="4" fill="#e8e0f5" opacity="0.7"/>
+  <polyline points="570,132 595,148 620,132" stroke="#b01458" stroke-width="2" fill="none" opacity="0.7"/>
+  <!-- Gouden stofspoor -->
+  <circle cx="555" cy="148" r="3" fill="#f5c842" opacity="0.5"/>
+  <circle cx="540" cy="140" r="2" fill="#f5c842" opacity="0.3"/>
+  <circle cx="635" cy="142" r="2.5" fill="#f5c842" opacity="0.4"/>
+  <circle cx="650" cy="134" r="2" fill="#f5c842" opacity="0.3"/>
+
+  <!-- Hart midden boven de brief -->
+  <path d="M591 108 Q600 100 609 108 Q609 118 600 124 Q591 118 591 108Z" fill="#cc2060" opacity="0.8" filter="url(#cenvglow)"/>
+
+  <!-- RECHTS: Pharos medewerker ontvangt -->
+  <!-- Figuur 2 (Pharos medewerker, blauwe kleding) -->
+  <circle cx="1000" cy="155" r="35" fill="#c07848"/>
+  <path d="M968 195 Q1000 182 1032 195 L1040 255 L960 255Z" fill="#1a3e8e"/>
+  <!-- Arm uitgestoken om te ontvangen -->
+  <line x1="968" y1="190" x2="890" y2="160" stroke="#c07848" stroke-width="8" stroke-linecap="round"/>
+  <!-- Pharos P badge op borst -->
+  <circle cx="1000" cy="210" r="14" fill="#b01458" opacity="0.9"/>
+  <!-- Blij gezicht: glimlach -->
+  <path d="M990 148 Q1000 156 1010 148" stroke="#333" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+
+  <!-- Pharos gebouw achter de medewerker -->
+  <rect x="1080" y="170" width="90" height="85" rx="3" fill="#2a1a5e" opacity="0.8"/>
+  <polygon points="1073,172 1125,140 1177,172" fill="#1a0a4e" opacity="0.8"/>
+  <!-- Ramen gebouw -->
+  <rect x="1092" y="182" width="18" height="22" rx="1" fill="rgba(245,200,66,0.35)"/>
+  <rect x="1118" y="182" width="18" height="22" rx="1" fill="rgba(245,200,66,0.35)"/>
+  <rect x="1144" y="182" width="18" height="22" rx="1" fill="rgba(245,200,66,0.35)"/>
+  <!-- Licht uit raam -->
+  <ellipse cx="1101" cy="193" rx="12" ry="8" fill="#f5c842" opacity="0.15"/>
+  <ellipse cx="1127" cy="193" rx="12" ry="8" fill="#f5c842" opacity="0.15"/>
+  <!-- P logo op gebouw -->
+  <circle cx="1125" cy="155" r="10" fill="#b01458" opacity="0.9"/>
+
+  <!-- Figuur 3 links (tweede burger) -->
+  <circle cx="100" cy="200" r="22" fill="#8a5030" opacity="0.8"/>
+  <path d="M84 218 Q100 212 116 218 L118 255 L82 255Z" fill="#4a2010" opacity="0.8"/>
+  <!-- Telefoon in hand -->
+  <rect x="116" y="200" width="18" height="28" rx="3" fill="#3a3a5e" opacity="0.9"/>
+  <rect x="118" y="204" width="14" height="18" rx="1" fill="#6a9aee" opacity="0.7"/>
+  <!-- Signaalstreepjes = bellen -->
+  <path d="M136 208 Q142 204 142 212 Q142 220 136 216" stroke="#f5c842" stroke-width="1.5" fill="none" opacity="0.7"/>
+  <path d="M138 205 Q147 200 147 212 Q147 224 138 219" stroke="#f5c842" stroke-width="1" fill="none" opacity="0.4"/>
+
+</svg>
+</div>
+
+<!-- CONTACT KAARTEN -->
+<div class="contact-grid">
+
+  <!-- E-mail -->
+  <a href="https://www.pharos.nl/contact/" class="contact-card" data-tip="E-mail — Stuur een bericht naar info@pharos.nl. Pharos reageert zo snel mogelijk op uw vraag.">
+    <svg viewBox="0 0 320 220" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="mailbg" cx="50%" cy="50%" r="70%">
+          <stop offset="0%" stop-color="#2a0a3a"/>
+          <stop offset="100%" stop-color="#0d0520"/>
+        </radialGradient>
+      </defs>
+      <rect width="320" height="220" fill="url(#mailbg)"/>
+      <!-- Grote envelop -->
+      <rect x="50" y="60" width="220" height="120" rx="8" fill="#3d2b6e" stroke="#b01458" stroke-width="2.5"/>
+      <!-- Flap -->
+      <polyline points="50,62 160,130 270,62" stroke="#b01458" stroke-width="2.5" fill="none"/>
+      <!-- Vouw lijnen -->
+      <line x1="50" y1="178" x2="120" y2="130" stroke="#6b4f9e" stroke-width="1.5" opacity="0.5"/>
+      <line x1="270" y1="178" x2="200" y2="130" stroke="#6b4f9e" stroke-width="1.5" opacity="0.5"/>
+      <!-- Hart op de envelop -->
+      <path d="M148 100 Q160 88 172 100 Q172 114 160 122 Q148 114 148 100Z" fill="#b01458" opacity="0.9"/>
+      <!-- Gouden glinstering -->
+      <circle cx="240" cy="75" r="4" fill="#f5c842" opacity="0.7"/>
+      <circle cx="80" cy="80" r="3" fill="#f5c842" opacity="0.5"/>
+    </svg>
+  </a>
+
+  <!-- Telefoon -->
+  <a href="https://www.pharos.nl/contact/" class="contact-card" data-tip="Telefoon — Bel met Pharos: 030 234 98 00. Bereikbaar op werkdagen van 9:00 tot 17:00 uur.">
+    <svg viewBox="0 0 320 220" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="telbg" cx="50%" cy="50%" r="70%">
+          <stop offset="0%" stop-color="#0a1a2a"/>
+          <stop offset="100%" stop-color="#050e18"/>
+        </radialGradient>
+      </defs>
+      <rect width="320" height="220" fill="url(#telbg)"/>
+      <!-- Grote telefoonhoorn -->
+      <path d="M90 160 Q75 145 78 120 Q82 95 108 80 Q118 75 128 82 L148 102 Q155 112 145 122 Q138 130 142 140 Q152 158 170 168 Q180 174 188 167 L208 149 Q218 140 228 148 L248 168 Q256 178 250 188 Q237 208 212 214 Q180 220 152 206 Q118 190 90 160Z" fill="#2a5a9e" stroke="#4a9aee" stroke-width="2"/>
+      <!-- Signaalcirkels (bellen) -->
+      <path d="M230 70 Q250 70 250 90 Q250 110 230 110" stroke="#f5c842" stroke-width="2.5" fill="none" opacity="0.7" stroke-linecap="round"/>
+      <path d="M235 55 Q265 55 265 90 Q265 125 235 125" stroke="#f5c842" stroke-width="2" fill="none" opacity="0.5" stroke-linecap="round"/>
+      <path d="M238 40 Q280 40 280 90 Q280 140 238 140" stroke="#f5c842" stroke-width="1.5" fill="none" opacity="0.3" stroke-linecap="round"/>
+      <!-- Glinstering op hoorn -->
+      <ellipse cx="140" cy="100" rx="12" ry="8" fill="white" opacity="0.1" transform="rotate(-30,140,100)"/>
+    </svg>
+  </a>
+
+  <!-- Locatie / bezoek -->
+  <a href="https://www.pharos.nl/contact/" class="contact-card" data-tip="Bezoekadres — Pharos is gevestigd aan de Churchilllaan 11 in Utrecht. U bent van harte welkom!">
+    <svg viewBox="0 0 320 220" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="locbg" cx="50%" cy="40%" r="60%">
+          <stop offset="0%" stop-color="#0a2a10"/>
+          <stop offset="100%" stop-color="#050e08"/>
+        </radialGradient>
+        <radialGradient id="locsun" cx="50%" cy="15%" r="40%">
+          <stop offset="0%" stop-color="#f5c842" stop-opacity="0.6"/>
+          <stop offset="100%" stop-color="#f5c842" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+      <rect width="320" height="220" fill="url(#locbg)"/>
+      <ellipse cx="160" cy="50" rx="130" ry="80" fill="url(#locsun)"/>
+      <!-- Grond -->
+      <rect x="0" y="175" width="320" height="45" fill="#1a3a1a" opacity="0.6"/>
+      <!-- Pharos gebouw -->
+      <rect x="100" y="100" width="120" height="75" rx="3" fill="#2a1a5e"/>
+      <polygon points="90,102 160,65 230,102" fill="#1a0a4e"/>
+      <!-- Ramen -->
+      <rect x="114" y="115" width="22" height="26" rx="2" fill="rgba(245,200,66,0.4)"/>
+      <rect x="149" y="115" width="22" height="26" rx="2" fill="rgba(245,200,66,0.4)"/>
+      <rect x="184" y="115" width="22" height="26" rx="2" fill="rgba(245,200,66,0.4)"/>
+      <!-- Deur -->
+      <rect x="146" y="148" width="28" height="27" rx="3" fill="#b01458" opacity="0.9"/>
+      <!-- P logo -->
+      <circle cx="160" cy="82" r="10" fill="#b01458" opacity="0.9"/>
+      <!-- Locatiepinnetje boven gebouw -->
+      <path d="M160 35 Q178 35 178 52 Q178 65 160 78 Q142 65 142 52 Q142 35 160 35Z" fill="#b01458" opacity="0.95"/>
+      <circle cx="160" cy="52" r="6" fill="white" opacity="0.9"/>
+      <!-- Looppad naar deur -->
+      <line x1="160" y1="175" x2="160" y2="200" stroke="#f5c842" stroke-width="3" stroke-dasharray="5,4" opacity="0.5"/>
+      <!-- Bezoeker loopt ernaartoe -->
+      <circle cx="160" cy="208" r="10" fill="#d49060"/>
+      <path d="M152 218 Q160 213 168 218 L170 225 L150 225Z" fill="#6a3010"/>
+    </svg>
+  </a>
+
+  <!-- Breed: meerdere manieren van contact (formulier, social) -->
+  <div class="contact-card contact-wide" data-tip="Neem contact op via het online formulier, e-mail of telefoon. Pharos is er voor professionals in zorg, welzijn en gemeenten die werken aan gelijke gezondheid voor iedereen.">
+    <svg viewBox="0 0 1000 200" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="wbg" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#1a0a3a"/>
+          <stop offset="50%" stop-color="#2d1b5e"/>
+          <stop offset="100%" stop-color="#1a0a3a"/>
+        </linearGradient>
+      </defs>
+      <rect width="1000" height="200" fill="url(#wbg)"/>
+
+      <!-- Diverse figuren sturen berichten naar Pharos vuurtoren in het midden -->
+
+      <!-- Figuur 1: zorgprofessional (links ver) -->
+      <circle cx="80" cy="90" r="22" fill="#d49060"/>
+      <path d="M65 108 Q80 100 95 108 L97 145 L63 145Z" fill="#2a5a8e"/>
+      <!-- Stethoscoop -->
+      <path d="M73 118 Q68 128 73 133 Q78 137 83 133 Q88 128 83 118" stroke="#c8a860" stroke-width="1.5" fill="none"/>
+      <!-- Pijl/lijn naar Pharos -->
+      <path d="M100 100 Q200 80 280 95" stroke="#b01458" stroke-width="1.5" fill="none" stroke-dasharray="6,4" opacity="0.6" marker-end="url(#arr)"/>
+
+      <!-- Figuur 2: gemeente ambtenaar -->
+      <circle cx="200" cy="105" r="18" fill="#c07848"/>
+      <path d="M187 120 Q200 113 213 120 L215 145 L185 145Z" fill="#4a3a20"/>
+      <!-- Map/document -->
+      <rect x="214" y="98" width="24" height="30" rx="2" fill="#e0d8c0"/>
+      <line x1="218" y1="106" x2="234" y2="106" stroke="#666" stroke-width="1.2" opacity="0.5"/>
+      <line x1="218" y1="112" x2="232" y2="112" stroke="#666" stroke-width="1.2" opacity="0.4"/>
+
+      <!-- Figuur 3: burger (links nabij) -->
+      <circle cx="320" cy="112" r="16" fill="#8a5030"/>
+      <path d="M309 125 Q320 118 331 125 L332 145 L308 145Z" fill="#5a2a10"/>
+      <!-- Telefoon -->
+      <rect x="332" y="106" width="14" height="22" rx="2" fill="#3a3a5e" opacity="0.9"/>
+      <rect x="334" y="110" width="10" height="13" rx="1" fill="#6a9aee" opacity="0.7"/>
+
+      <!-- PHAROS CENTRUM -->
+      <!-- Vuurtoren -->
+      <polygon points="488,145 512,145 508,60 492,60" fill="#cc2060"/>
+      <rect x="484" y="54" width="32" height="12" fill="#f5c842"/>
+      <polygon points="488,54 500,38 512,54" fill="#cc2060"/>
+      <ellipse cx="500" cy="40" rx="12" ry="6" fill="#f5c842" opacity="0.8"/>
+      <!-- Lichtstraal uitwaaiend -->
+      <polygon points="512,45 620,15 615,75" fill="#f5c842" opacity="0.2"/>
+      <polygon points="488,45 380,15 385,75" fill="#f5c842" opacity="0.15"/>
+      <!-- P logo op toren -->
+      <circle cx="500" cy="95" r="10" fill="#b01458" opacity="0.9"/>
+      <!-- Gloei -->
+      <circle cx="500" cy="100" r="60" fill="#f5c842" opacity="0.04"/>
+
+      <!-- Figuur 4: researcher (rechts nabij) -->
+      <circle cx="680" cy="112" r="16" fill="#b08060"/>
+      <path d="M669 125 Q680 118 691 125 L692 145 L668 145Z" fill="#7a5030"/>
+      <!-- Boek/rapport -->
+      <rect x="654" y="100" width="20" height="26" rx="2" fill="#d0c4e8" opacity="0.7"/>
+      <line x1="658" y1="108" x2="670" y2="108" stroke="#555" stroke-width="1" opacity="0.5"/>
+      <line x1="658" y1="114" x2="669" y2="114" stroke="#555" stroke-width="1" opacity="0.4"/>
+      <!-- Pijl terug van Pharos -->
+      <path d="M720 100 Q800 80 880 95" stroke="#b01458" stroke-width="1.5" fill="none" stroke-dasharray="6,4" opacity="0.6"/>
+
+      <!-- Figuur 5: bestuurder -->
+      <circle cx="800" cy="105" r="18" fill="#d4a060"/>
+      <path d="M787 120 Q800 113 813 120 L815 145 L785 145Z" fill="#3a3a70"/>
+
+      <!-- Figuur 6: patiënt (rechts ver) -->
+      <circle cx="920" cy="90" r="22" fill="#c07848"/>
+      <path d="M905 108 Q920 100 935 108 L937 145 L903 145Z" fill="#6a4020"/>
+      <!-- Rollator/loopsteun -->
+      <line x1="936" y1="115" x2="960" y2="145" stroke="#d0c4e8" stroke-width="2" opacity="0.6"/>
+      <line x1="936" y1="115" x2="955" y2="130" stroke="#d0c4e8" stroke-width="2" opacity="0.5"/>
+      <line x1="955" y1="130" x2="960" y2="145" stroke="#d0c4e8" stroke-width="2" opacity="0.5"/>
+
+      <!-- Verbindingslijnen rechts -->
+      <path d="M900 100 Q800 80 720 95" stroke="#b01458" stroke-width="1.5" fill="none" stroke-dasharray="6,4" opacity="0.5"/>
+
+      <!-- Hartjes langs de lijnen -->
+      <path d="M390 82 Q396 76 402 82 Q402 89 396 93 Q390 89 390 82Z" fill="#cc2060" opacity="0.6"/>
+      <path d="M598 82 Q604 76 610 82 Q610 89 604 93 Q598 89 598 82Z" fill="#cc2060" opacity="0.6"/>
+    </svg>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-row">
+    <a href="index.html" data-tip="Pharos — Gezondheid en kwaliteit van zorg voor iedereen in Nederland"><svg viewBox="0 0 28 28" fill="none"><path d="M3 13 L14 4 L25 13 L25 24 L19 24 L19 18 L9 18 L9 24 L3 24 Z" fill="#d0c4e8" opacity="0.7"/></svg></a>
+    <a href="missie.html" data-tip="Missie en visie"><svg viewBox="0 0 28 28" fill="none"><circle cx="13" cy="13" r="10" stroke="#d0c4e8" stroke-width="1.5" fill="none"/><line x1="13" y1="11" x2="13" y2="19" stroke="#d0c4e8" stroke-width="2.5"/><circle cx="13" cy="8" r="1.5" fill="#b01458"/></svg></a>
+    <a href="laaggeletterdheid.html" data-tip="Gezondheidsvaardigheden en laaggeletterdheid"><svg viewBox="0 0 28 28" fill="none"><rect x="4" y="3" width="13" height="19" rx="2" stroke="#d0c4e8" stroke-width="1.5" fill="none"/><circle cx="20" cy="18" r="6" fill="#f5c842" opacity="0.6"/></svg></a>
+    <a href="samenwerken.html" data-tip="Samenwerken"><svg viewBox="0 0 28 28" fill="none"><circle cx="9" cy="10" r="5" stroke="#d0c4e8" stroke-width="1.5" fill="none"/><circle cx="19" cy="10" r="5" stroke="#d0c4e8" stroke-width="1.5" fill="none"/><path d="M3 24 Q3 18 9 18 Q14 18 14 21 Q14 18 19 18 Q25 18 25 24" stroke="#d0c4e8" stroke-width="1.5" fill="none"/></svg></a>
+    <a href="ehealth.html" data-tip="e-Health"><svg viewBox="0 0 28 28" fill="none"><rect x="8" y="2" width="12" height="24" rx="3" stroke="#d0c4e8" stroke-width="1.5" fill="none"/><circle cx="14" cy="22" r="2" fill="#b01458"/></svg></a>
+    <a href="preventie.html" data-tip="Preventie"><svg viewBox="0 0 28 28" fill="none"><path d="M14 3 L22 7 L22 16 Q22 23 14 26 Q6 23 6 16 L6 7Z" stroke="#d0c4e8" stroke-width="1.5" fill="none"/><path d="M10 14 L13 17 L18 11" stroke="#f5c842" stroke-width="2" fill="none" stroke-linecap="round"/></svg></a>
+    <a href="spuk.html" data-tip="SPUK-regeling"><svg viewBox="0 0 28 28" fill="none"><rect x="5" y="12" width="18" height="14" rx="1" stroke="#d0c4e8" stroke-width="1.5" fill="none"/><polygon points="3,13 14,5 25,13" stroke="#d0c4e8" stroke-width="1.5" fill="none"/><rect x="11" y="18" width="6" height="8" fill="#b01458" opacity="0.7"/></svg></a>
+    <a href="zoeken.html" data-tip="Zoeken"><svg viewBox="0 0 28 28" fill="none"><circle cx="11" cy="11" r="7" stroke="#d0c4e8" stroke-width="1.5" fill="none"/><line x1="16" y1="16" x2="23" y2="23" stroke="#b01458" stroke-width="2.5" stroke-linecap="round"/></svg></a>
+  </div>
+</footer>
+
+</body>
+</html>

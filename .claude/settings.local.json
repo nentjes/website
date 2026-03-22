@@ -27,7 +27,8 @@
       "Bash(/Users/1roel/Documents/Projecten/Presentatie/website/pharos-pictogram/spuk.html:*)",
       "Bash(ls -la /Users/1roel/Documents/Projecten/Presentatie/website/pharos-pictogram/*.html)",
       "Bash(grep -h \"data-tip=\" /Users/1roel/Documents/Projecten/Presentatie/website/pharos-pictogram/*.html)",
-      "Bash(grep -n \"<nav\" /Users/1roel/Documents/Projecten/Presentatie/website/pharos-pictogram/*.html)"
+      "Bash(grep -n \"<nav\" /Users/1roel/Documents/Projecten/Presentatie/website/pharos-pictogram/*.html)",
+      "Bash(grep -c \"pharos.nl/contact\" /Users/1roel/Documents/Projecten/Presentatie/website/pharos-pictogram/*.html)"
     ]
   }
 }

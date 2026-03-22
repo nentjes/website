@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pharos — Zoeken in beeldtaal</title>
+<style>
+  :root{--pp:#3d2b6e;--ppd:#2d1b5e;--ppm:#6b4f9e;--pl:#d0c4e8;--pm:#b01458;--vg:#f5c842;--vgb:#1a3e6e;}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--ppd);font-family:sans-serif;color:var(--pl);overflow-x:hidden;}
+  header{background:var(--ppd);border-bottom:3px solid var(--pm);display:flex;align-items:center;padding:10px 24px;gap:20px;position:sticky;top:0;z-index:100;flex-wrap:wrap;}
+  .logo-wrap{display:flex;align-items:center;gap:12px;text-decoration:none;}
+  .logo-circle{width:48px;height:48px;background:var(--pm);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:24px;color:white;flex-shrink:0;}
+  .back-btn{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--pl);background:var(--ppm);padding:8px 14px;border-radius:10px;margin-left:auto;transition:background 0.2s;}
+  .back-btn:hover{background:var(--pm);}
+  .back-btn svg{width:22px;height:22px;}
+  nav{display:flex;gap:6px;flex-wrap:wrap;}
+  .nav-item{display:flex;flex-direction:column;align-items:center;text-decoration:none;color:var(--pl);padding:4px 8px;border-radius:8px;transition:background 0.2s;gap:2px;}
+  .nav-item:hover{background:var(--ppm);}
+  .nav-item.active{box-shadow:0 0 0 2px var(--pm);background:rgba(176,20,88,0.18);border-radius:10px;}
+  .nav-item.active .nav-label{color:var(--pm);font-weight:700;opacity:1;}
+  .nav-item.active svg{opacity:1;}
+  .nav-item svg{width:26px;height:26px;}
+  .nav-label{font-size:9px;opacity:0.85;text-align:center;}
+
+  /* ── PHAROS TOOLTIP ── */
+  [data-tip]{position:relative;}
+  [data-tip]::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 10px);left:50%;transform:translateX(-50%);background:#2d1b5e;color:#e8e0f5;padding:10px 14px;border-radius:10px;font-size:13px;line-height:1.55;max-width:300px;width:max-content;white-space:normal;pointer-events:none;opacity:0;transition:opacity 0.25s;z-index:9999;text-align:left;border:1px solid #b01458;box-shadow:0 6px 20px rgba(0,0,0,0.55);font-family:system-ui,-apple-system,sans-serif;}
+  [data-tip]:hover::after{opacity:1;}
+  [data-tip]:first-child::after,.logo-wrap::after{left:0;transform:none;}
+  header [data-tip]::after{bottom:auto;top:calc(100% + 8px);left:50%;transform:translateX(-50%);}
+
+  /* ── ZOEK HERO ── */
+  .zoek-hero{width:100%;overflow:hidden;position:relative;}
+  .zoek-hero svg{display:block;width:100%;height:auto;}
+
+  /* ── VERGROOTGLAS ANIMATIE ── */
+  @keyframes zweven{
+    0%{transform:translate(0,0) rotate(-8deg);}
+    25%{transform:translate(40px,-20px) rotate(5deg);}
+    50%{transform:translate(-10px,15px) rotate(-12deg);}
+    75%{transform:translate(30px,10px) rotate(8deg);}
+    100%{transform:translate(0,0) rotate(-8deg);}
+  }
+  .lens-float{animation:zweven 6s ease-in-out infinite;transform-origin:center;}
+
+  /* ── THEMA KAARTEN ── */
+  .themas-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;padding:32px;max-width:1200px;margin:0 auto;}
+  .thema-card{display:block;text-decoration:none;background:var(--pp);border-radius:16px;overflow:hidden;border:2px solid var(--ppm);box-shadow:0 6px 20px rgba(0,0,0,0.4);transition:transform 0.25s,border-color 0.25s,box-shadow 0.25s;position:relative;}
+  .thema-card:hover{transform:translateY(-6px) scale(1.02);border-color:var(--vg);box-shadow:0 12px 32px rgba(0,0,0,0.6);}
+  .thema-card svg{width:100%;height:auto;display:block;}
+
+  /* Glow-effect bij hover */
+  .thema-card::before{content:'';position:absolute;inset:0;border-radius:14px;box-shadow:inset 0 0 0 0 var(--vg);transition:box-shadow 0.3s;}
+  .thema-card:hover::before{box-shadow:inset 0 0 20px rgba(245,200,66,0.15);}
+
+  /* ── PULSE ANIMATIE op de zoekring ── */
+  @keyframes pulse{0%,100%{r:62;opacity:0.6;}50%{r:70;opacity:0.2;}}
+  .pulse-ring{animation:pulse 2s ease-in-out infinite;}
+
+  footer{background:var(--ppd);border-top:3px solid var(--pm);padding:28px 32px 18px;}
+  .footer-row{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;}
+  .footer-row a{color:var(--pl);opacity:0.8;transition:opacity 0.2s;}
+  .footer-row a:hover{opacity:1;}
+  .footer-row svg{width:28px;height:28px;}
+  @media(max-width:900px){.themas-grid{grid-template-columns:1fr;}}
+  @media(max-width:600px){.themas-grid{grid-template-columns:repeat(2,1fr);gap:14px;padding:16px;}}
+</style>
+</head>
+<body>
+<header>
+  <a href="index.html" class="logo-wrap" data-tip="Pharos — Gezondheid en kwaliteit van zorg voor iedereen in Nederland">
+    <div class="logo-circle">P</div>
+    <svg viewBox="0 0 120 36" width="110" height="34" fill="none"><path d="M4 26 Q14 10 24 22 Q34 34 44 18 Q54 4 64 18 Q74 32 84 16 Q94 2 104 18 Q114 32 120 22" stroke="#b01458" stroke-width="3" fill="none"/></svg>
+  </a>
+  <nav>
+    <a href="index.html" class="nav-item" data-tip="Pharos — Gezondheid en kwaliteit van zorg voor iedereen in Nederland">
+      <svg viewBox="0 0 26 26" fill="none"><polygon points="13,3 22,10 22,22 4,22 4,10" fill="#d0c4e8" fill-opacity="0.15" stroke="#d0c4e8" stroke-width="1.5"/><rect x="10" y="14" width="6" height="8" fill="#b01458" opacity="0.8"/><line x1="13" y1="3" x2="13" y2="8" stroke="#f5c842" stroke-width="2" stroke-linecap="round"/></svg>
+      <span class="nav-label">Home</span>
+    </a>
+    <a href="missie.html" class="nav-item" data-tip="Missie en visie — Onze missie: het terugdringen van grote gezondheidsverschillen. Ons uitgangspunt: gezondheid en kwaliteit van zorg voor iedereen in Nederland.">
+      <svg viewBox="0 0 26 26" fill="none"><circle cx="13" cy="13" r="10" stroke="#d0c4e8" stroke-width="1.5" fill="#d0c4e8" fill-opacity="0.1"/><line x1="13" y1="11" x2="13" y2="19" stroke="#d0c4e8" stroke-width="2.5"/><circle cx="13" cy="8" r="1.8" fill="#b01458"/></svg>
+      <span class="nav-label">Missie</span>
+    </a>
+    <a href="laaggeletterdheid.html" class="nav-item" data-tip="Gezondheidsvaardigheden en laaggeletterdheid — Ruim 2,5 miljoen Nederlanders hebben moeite met lezen en schrijven. Dit beïnvloedt sterk hoe zij omgaan met hun gezondheid.">
+      <svg viewBox="0 0 26 26" fill="none"><rect x="4" y="3" width="14" height="18" rx="2" fill="#d0c4e8" fill-opacity="0.15" stroke="#d0c4e8" stroke-width="1.5"/><line x1="7" y1="8" x2="15" y2="8" stroke="#d0c4e8" stroke-width="1.5"/><line x1="7" y1="12" x2="13" y2="12" stroke="#d0c4e8" stroke-width="1.5"/><path d="M17 13 Q22 10 22 17 Q22 22 17 22" stroke="#f5c842" stroke-width="1.5" fill="none"/></svg>
+      <span class="nav-label">Kennis</span>
+    </a>
+    <a href="samenwerken.html" class="nav-item" data-tip="Samenwerken — Pharos helpt organisaties hun communicatie, processen en beleid zo in te richten dat iedereen passende zorg krijgt.">
+      <svg viewBox="0 0 26 26" fill="none"><circle cx="9" cy="10" r="4.5" fill="#d0c4e8" fill-opacity="0.2" stroke="#d0c4e8" stroke-width="1.5"/><circle cx="17" cy="10" r="4.5" fill="#d0c4e8" fill-opacity="0.2" stroke="#d0c4e8" stroke-width="1.5"/><path d="M3 22 Q3 16 9 16 Q13 16 13 19 Q13 16 17 16 Q23 16 23 22" stroke="#d0c4e8" stroke-width="1.5" fill="none"/><line x1="9" y1="10" x2="17" y2="10" stroke="#b01458" stroke-width="1.5"/></svg>
+      <span class="nav-label">Samen</span>
+    </a>
+    <a href="ehealth.html" class="nav-item" data-tip="e-health en digitale zorg — Digitale vernieuwingen zoals AI en apps veranderen de zorg razendsnel. Maar deze oplossingen zijn niet voor iedereen toegankelijk, begrijpelijk of gebruiksvriendelijk.">
+      <svg viewBox="0 0 26 26" fill="none"><rect x="7" y="2" width="12" height="22" rx="2.5" stroke="#d0c4e8" stroke-width="1.5" fill="#d0c4e8" fill-opacity="0.1"/><circle cx="13" cy="20" r="1.8" fill="#b01458"/><line x1="10" y1="7" x2="16" y2="7" stroke="#d0c4e8" stroke-width="1.5"/><line x1="10" y1="11" x2="16" y2="11" stroke="#d0c4e8" stroke-width="1"/></svg>
+      <span class="nav-label">e-Health</span>
+    </a>
+    <a href="preventie.html" class="nav-item" data-tip="Preventie — 16 succesfactoren voor preventiebeleid dat gezondheidsverschillen verkleint. Pharos ondersteunt gemeenten en zorgorganisaties bij effectieve preventie.">
+      <svg viewBox="0 0 26 26" fill="none"><path d="M13 3 L21 7 L21 16 Q21 22 13 25 Q5 22 5 16 L5 7 Z" fill="#4a8a3a" fill-opacity="0.25" stroke="#d0c4e8" stroke-width="1.5"/><path d="M9 13 L12 16 L17 10" stroke="#f5c842" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span class="nav-label">Preventie</span>
+    </a>
+    <a href="spuk.html" class="nav-item" data-tip="SPUK-regeling — Hoe gemeenten stevig kunnen inzetten op het terugdringen van vermijdbare gezondheidsverschillen bij kwetsbare groepen.">
+      <svg viewBox="0 0 26 26" fill="none"><rect x="5" y="11" width="16" height="12" rx="1" fill="#d0c4e8" fill-opacity="0.15" stroke="#d0c4e8" stroke-width="1.5"/><polygon points="3,12 13,4 23,12" fill="#d0c4e8" fill-opacity="0.2" stroke="#d0c4e8" stroke-width="1.5"/><rect x="10" y="16" width="6" height="7" fill="#b01458" opacity="0.7"/></svg>
+      <span class="nav-label">SPUK</span>
+    </a>
+    <a href="contact.html" class="nav-item" data-tip="Contact — Neem contact op met Pharos: info@pharos.nl">
+      <svg viewBox="0 0 26 26" fill="none"><rect x="2" y="6" width="22" height="16" rx="2" stroke="#d0c4e8" stroke-width="1.5" fill="#d0c4e8" fill-opacity="0.1"/><polyline points="2,8 13,15 24,8" stroke="#d0c4e8" stroke-width="1.5" fill="none"/></svg>
+      <span class="nav-label">Contact</span>
+    </a>
+    <a href="zoeken.html" class="nav-item active" aria-current="page" data-tip="Zoek in alle kennis, publicaties en nieuws van Pharos">
+      <svg viewBox="0 0 26 26" fill="none"><circle cx="11" cy="11" r="7" stroke="#d0c4e8" stroke-width="1.5" fill="#d0c4e8" fill-opacity="0.1"/><line x1="16" y1="16" x2="23" y2="23" stroke="#b01458" stroke-width="2.5" stroke-linecap="round"/></svg>
+      <span class="nav-label">Zoeken</span>
+    </a>
+  </nav>
+  <a href="index.html" class="back-btn" data-tip="Terug naar de startpagina van Pharos Beeldtaal"><svg viewBox="0 0 22 22" fill="none"><polyline points="14,4 6,11 14,18" stroke="#d0c4e8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg><svg viewBox="0 0 22 22" fill="none"><path d="M3 11 L11 4 L19 11 L19 19 L14 19 L14 14 L8 14 L8 19 L3 19 Z" fill="#d0c4e8" opacity="0.8"/></svg></a>
+</header>
+
+<!-- ZOEK HERO: vergrootglas zweeft over pictogramwereld -->
+<div class="zoek-hero">
+<svg viewBox="0 0 1200 340" xmlns="http://www.w3.org/2000/svg" aria-label="Zoek in de pictogramwereld van Pharos">
+  <defs>
+    <radialGradient id="zbg" cx="50%" cy="50%" r="70%">
+      <stop offset="0%" stop-color="#1a0a3a"/>
+      <stop offset="100%" stop-color="#0a0520"/>
+    </radialGradient>
+    <radialGradient id="zstar1" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#f5c842" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#f5c842" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="zlens" cx="40%" cy="35%" r="60%">
+      <stop offset="0%" stop-color="#7ad4ff" stop-opacity="0.25"/>
+      <stop offset="70%" stop-color="#3a9aee" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#1a5aaa" stop-opacity="0.05"/>
+    </radialGradient>
+    <filter id="zglow"><feGaussianBlur stdDeviation="8" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <filter id="zlensglow"><feGaussianBlur stdDeviation="12" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <clipPath id="lensclip"><circle cx="420" cy="165" r="105"/></clipPath>
+  </defs>
+
+  <!-- Achtergrond: nachtelijke hemel vol sterren -->
+  <rect width="1200" height="340" fill="url(#zbg)"/>
+
+  <!-- Sterren -->
+  <circle cx="60" cy="30" r="1.5" fill="white" opacity="0.7"/>
+  <circle cx="140" cy="55" r="1" fill="white" opacity="0.5"/>
+  <circle cx="220" cy="20" r="2" fill="white" opacity="0.6"/>
+  <circle cx="310" cy="45" r="1" fill="white" opacity="0.4"/>
+  <circle cx="90" cy="90" r="1.5" fill="white" opacity="0.5"/>
+  <circle cx="680" cy="25" r="1.5" fill="white" opacity="0.6"/>
+  <circle cx="760" cy="60" r="1" fill="white" opacity="0.5"/>
+  <circle cx="850" cy="30" r="2" fill="white" opacity="0.7"/>
+  <circle cx="950" cy="50" r="1" fill="white" opacity="0.4"/>
+  <circle cx="1050" cy="20" r="1.5" fill="white" opacity="0.6"/>
+  <circle cx="1130" cy="70" r="1" fill="white" opacity="0.5"/>
+  <circle cx="1000" cy="90" r="2" fill="white" opacity="0.4"/>
+  <circle cx="480" cy="15" r="1.5" fill="white" opacity="0.5"/>
+  <circle cx="570" cy="40" r="1" fill="white" opacity="0.6"/>
+  <circle cx="1150" cy="130" r="1.5" fill="white" opacity="0.5"/>
+  <circle cx="30" cy="180" r="1" fill="white" opacity="0.4"/>
+  <circle cx="1180" cy="200" r="1.5" fill="white" opacity="0.6"/>
+
+  <!-- Gouden glinstering-sterren -->
+  <circle cx="200" cy="110" r="2.5" fill="#f5c842" opacity="0.5"/>
+  <circle cx="800" cy="80" r="2" fill="#f5c842" opacity="0.4"/>
+  <circle cx="1100" cy="150" r="2.5" fill="#f5c842" opacity="0.5"/>
+  <circle cx="50" cy="250" r="2" fill="#f5c842" opacity="0.3"/>
+
+  <!-- Mini pictogrammen verspreid in de wereld (de dingen die gezocht kunnen worden) -->
+
+  <!-- Links: gezin -->
+  <circle cx="100" cy="200" r="16" fill="#2a1a4e" stroke="#6b4f9e" stroke-width="1.5" opacity="0.9"/>
+  <circle cx="95" cy="193" r="5" fill="#d49060"/>
+  <path d="M88 205 Q95 200 102 205 L102 210 L88 210Z" fill="#d49060" opacity="0.8"/>
+  <circle cx="106" cy="196" r="4" fill="#c07848"/>
+  <path d="M101 207 Q107 203 113 207" stroke="#c07848" stroke-width="1.5" fill="none"/>
+
+  <!-- Ziekenhuis -->
+  <circle cx="180" cy="260" r="16" fill="#0a2a3a" stroke="#1a6a9e" stroke-width="1.5" opacity="0.85"/>
+  <rect x="171" y="252" width="18" height="16" rx="1" fill="#2a6a9e" opacity="0.9"/>
+  <line x1="180" y1="255" x2="180" y2="265" stroke="white" stroke-width="2"/>
+  <line x1="175" y1="260" x2="185" y2="260" stroke="white" stroke-width="2"/>
+
+  <!-- Schild (preventie) -->
+  <circle cx="80" cy="290" r="14" fill="#0a2a1a" stroke="#3a8a3a" stroke-width="1.5" opacity="0.8"/>
+  <path d="M80 278 L90 283 L90 291 Q90 298 80 301 Q70 298 70 291 L70 283Z" fill="#2a7a3a" opacity="0.8"/>
+  <path d="M76 290 L79 293 L84 286" stroke="white" stroke-width="1.5" fill="none"/>
+
+  <!-- Rechts: netwerk -->
+  <circle cx="1100" cy="200" r="16" fill="#2a1a4a" stroke="#6b4f9e" stroke-width="1.5" opacity="0.9"/>
+  <circle cx="1100" cy="192" r="4" fill="#d49060"/>
+  <circle cx="1092" cy="204" r="3.5" fill="#8a5030"/>
+  <circle cx="1108" cy="204" r="3.5" fill="#c07848"/>
+  <line x1="1100" y1="196" x2="1093" y2="201" stroke="#b01458" stroke-width="1.2"/>
+  <line x1="1100" y1="196" x2="1107" y2="201" stroke="#b01458" stroke-width="1.2"/>
+  <line x1="1094" y1="204" x2="1106" y2="204" stroke="#b01458" stroke-width="1.2"/>
+
+  <!-- Telefoon/app -->
+  <circle cx="1140" cy="270" r="14" fill="#1a2a4a" stroke="#1a6a9e" stroke-width="1.5" opacity="0.85"/>
+  <rect x="1133" y="260" width="14" height="20" rx="2" fill="#2a5a8a" opacity="0.9"/>
+  <rect x="1135" y="262" width="10" height="13" rx="1" fill="#4a9aee" opacity="0.7"/>
+  <rect x="1137" y="264" width="6" height="4" rx="1" fill="#cc2060" opacity="0.9"/>
+  <path d="M1135 277 L1137 280 L1143 274" stroke="#4aaa3a" stroke-width="1.5" fill="none"/>
+
+  <!-- Vuurtoren -->
+  <circle cx="1060" cy="290" r="14" fill="#0a1a3a" stroke="#1a3e6e" stroke-width="1.5" opacity="0.85"/>
+  <polygon points="1056,300 1064,300 1062,286 1058,286" fill="#cc2060" opacity="0.9"/>
+  <rect x="1055" y="283" width="10" height="3" fill="#f5c842" opacity="0.8"/>
+  <ellipse cx="1060" cy="283" rx="5" ry="2.5" fill="#f5c842" opacity="0.4"/>
+
+  <!-- Midden (groot): de wereld die doorzocht wordt - een globe/kaart -->
+  <ellipse cx="720" cy="200" rx="200" ry="120" fill="#1a0a30" opacity="0.4"/>
+  <!-- Landmassa silhouet -->
+  <path d="M580 200 Q600 170 640 175 Q680 160 700 180 Q730 165 760 175 Q790 180 800 195 Q820 205 810 220 Q800 235 770 230 Q740 240 720 225 Q690 235 660 225 Q630 230 610 215 Q590 210 580 200Z" fill="#2a4a2a" opacity="0.6"/>
+  <path d="M650 180 Q670 175 680 185 Q670 195 650 190Z" fill="#3a6a3a" opacity="0.5"/>
+
+  <!-- Mensen figuren op de globe -->
+  <!-- Persoon links op globe -->
+  <circle cx="625" cy="195" r="5" fill="#d49060" opacity="0.9"/>
+  <path d="M621 205 Q625 200 629 205 L629 212 L621 212Z" fill="#d49060" opacity="0.7"/>
+  <!-- Persoon rechts op globe -->
+  <circle cx="760" cy="205" r="5" fill="#8a5030" opacity="0.9"/>
+  <path d="M756 215 Q760 210 764 215 L764 222 L756 222Z" fill="#8a5030" opacity="0.7"/>
+  <!-- Hart tussen hen -->
+  <path d="M685 198 Q692 192 699 198 Q699 205 692 210 Q685 205 685 198Z" fill="#cc2060" opacity="0.7"/>
+
+  <!-- HET VERGROOTGLAS (geanimeerd) -->
+  <g class="lens-float" style="transform-origin:420px 165px;">
+    <!-- Glow achter lens -->
+    <circle cx="420" cy="165" r="110" fill="url(#zstar1)" opacity="0.15" filter="url(#zlensglow)"/>
+    <!-- Pulse ring -->
+    <circle cx="420" cy="165" r="62" fill="none" stroke="#f5c842" stroke-width="1.5" opacity="0.3" class="pulse-ring"/>
+    <!-- Lensreflectie/inhoud -->
+    <circle cx="420" cy="165" r="105" fill="url(#zlens)"/>
+    <!-- Lens glas cirkel -->
+    <circle cx="420" cy="165" r="105" fill="none" stroke="#7ad4ff" stroke-width="4" opacity="0.7"/>
+    <circle cx="420" cy="165" r="105" fill="none" stroke="white" stroke-width="1.5" opacity="0.25"/>
+    <!-- Lensreflectie lichtflits -->
+    <path d="M360 120 Q380 108 395 118" stroke="white" stroke-width="3" fill="none" opacity="0.5" stroke-linecap="round"/>
+
+    <!-- Wat de lens vergroot: een gezin met een zorgverlener in het midden -->
+    <g clip-path="url(#lensclip)">
+      <!-- Achtergrond in lens: warme gele gloed -->
+      <circle cx="420" cy="165" r="105" fill="#1a0830" opacity="0.7"/>
+      <circle cx="420" cy="165" r="80" fill="#f5c842" opacity="0.07"/>
+
+      <!-- Grote figuur: arts met stethoscoop -->
+      <circle cx="420" cy="130" r="18" fill="#d49060"/>
+      <rect x="409" y="148" width="22" height="35" rx="4" fill="#2a5a9e"/>
+      <!-- Stethoscoop -->
+      <path d="M415 158 Q410 168 415 175 Q420 180 425 175 Q430 168 425 158" stroke="#c8a860" stroke-width="2" fill="none"/>
+      <circle cx="420" cy="177" r="4" fill="#c8a860"/>
+
+      <!-- Klein kind links -->
+      <circle cx="385" cy="155" r="11" fill="#c07848"/>
+      <rect x="378" y="166" width="14" height="22" rx="3" fill="#cc6020"/>
+      <!-- Hart omhoog -->
+      <path d="M381 148 Q385 143 389 148 Q389 153 385 156 Q381 153 381 148Z" fill="#cc2060" opacity="0.8"/>
+
+      <!-- Klein kind rechts -->
+      <circle cx="455" cy="158" r="10" fill="#8a4020"/>
+      <rect x="449" y="168" width="13" height="20" rx="3" fill="#6a3010"/>
+      <!-- Ster boven hoofd (blij) -->
+      <polygon points="455,145 456.5,150 461,150 457.5,153 459,158 455,155 451,158 452.5,153 449,150 453.5,150" fill="#f5c842" opacity="0.9"/>
+
+      <!-- Verbindende lijn (gelijkheid) -->
+      <line x1="396" y1="170" x2="409" y2="170" stroke="#b01458" stroke-width="1.5" stroke-dasharray="3,2"/>
+      <line x1="431" y1="170" x2="444" y2="170" stroke="#b01458" stroke-width="1.5" stroke-dasharray="3,2"/>
+    </g>
+
+    <!-- Steel van vergrootglas -->
+    <line x1="502" y1="247" x2="560" y2="305" stroke="#6b4f9e" stroke-width="14" stroke-linecap="round"/>
+    <line x1="502" y1="247" x2="560" y2="305" stroke="#9a7ace" stroke-width="5" stroke-linecap="round" opacity="0.5"/>
+  </g>
+
+  <!-- Rechterkant: het verhaal van de zoektocht — pijlen naar thema-pictogrammen -->
+  <!-- Gouden stofdeeltjes die uit de lens vliegen -->
+  <circle cx="550" cy="145" r="3" fill="#f5c842" opacity="0.6"/>
+  <circle cx="565" cy="130" r="2" fill="#f5c842" opacity="0.4"/>
+  <circle cx="575" cy="155" r="1.5" fill="#f5c842" opacity="0.5"/>
+  <circle cx="540" cy="120" r="2.5" fill="#f5c842" opacity="0.3"/>
+
+</svg>
+</div>
+
+<!-- THEMA KAARTEN: klik om te ontdekken -->
+<div class="themas-grid">
+
+  <!-- Missie -->
+  <a href="missie.html" class="thema-card" data-tip="Missie en visie — Onze missie: het terugdringen van grote gezondheidsverschillen. Ons uitgangspunt: gezondheid en kwaliteit van zorg voor iedereen in Nederland.">
+    <svg viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="mbg" cx="50%" cy="50%" r="70%">
+          <stop offset="0%" stop-color="#1a0a3a"/>
+          <stop offset="100%" stop-color="#0a0520"/>
+        </radialGradient>
+        <radialGradient id="mbeam" cx="50%" cy="40%" r="50%">
+          <stop offset="0%" stop-color="#f5c842" stop-opacity="0.6"/>
+          <stop offset="100%" stop-color="#f5c842" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+      <rect width="400" height="260" fill="url(#mbg)"/>
+      <!-- Lichtbundel -->
+      <ellipse cx="200" cy="130" rx="140" ry="100" fill="url(#mbeam)"/>
+      <!-- Vuurtoren -->
+      <polygon points="180,220 220,220 215,90 185,90" fill="#cc2060"/>
+      <rect x="175" y="85" width="50" height="15" fill="#f5c842"/>
+      <polygon points="183,85 217,85 213,65 187,65" fill="#cc2060"/>
+      <ellipse cx="200" cy="68" rx="16" ry="8" fill="#f5c842" opacity="0.8"/>
+      <!-- Lichtstraal -->
+      <polygon points="217,70 340,30 335,110" fill="#f5c842" opacity="0.25"/>
+      <!-- Water/grond -->
+      <rect x="0" y="220" width="400" height="40" fill="#1a3e6e" opacity="0.5"/>
+      <path d="M0 220 Q50 215 100 220 Q150 225 200 220 Q250 215 300 220 Q350 225 400 220 L400 225 Q350 230 300 225 Q250 220 200 225 Q150 230 100 225 Q50 220 0 225Z" fill="#2a5e9e" opacity="0.4"/>
+      <!-- Mensen die naar het licht lopen -->
+      <circle cx="80" cy="205" r="12" fill="#2a1a3e"/>
+      <circle cx="78" cy="197" r="5" fill="#8a5030"/>
+      <path d="M74 207 Q78 202 82 207 L82 214 L74 214Z" fill="#8a5030" opacity="0.7"/>
+      <circle cx="320" cy="208" r="12" fill="#2a3e1e"/>
+      <circle cx="322" cy="200" r="5" fill="#d49060"/>
+      <path d="M318 210 Q322 205 326 210 L326 217 L318 217Z" fill="#d49060" opacity="0.7"/>
+      <!-- Balans = gelijkheid -->
+      <line x1="100" y1="180" x2="300" y2="180" stroke="#f5c842" stroke-width="1.5" opacity="0.4" stroke-dasharray="6,4"/>
+      <circle cx="100" cy="180" r="4" fill="#f5c842" opacity="0.6"/>
+      <circle cx="300" cy="180" r="4" fill="#f5c842" opacity="0.6"/>
+    </svg>
+  </a>
+
+  <!-- Laaggeletterdheid -->
+  <a href="laaggeletterdheid.html" class="thema-card" data-tip="Gezondheidsvaardigheden en laaggeletterdheid — Ruim 2,5 miljoen Nederlanders hebben moeite met lezen en schrijven. Dit beïnvloedt sterk hoe zij omgaan met hun gezondheid.">
+    <svg viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="lbg" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#2a1a08"/>
+          <stop offset="100%" stop-color="#4a2a10"/>
+        </linearGradient>
+        <radialGradient id="lglow" cx="70%" cy="30%" r="50%">
+          <stop offset="0%" stop-color="#f5c842" stop-opacity="0.5"/>
+          <stop offset="100%" stop-color="#f5c842" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+      <rect width="400" height="260" fill="url(#lbg)"/>
+      <ellipse cx="300" cy="80" rx="100" ry="80" fill="url(#lglow)"/>
+      <!-- Linkerkant: verward figuur met papieren vol tekst-krabbels -->
+      <circle cx="110" cy="120" r="22" fill="#8a5030"/>
+      <!-- Zweetdruppels = stress -->
+      <circle cx="85" cy="108" r="3" fill="#4a9aee" opacity="0.8"/>
+      <circle cx="82" cy="118" r="2" fill="#4a9aee" opacity="0.6"/>
+      <path d="M102 133 Q110 128 118 133 L118 155 L102 155Z" fill="#6a3a1a"/>
+      <!-- Papier vol krabbels -->
+      <rect x="125" y="100" width="36" height="46" rx="2" fill="#e8e0c0" transform="rotate(-15,143,123)"/>
+      <line x1="130" y1="108" x2="148" y2="105" stroke="#333" stroke-width="1.5" opacity="0.5" transform="rotate(-15,143,123)"/>
+      <line x1="130" y1="114" x2="150" y2="111" stroke="#333" stroke-width="1.5" opacity="0.5" transform="rotate(-15,143,123)"/>
+      <line x1="130" y1="120" x2="145" y2="117" stroke="#333" stroke-width="1.5" opacity="0.4" transform="rotate(-15,143,123)"/>
+      <circle cx="152" cy="95" r="12" fill="#cc2060" opacity="0.8"/>
+      <line x1="147" y1="90" x2="157" y2="100" stroke="white" stroke-width="2.5"/>
+      <line x1="157" y1="90" x2="147" y2="100" stroke="white" stroke-width="2.5"/>
+      <!-- Pijl naar rechterkant -->
+      <path d="M185 130 Q220 120 250 130" stroke="#f5c842" stroke-width="2.5" fill="none" stroke-dasharray="8,5" marker-end="url(#arrowhead)"/>
+      <!-- Rechterkant: zorgverlener met pictogramkaarten -->
+      <circle cx="300" cy="120" r="22" fill="#d49060"/>
+      <path d="M288 133 Q300 126 312 133 L312 156 L288 156Z" fill="#2a5a8e"/>
+      <!-- Pictogramkaart: hart -->
+      <rect x="320" y="100" width="44" height="36" rx="4" fill="#e8f0ff"/>
+      <path d="M332 114 Q338 108 344 114 Q344 121 338 126 Q332 121 332 114Z" fill="#cc2060" opacity="0.9"/>
+      <!-- Patiënt rechts: blij, begrijpt het! -->
+      <circle cx="360" cy="175" r="18" fill="#c07848"/>
+      <path d="M354 185 Q360 180 366 185" stroke="#333" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <!-- Gloeilamp boven hoofd -->
+      <circle cx="360" cy="152" r="9" fill="#f5c842" opacity="0.9"/>
+      <rect x="357" y="160" width="6" height="5" fill="#c89820"/>
+      <line x1="352" y1="148" x2="348" y2="143" stroke="#f5c842" stroke-width="1.5" opacity="0.6"/>
+      <line x1="368" y1="148" x2="372" y2="143" stroke="#f5c842" stroke-width="1.5" opacity="0.6"/>
+      <line x1="360" y1="143" x2="360" y2="138" stroke="#f5c842" stroke-width="1.5" opacity="0.6"/>
+    </svg>
+  </a>
+
+  <!-- Samenwerken -->
+  <a href="samenwerken.html" class="thema-card" data-tip="Samenwerken — Pharos helpt organisaties hun communicatie, processen en beleid zo in te richten dat iedereen passende zorg krijgt.">
+    <svg viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="sbg" cx="50%" cy="50%" r="60%">
+          <stop offset="0%" stop-color="#3a1a3a"/>
+          <stop offset="100%" stop-color="#0d0820"/>
+        </radialGradient>
+        <radialGradient id="sheart" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#ff6090" stop-opacity="0.5"/>
+          <stop offset="100%" stop-color="#cc2060" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+      <rect width="400" height="260" fill="url(#sbg)"/>
+      <!-- Centrale hartgloed -->
+      <circle cx="200" cy="130" r="80" fill="url(#sheart)"/>
+      <!-- Hart -->
+      <path d="M188 122 Q200 110 212 122 Q212 135 200 145 Q188 135 188 122Z" fill="#cc2060" opacity="0.95"/>
+      <!-- 6 figuren in cirkel -->
+      <!-- Boven -->
+      <circle cx="200" cy="48" r="14" fill="#d49060"/>
+      <path d="M193 60 Q200 55 207 60 L207 72 L193 72Z" fill="#2a5a8e"/>
+      <line x1="200" y1="72" x2="200" y2="105" stroke="#cc2060" stroke-width="2.5"/>
+      <!-- Rechts boven -->
+      <circle cx="318" cy="82" r="14" fill="#c07848"/>
+      <path d="M311 94 Q318 89 325 94 L325 106 L311 106Z" fill="#3a7a3a"/>
+      <line x1="306" y1="96" x2="225" y2="118" stroke="#cc2060" stroke-width="2.5"/>
+      <!-- Rechts onder -->
+      <circle cx="318" cy="178" r="14" fill="#8a5030"/>
+      <path d="M311 190 Q318 185 325 190 L325 202 L311 202Z" fill="#6a2a1a"/>
+      <line x1="306" y1="180" x2="225" y2="145" stroke="#cc2060" stroke-width="2.5"/>
+      <!-- Onder -->
+      <circle cx="200" cy="212" r="14" fill="#d4a060"/>
+      <path d="M193 224 Q200 219 207 224 L207 236 L193 236Z" fill="#8a4a10"/>
+      <line x1="200" y1="212" x2="200" y2="158" stroke="#cc2060" stroke-width="2.5"/>
+      <!-- Links onder -->
+      <circle cx="82" cy="178" r="14" fill="#a07050"/>
+      <path d="M75 190 Q82 185 89 190 L89 202 L75 202Z" fill="#5a3a1a"/>
+      <line x1="94" y1="180" x2="175" y2="145" stroke="#cc2060" stroke-width="2.5"/>
+      <!-- Links boven -->
+      <circle cx="82" cy="82" r="14" fill="#b08060"/>
+      <path d="M75 94 Q82 89 89 94 L89 106 L75 106Z" fill="#4a7a2a"/>
+      <line x1="94" y1="96" x2="175" y2="118" stroke="#cc2060" stroke-width="2.5"/>
+    </svg>
+  </a>
+
+  <!-- e-Health -->
+  <a href="ehealth.html" class="thema-card" data-tip="e-health en digitale zorg — Digitale vernieuwingen zoals AI en apps veranderen de zorg razendsnel. Maar deze oplossingen zijn niet voor iedereen toegankelijk, begrijpelijk of gebruiksvriendelijk.">
+    <svg viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="ebg" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#050e28"/>
+          <stop offset="100%" stop-color="#0a1e3e"/>
+        </linearGradient>
+        <radialGradient id="escreenglow" cx="65%" cy="40%" r="40%">
+          <stop offset="0%" stop-color="#4aeeee" stop-opacity="0.4"/>
+          <stop offset="100%" stop-color="#1a9aee" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+      <rect width="400" height="260" fill="url(#ebg)"/>
+      <ellipse cx="270" cy="100" rx="120" ry="90" fill="url(#escreenglow)"/>
+      <!-- Oudere persoon links: verward -->
+      <circle cx="90" cy="115" r="22" fill="#8a5030"/>
+      <!-- Rimpels/wenkbrauwen omlaag = verward -->
+      <path d="M82 107 Q87 104 92 107" stroke="#333" stroke-width="2" fill="none"/>
+      <path d="M93 107 Q98 104 103 107" stroke="#333" stroke-width="2" fill="none"/>
+      <path d="M84 128 Q90 126 96 128" stroke="#333" stroke-width="1.5" fill="none"/>
+      <path d="M82 128 Q90 132 98 128" stroke="#333" stroke-width="1.5" fill="none"/>
+      <path d="M78 128 Q90 135 102 128 L102 148 L78 148Z" fill="#6a3010"/>
+      <!-- Complex apparaat scherm links -->
+      <rect x="118" y="90" width="80" height="100" rx="4" fill="#1a3a6a"/>
+      <rect x="122" y="94" width="72" height="86" rx="2" fill="#0a2050"/>
+      <!-- Veel kleine knoppen = verwarring -->
+      <rect x="126" y="98" width="12" height="8" rx="1" fill="#cc2060" opacity="0.7"/>
+      <rect x="141" y="98" width="12" height="8" rx="1" fill="#2a7aee" opacity="0.7"/>
+      <rect x="156" y="98" width="12" height="8" rx="1" fill="#4aaa3a" opacity="0.7"/>
+      <rect x="171" y="98" width="12" height="8" rx="1" fill="#ee8a2a" opacity="0.7"/>
+      <rect x="126" y="110" width="12" height="8" rx="1" fill="#8a2aee" opacity="0.7"/>
+      <rect x="141" y="110" width="12" height="8" rx="1" fill="#ee4a2a" opacity="0.7"/>
+      <rect x="156" y="110" width="12" height="8" rx="1" fill="#2aaaee" opacity="0.7"/>
+      <rect x="171" y="110" width="12" height="8" rx="1" fill="#ee2a8a" opacity="0.7"/>
+      <!-- Vraagtekens -->
+      <text x="148" y="148" fill="#f5c842" font-size="18" font-weight="bold" text-anchor="middle" opacity="0.8">?</text>
+      <!-- Pijl naar rechts -->
+      <path d="M208 140 L235 140" stroke="#f5c842" stroke-width="2.5" marker-end="url(#arrowhead2)"/>
+      <!-- Co-design team midden -->
+      <circle cx="248" cy="100" r="10" fill="#d49060"/>
+      <circle cx="262" cy="115" r="10" fill="#c07848"/>
+      <circle cx="250" cy="128" r="10" fill="#d4a060"/>
+      <path d="M255 106 Q265 120 258 130" stroke="#b01458" stroke-width="1.5" fill="none" stroke-dasharray="3,2"/>
+      <!-- Simpele app rechts -->
+      <rect x="295" y="80" width="70" height="120" rx="8" fill="#2a5a9e"/>
+      <rect x="299" y="90" width="62" height="90" rx="4" fill="#3a7ace"/>
+      <!-- Één grote knop = toegankelijk -->
+      <rect x="308" y="100" width="44" height="30" rx="6" fill="#cc2060"/>
+      <path d="M319 113 Q330 107 341 113 Q341 121 330 127 Q319 121 319 113Z" fill="white" opacity="0.85"/>
+      <!-- Vinkje onderaan -->
+      <path d="M308 148 L314 155 L332 135" stroke="#4aaa3a" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <!-- Blij figuur rechts van de app -->
+      <circle cx="380" cy="115" r="18" fill="#d49060"/>
+      <path d="M372 127 Q380 132 388 127" stroke="#333" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <path d="M368 130 Q380 135 392 130 L392 148 L368 148Z" fill="#c07848"/>
+    </svg>
+  </a>
+
+  <!-- Preventie -->
+  <a href="preventie.html" class="thema-card" data-tip="Preventie — 16 succesfactoren voor preventiebeleid dat gezondheidsverschillen verkleint. Pharos ondersteunt gemeenten en zorgorganisaties bij effectieve preventie.">
+    <svg viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="pbg" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#051808"/>
+          <stop offset="100%" stop-color="#0a2a10"/>
+        </linearGradient>
+        <radialGradient id="psun" cx="75%" cy="15%" r="35%">
+          <stop offset="0%" stop-color="#f5c842" stop-opacity="0.7"/>
+          <stop offset="100%" stop-color="#f5c842" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+      <rect width="400" height="260" fill="url(#pbg)"/>
+      <ellipse cx="300" cy="40" rx="130" ry="100" fill="url(#psun)"/>
+      <!-- Zon -->
+      <circle cx="340" cy="50" r="28" fill="#f5c842" opacity="0.85"/>
+      <line x1="340" y1="10" x2="340" y2="2" stroke="#f5c842" stroke-width="3" opacity="0.6"/>
+      <line x1="367" y1="23" x2="373" y2="17" stroke="#f5c842" stroke-width="3" opacity="0.6"/>
+      <line x1="380" y1="50" x2="388" y2="50" stroke="#f5c842" stroke-width="3" opacity="0.6"/>
+      <line x1="367" y1="77" x2="373" y2="83" stroke="#f5c842" stroke-width="3" opacity="0.6"/>
+      <line x1="313" y1="23" x2="307" y2="17" stroke="#f5c842" stroke-width="3" opacity="0.6"/>
+      <!-- Groot schild -->
+      <path d="M200 40 L280 75 L280 160 Q280 220 200 245 Q120 220 120 160 L120 75Z" fill="#2a7a3a" opacity="0.8"/>
+      <path d="M200 55 L265 84 L265 158 Q265 210 200 232 Q135 210 135 158 L135 84Z" fill="#3a9a4a" opacity="0.7"/>
+      <!-- Hart in schild -->
+      <path d="M183 135 Q200 118 217 135 Q217 152 200 165 Q183 152 183 135Z" fill="white" opacity="0.9"/>
+      <!-- Mensen voor het schild: divers -->
+      <circle cx="80" cy="185" r="16" fill="#d49060"/>
+      <path d="M72 197 Q80 191 88 197 L88 214 L72 214Z" fill="#6a4020"/>
+      <circle cx="120" cy="195" r="14" fill="#c07848"/>
+      <path d="M113 207 Q120 201 127 207 L127 222 L113 222Z" fill="#5a3010"/>
+      <circle cx="280" cy="185" r="16" fill="#8a5030"/>
+      <path d="M272 197 Q280 191 288 197 L288 214 L272 214Z" fill="#4a2010"/>
+      <circle cx="320" cy="195" r="14" fill="#b07840"/>
+      <path d="M313 207 Q320 201 327 207 L327 222 L313 222Z" fill="#7a4820"/>
+      <!-- Pijlen wijzend naar schild -->
+      <path d="M60 165 Q90 150 118 160" stroke="#f5c842" stroke-width="2" fill="none" opacity="0.5" stroke-dasharray="5,3"/>
+      <path d="M340 165 Q310 150 282 160" stroke="#f5c842" stroke-width="2" fill="none" opacity="0.5" stroke-dasharray="5,3"/>
+      <!-- Vinkje -->
+      <path d="M188 132 L197 142 L213 122" stroke="#4aaa3a" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </a>
+
+  <!-- SPUK -->
+  <a href="spuk.html" class="thema-card" data-tip="SPUK-regeling — Hoe gemeenten stevig kunnen inzetten op het terugdringen van vermijdbare gezondheidsverschillen bij kwetsbare groepen.">
+    <svg viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="spbg" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#0a1a3a"/>
+          <stop offset="100%" stop-color="#0a2a4a"/>
+        </linearGradient>
+        <radialGradient id="spgold" cx="50%" cy="30%" r="50%">
+          <stop offset="0%" stop-color="#f5c842" stop-opacity="0.3"/>
+          <stop offset="100%" stop-color="#f5c842" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+      <rect width="400" height="260" fill="url(#spbg)"/>
+      <ellipse cx="200" cy="80" rx="160" ry="90" fill="url(#spgold)"/>
+      <!-- Ministerie gebouw (groot, boven) -->
+      <rect x="140" y="30" width="120" height="80" rx="2" fill="#2a5a9e" opacity="0.9"/>
+      <polygon points="130,32 200,8 270,32" fill="#1a3a7a"/>
+      <!-- Ramen ministerie -->
+      <rect x="152" y="45" width="16" height="20" rx="1" fill="rgba(245,200,66,0.4)"/>
+      <rect x="175" y="45" width="16" height="20" rx="1" fill="rgba(245,200,66,0.4)"/>
+      <rect x="198" y="45" width="16" height="20" rx="1" fill="rgba(245,200,66,0.4)"/>
+      <rect x="221" y="45" width="16" height="20" rx="1" fill="rgba(245,200,66,0.4)"/>
+      <!-- Vlag -->
+      <line x1="200" y1="8" x2="200" y2="0" stroke="#d0c4e8" stroke-width="1.5"/>
+      <rect x="200" y="0" width="16" height="10" fill="#cc2060" opacity="0.9"/>
+      <!-- Euro-munten stromen naar beneden -->
+      <circle cx="165" cy="130" r="10" fill="#f5c842" opacity="0.9"/>
+      <circle cx="200" cy="125" r="10" fill="#f5c842" opacity="0.9"/>
+      <circle cx="235" cy="130" r="10" fill="#f5c842" opacity="0.9"/>
+      <!-- € in munten -->
+      <text x="165" y="134" fill="#7a5800" font-size="10" font-weight="bold" text-anchor="middle">€</text>
+      <text x="200" y="129" fill="#7a5800" font-size="10" font-weight="bold" text-anchor="middle">€</text>
+      <text x="235" y="134" fill="#7a5800" font-size="10" font-weight="bold" text-anchor="middle">€</text>
+      <!-- Pijlen naar 3 gemeentes -->
+      <line x1="165" y1="140" x2="80" y2="185" stroke="#f5c842" stroke-width="1.5" stroke-dasharray="5,3" opacity="0.7"/>
+      <line x1="200" y1="135" x2="200" y2="185" stroke="#f5c842" stroke-width="1.5" stroke-dasharray="5,3" opacity="0.7"/>
+      <line x1="235" y1="140" x2="320" y2="185" stroke="#f5c842" stroke-width="1.5" stroke-dasharray="5,3" opacity="0.7"/>
+      <!-- 3 gemeentegebouwen -->
+      <rect x="55" y="185" width="50" height="40" rx="2" fill="#2a7a4a" opacity="0.9"/>
+      <polygon points="50,187 80,170 110,187" fill="#1a5a3a"/>
+      <rect x="175" y="185" width="50" height="40" rx="2" fill="#2a7a4a" opacity="0.9"/>
+      <polygon points="170,187 200,170 230,187" fill="#1a5a3a"/>
+      <rect x="295" y="185" width="50" height="40" rx="2" fill="#2a7a4a" opacity="0.9"/>
+      <polygon points="290,187 320,170 350,187" fill="#1a5a3a"/>
+      <!-- Mensen bij gemeentes -->
+      <circle cx="80" cy="237" r="7" fill="#d49060"/>
+      <circle cx="200" cy="237" r="7" fill="#c07848"/>
+      <circle cx="320" cy="237" r="7" fill="#8a5030"/>
+    </svg>
+  </a>
+
+</div>
+
+<footer>
+  <div class="footer-row">
+    <a href="index.html" data-tip="Pharos — Gezondheid en kwaliteit van zorg voor iedereen in Nederland"><svg viewBox="0 0 28 28" fill="none"><path d="M3 13 L14 4 L25 13 L25 24 L19 24 L19 18 L9 18 L9 24 L3 24 Z" fill="#d0c4e8" opacity="0.7"/></svg></a>
+    <a href="missie.html" data-tip="Missie en visie — Onze missie: het terugdringen van grote gezondheidsverschillen."><svg viewBox="0 0 28 28" fill="none"><circle cx="13" cy="13" r="10" stroke="#d0c4e8" stroke-width="1.5" fill="#d0c4e8" opacity="0.1"/><line x1="13" y1="11" x2="13" y2="19" stroke="#d0c4e8" stroke-width="2.5"/><circle cx="13" cy="8" r="1.5" fill="#b01458"/></svg></a>
+    <a href="laaggeletterdheid.html" data-tip="Gezondheidsvaardigheden en laaggeletterdheid"><svg viewBox="0 0 28 28" fill="none"><rect x="4" y="3" width="13" height="19" rx="2" stroke="#d0c4e8" stroke-width="1.5" fill="#d0c4e8" opacity="0.1"/><circle cx="20" cy="18" r="6" fill="#f5c842" opacity="0.6"/></svg></a>
+    <a href="samenwerken.html" data-tip="Samenwerken — Pharos bouwt bruggen tussen zorg en kwetsbare groepen"><svg viewBox="0 0 28 28" fill="none"><circle cx="9" cy="10" r="5" stroke="#d0c4e8" stroke-width="1.5" fill="none"/><circle cx="19" cy="10" r="5" stroke="#d0c4e8" stroke-width="1.5" fill="none"/><path d="M3 24 Q3 18 9 18 Q14 18 14 21 Q14 18 19 18 Q25 18 25 24" stroke="#d0c4e8" stroke-width="1.5" fill="none"/></svg></a>
+    <a href="ehealth.html" data-tip="e-Health en digitale zorg"><svg viewBox="0 0 28 28" fill="none"><rect x="8" y="2" width="12" height="24" rx="3" stroke="#d0c4e8" stroke-width="1.5" fill="none"/><circle cx="14" cy="22" r="2" fill="#b01458"/></svg></a>
+    <a href="preventie.html" data-tip="Preventie — Gezondheidsverschillen verkleinen"><svg viewBox="0 0 28 28" fill="none"><path d="M14 3 L22 7 L22 16 Q22 23 14 26 Q6 23 6 16 L6 7Z" stroke="#d0c4e8" stroke-width="1.5" fill="none"/><path d="M10 14 L13 17 L18 11" stroke="#f5c842" stroke-width="2" fill="none" stroke-linecap="round"/></svg></a>
+    <a href="spuk.html" data-tip="SPUK-regeling — Budget voor gemeenten"><svg viewBox="0 0 28 28" fill="none"><rect x="5" y="12" width="18" height="14" rx="1" stroke="#d0c4e8" stroke-width="1.5" fill="none"/><polygon points="3,13 14,5 25,13" stroke="#d0c4e8" stroke-width="1.5" fill="none"/><rect x="11" y="18" width="6" height="8" fill="#b01458" opacity="0.7"/></svg></a>
+    <a href="contact.html" data-tip="Contact — info@pharos.nl"><svg viewBox="0 0 28 28" fill="none"><rect x="2" y="6" width="24" height="18" rx="2" stroke="#d0c4e8" stroke-width="1.5" fill="none"/><polyline points="2,8 14,16 26,8" stroke="#d0c4e8" stroke-width="1.5" fill="none"/></svg></a>
+  </div>
+</footer>
+
+</body>
+</html>
