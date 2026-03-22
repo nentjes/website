@@ -35,12 +35,12 @@
   .hero-wrap{width:100%;overflow:hidden;background:#1a0d00;}
   .hero-wrap svg{display:block;width:100%;height:auto;}
   .panels-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;padding:32px;max-width:1280px;margin:0 auto;}
-  .panel{background:var(--pp);border-radius:16px;overflow:hidden;border:2px solid var(--ppm);box-shadow:0 4px 18px rgba(0,0,0,0.4);}
-  .panel svg{width:100%;height:auto;display:block;}
+  .panel{background:var(--pp);border-radius:16px;border:2px solid var(--ppm);box-shadow:0 4px 18px rgba(0,0,0,0.4);}
+  .panel svg{width:100%;height:auto;display:block;border-radius:14px 14px 0 0;}
   .subpages-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;padding:24px 32px 48px;max-width:1280px;margin:0 auto;}
-  .subpage-link{background:var(--pp);border-radius:12px;overflow:hidden;text-decoration:none;border:2px solid var(--ppm);transition:transform 0.2s,box-shadow 0.2s;display:block;box-shadow:0 3px 12px rgba(0,0,0,0.35);}
+  .subpage-link{background:var(--pp);border-radius:12px;text-decoration:none;border:2px solid var(--ppm);transition:transform 0.2s,box-shadow 0.2s;display:block;box-shadow:0 3px 12px rgba(0,0,0,0.35);}
   .subpage-link:hover{transform:translateY(-4px);border-color:var(--vg);box-shadow:0 8px 24px rgba(245,200,66,0.3);}
-  .subpage-link svg{width:100%;height:auto;display:block;}
+  .subpage-link svg{width:100%;height:auto;display:block;border-radius:10px;}
   footer{background:var(--ppd);border-top:3px solid var(--pm);padding:30px 32px 20px;}
   .footer-row{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-bottom:16px;}
   .footer-row a{color:var(--pl);opacity:0.8;transition:opacity 0.2s;}
@@ -50,6 +50,7 @@
 
   /* ── PHAROS TOOLTIP: echte tekst van pharos.nl ── */
   [data-tip] { position: relative; }
+  .sublink-wrap { display: block; }
   [data-tip]::after {
     content: attr(data-tip);
     position: absolute;
@@ -318,7 +319,7 @@
 <div class="panels-grid">
 
   <!-- Panel 1: The Problem -->
-  <div class="panel">
+  <div class="panel" data-tip="Ongelijkheid in gezondheid — Niet iedereen in Nederland heeft gelijke kansen op gezondheid. Mensen met een lagere opleiding of een migratieachtergrond leven gemiddeld korter in goede gezondheid.">
     <svg viewBox="0 0 400 380" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <linearGradient id="p1bg" x1="0" y1="0" x2="1" y2="1">
@@ -401,7 +402,7 @@
   </div>
 
   <!-- Panel 2: Pharos at Work -->
-  <div class="panel">
+  <div class="panel" data-tip="Pharos bouwt bruggen — Wij ondersteunen zorgprofessionals, gemeenten en beleidsmakers om drempels te slechten en zorg bereikbaar te maken voor iedereen.">
     <svg viewBox="0 0 400 380" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <linearGradient id="p2bg" x1="0" y1="0" x2="1" y2="1">
@@ -474,7 +475,7 @@
   </div>
 
   <!-- Panel 3: Equal Health -->
-  <div class="panel">
+  <div class="panel" data-tip="Gelijke gezondheid als doel — Onze missie: een Nederland waar iedereen, ongeacht achtergrond of opleidingsniveau, gelijke kansen heeft op een goede gezondheid en kwaliteit van leven.">
     <svg viewBox="0 0 400 380" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <linearGradient id="p3bg" x1="0" y1="0" x2="0" y2="1">
@@ -579,7 +580,8 @@
   <svg viewBox="0 0 40 16" width="40" height="16"><path d="M2 8 Q10 3 18 8 Q26 13 34 8" stroke="#b01458" stroke-width="2" fill="none"/></svg>
 </div>
 <div class="subpages-grid">
-  <a href="index.html" class="subpage-link" data-tip="Pharos — Gezondheid en kwaliteit van zorg voor iedereen in Nederland">
+  <div class="sublink-wrap" data-tip="Pharos — Gezondheid en kwaliteit van zorg voor iedereen in Nederland">
+  <a href="index.html" class="subpage-link">
     <svg viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg">
       <rect width="200" height="80" fill="#2d1b5e"/>
       <polygon points="100,10 130,35 120,35 120,60 80,60 80,35 70,35" fill="#b01458" opacity="0.8"/>
@@ -588,7 +590,9 @@
       <path d="M50 50 Q70 35 90 50 Q110 35 130 50 Q150 35 170 50" stroke="#b01458" stroke-width="2" fill="none"/>
     </svg>
   </a>
-  <a href="laaggeletterdheid.html" class="subpage-link" data-tip="Gezondheidsvaardigheden en laaggeletterdheid — Ruim 2,5 miljoen Nederlanders hebben moeite met lezen en schrijven. Dit beïnvloedt sterk hoe zij omgaan met hun gezondheid.">
+</div>
+  <div class="sublink-wrap" data-tip="Gezondheidsvaardigheden en laaggeletterdheid — Ruim 2,5 miljoen Nederlanders hebben moeite met lezen en schrijven. Dit beïnvloedt sterk hoe zij omgaan met hun gezondheid.">
+  <a href="laaggeletterdheid.html" class="subpage-link">
     <svg viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg">
       <rect width="200" height="80" fill="#3d2b1e"/>
       <rect x="20" y="15" width="55" height="70" fill="white" opacity="0.8" transform="rotate(-10,47,50)"/>
@@ -600,7 +604,9 @@
       <path d="M162 33 Q168 27 174 33 Q174 40 168 45 Q162 40 162 33 Z" fill="#c89a00"/>
     </svg>
   </a>
-  <a href="samenwerken.html" class="subpage-link" data-tip="Samenwerken — Pharos helpt organisaties hun communicatie, processen en beleid zo in te richten dat iedereen passende zorg krijgt.">
+</div>
+  <div class="sublink-wrap" data-tip="Samenwerken — Pharos helpt organisaties hun communicatie, processen en beleid zo in te richten dat iedereen passende zorg krijgt.">
+  <a href="samenwerken.html" class="subpage-link">
     <svg viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg">
       <rect width="200" height="80" fill="#3d1a2a"/>
       <circle cx="100" cy="42" r="10" fill="#cc2060" opacity="0.8"/>
@@ -614,7 +620,9 @@
       <line x1="126" y1="52" x2="108" y2="44" stroke="#b01458" stroke-width="2" opacity="0.6"/>
     </svg>
   </a>
-  <a href="ehealth.html" class="subpage-link" data-tip="e-health en digitale zorg — Digitale vernieuwingen zoals AI en apps veranderen de zorg razendsnel. Maar deze oplossingen zijn niet voor iedereen toegankelijk, begrijpelijk of gebruiksvriendelijk.">
+</div>
+  <div class="sublink-wrap" data-tip="e-health en digitale zorg — Digitale vernieuwingen zoals AI en apps veranderen de zorg razendsnel. Maar deze oplossingen zijn niet voor iedereen toegankelijk, begrijpelijk of gebruiksvriendelijk.">
+  <a href="ehealth.html" class="subpage-link">
     <svg viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg">
       <rect width="200" height="80" fill="#1a2a40"/>
       <rect x="75" y="8" width="50" height="88" fill="#f0f0f0" rx="8" stroke="#4a8a3a" stroke-width="2"/>
@@ -625,7 +633,9 @@
       <circle cx="120" cy="60" r="5" fill="#b01458" opacity="0.6"/>
     </svg>
   </a>
-  <a href="preventie.html" class="subpage-link" data-tip="Preventie — 16 succesfactoren voor preventiebeleid dat gezondheidsverschillen verkleint. Pharos ondersteunt gemeenten en zorgorganisaties bij effectieve preventie.">
+</div>
+  <div class="sublink-wrap" data-tip="Preventie — 16 succesfactoren voor preventiebeleid dat gezondheidsverschillen verkleint. Pharos ondersteunt gemeenten en zorgorganisaties bij effectieve preventie.">
+  <a href="preventie.html" class="subpage-link">
     <svg viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg">
       <rect width="200" height="80" fill="#1a2a1a"/>
       <path d="M100 10 L130 26 L130 52 Q130 70 100 78 Q70 70 70 52 L70 26 Z" fill="#4a8a3a" opacity="0.7"/>
@@ -635,7 +645,9 @@
       <circle cx="152" cy="40" r="3" fill="#cc2020"/>
     </svg>
   </a>
-  <a href="spuk.html" class="subpage-link" data-tip="SPUK-regeling — Hoe gemeenten stevig kunnen inzetten op het terugdringen van vermijdbare gezondheidsverschillen bij kwetsbare groepen.">
+</div>
+  <div class="sublink-wrap" data-tip="SPUK-regeling — Hoe gemeenten stevig kunnen inzetten op het terugdringen van vermijdbare gezondheidsverschillen bij kwetsbare groepen.">
+  <a href="spuk.html" class="subpage-link">
     <svg viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg">
       <rect width="200" height="80" fill="#1a2030"/>
       <rect x="75" y="5" width="50" height="35" fill="#d4c8b0" rx="2"/>
@@ -655,6 +667,7 @@
       <text x="136" y="73" font-size="9" fill="#8a6020" font-weight="bold">€</text>
     </svg>
   </a>
+</div>
 </div>
 
 <footer>

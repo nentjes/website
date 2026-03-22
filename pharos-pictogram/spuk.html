@@ -36,12 +36,12 @@
   .hero-wrap{width:100%;overflow:hidden;}
   .hero-wrap svg{display:block;width:100%;height:auto;}
   .panels-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;padding:28px;max-width:1280px;margin:0 auto;}
-  .panel{background:var(--pp);border-radius:14px;overflow:hidden;border:2px solid var(--ppm);box-shadow:0 4px 16px rgba(0,0,0,0.4);}
-  .panel svg{width:100%;height:auto;display:block;}
+  .panel{background:var(--pp);border-radius:14px;border:2px solid var(--ppm);box-shadow:0 4px 16px rgba(0,0,0,0.4);}
+  .panel svg{width:100%;height:auto;display:block;border-radius:14px 14px 0 0;}
   .subpages-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding:0 28px 40px;max-width:1280px;margin:0 auto;}
-  .subpage-link{background:var(--pp);border-radius:12px;overflow:hidden;text-decoration:none;border:2px solid var(--ppm);transition:transform 0.2s;display:block;}
+  .subpage-link{background:var(--pp);border-radius:12px;text-decoration:none;border:2px solid var(--ppm);transition:transform 0.2s;display:block;}
   .subpage-link:hover{transform:translateY(-4px);border-color:var(--vg);}
-  .subpage-link svg{width:100%;height:auto;display:block;}
+  .subpage-link svg{width:100%;height:auto;display:block;border-radius:10px;}
   footer{background:var(--ppd);border-top:3px solid var(--pm);padding:28px 32px 18px;}
   .footer-row{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;}
   .footer-row a{color:var(--pl);opacity:0.8;transition:opacity 0.2s;}
@@ -51,6 +51,7 @@
 
   /* ── PHAROS TOOLTIP: echte tekst van pharos.nl ── */
   [data-tip] { position: relative; }
+  .sublink-wrap { display: block; }
   [data-tip]::after {
     content: attr(data-tip);
     position: absolute;

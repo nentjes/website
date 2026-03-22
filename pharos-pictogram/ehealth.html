@@ -35,12 +35,12 @@
   .hero-wrap{width:100%;overflow:hidden;}
   .hero-wrap svg{display:block;width:100%;height:auto;}
   .panels-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;padding:28px;max-width:1280px;margin:0 auto;}
-  .panel{background:var(--pp);border-radius:14px;overflow:hidden;border:2px solid var(--ppm);box-shadow:0 4px 16px rgba(0,0,0,0.4);}
-  .panel svg{width:100%;height:auto;display:block;}
+  .panel{background:var(--pp);border-radius:14px;border:2px solid var(--ppm);box-shadow:0 4px 16px rgba(0,0,0,0.4);}
+  .panel svg{width:100%;height:auto;display:block;border-radius:14px 14px 0 0;}
   .subpages-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding:0 28px 40px;max-width:1280px;margin:0 auto;}
-  .subpage-link{background:var(--pp);border-radius:12px;overflow:hidden;text-decoration:none;border:2px solid var(--ppm);transition:transform 0.2s;display:block;}
+  .subpage-link{background:var(--pp);border-radius:12px;text-decoration:none;border:2px solid var(--ppm);transition:transform 0.2s;display:block;}
   .subpage-link:hover{transform:translateY(-4px);border-color:var(--vg);}
-  .subpage-link svg{width:100%;height:auto;display:block;}
+  .subpage-link svg{width:100%;height:auto;display:block;border-radius:10px;}
   footer{background:var(--ppd);border-top:3px solid var(--pm);padding:28px 32px 18px;}
   .footer-row{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;}
   .footer-row a{color:var(--pl);opacity:0.8;transition:opacity 0.2s;}
@@ -50,6 +50,7 @@
 
   /* ── PHAROS TOOLTIP: echte tekst van pharos.nl ── */
   [data-tip] { position: relative; }
+  .sublink-wrap { display: block; }
   [data-tip]::after {
     content: attr(data-tip);
     position: absolute;
@@ -374,7 +375,7 @@
 <!-- 4 STORY PANELS -->
 <div class="panels-grid">
   <!-- Panel 1: Complex & Excluding -->
-  <div class="panel">
+  <div class="panel" data-tip="Digitale zorg sluit velen uit — Complexe apps en portalen zijn voor veel mensen onbegrijpelijk. Ouderen, laaggeletterden en mensen met een beperking haken af.">
     <svg viewBox="0 0 300 380" xmlns="http://www.w3.org/2000/svg">
       <defs><linearGradient id="ep1bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#0a1a30"/><stop offset="100%" stop-color="#1a0d28"/></linearGradient></defs>
       <rect width="300" height="380" fill="url(#ep1bg)"/>
@@ -423,7 +424,7 @@
   </div>
 
   <!-- Panel 2: Inclusive Design Process -->
-  <div class="panel">
+  <div class="panel" data-tip="Inclusief ontwerpen met de gebruiker — Pharos pleit voor co-design: nieuwe digitale toepassingen samen met de eindgebruiker ontwerpen, zodat ze écht werken voor iedereen.">
     <svg viewBox="0 0 300 380" xmlns="http://www.w3.org/2000/svg">
       <defs><linearGradient id="ep2bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#1a2840"/><stop offset="100%" stop-color="#2d1b5e"/></linearGradient></defs>
       <rect width="300" height="380" fill="url(#ep2bg)"/>
@@ -475,7 +476,7 @@
   </div>
 
   <!-- Panel 3: Simple Accessible App -->
-  <div class="panel">
+  <div class="panel" data-tip="Eenvoudige digitale zorg werkt — Een app met grote knoppen, duidelijke pictogrammen en eenvoudige taal is voor veel meer mensen toegankelijk.">
     <svg viewBox="0 0 300 380" xmlns="http://www.w3.org/2000/svg">
       <defs><linearGradient id="ep3bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0a2828"/><stop offset="100%" stop-color="#1a4a2a"/></linearGradient></defs>
       <rect width="300" height="380" fill="url(#ep3bg)"/>
@@ -529,7 +530,7 @@
   </div>
 
   <!-- Panel 4: Connected Care at Home -->
-  <div class="panel">
+  <div class="panel" data-tip="Verbonden zorg thuis — Goede digitale zorgoplossingen versterken de verbinding tussen patiënt en zorgverlener, ook op afstand en voor kwetsbare groepen.">
     <svg viewBox="0 0 300 380" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <linearGradient id="ep4bg" x1="0" y1="0" x2="0" y2="1">
@@ -614,12 +615,24 @@
 </div>
 
 <div class="subpages-grid">
-  <a href="index.html" class="subpage-link" data-tip="Pharos — Gezondheid en kwaliteit van zorg voor iedereen in Nederland"><svg viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="80" fill="#2d1b5e"/><polygon points="100,8 132,36 122,36 122,62 78,62 78,36 68,36" fill="#b01458" opacity="0.8"/></svg></a>
-  <a href="missie.html" class="subpage-link" data-tip="Missie en visie — Onze missie: het terugdringen van grote gezondheidsverschillen. Ons uitgangspunt: gezondheid en kwaliteit van zorg voor iedereen in Nederland."><svg viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="80" fill="#2d1820"/><polygon points="100,62 92,30 108,30" fill="#b01458"/><rect x="90" y="26" width="20" height="8" fill="#f5c842" rx="2"/><circle cx="100" cy="32" r="16" fill="#f5c842" opacity="0.3"/></svg></a>
-  <a href="laaggeletterdheid.html" class="subpage-link" data-tip="Gezondheidsvaardigheden en laaggeletterdheid — Ruim 2,5 miljoen Nederlanders hebben moeite met lezen en schrijven. Dit beïnvloedt sterk hoe zij omgaan met hun gezondheid."><svg viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="80" fill="#3d2b1e"/><rect x="30" y="10" width="55" height="70" fill="white" opacity="0.8" transform="rotate(-10,57,45)"/><path d="M40 35 Q57 31 70 35" stroke="#999" stroke-width="2" fill="none"/><path d="M40 44 Q57 40 70 44" stroke="#999" stroke-width="2" fill="none"/><circle cx="150" cy="40" r="20" fill="#f5c842" opacity="0.8"/><path d="M143 38 Q150 32 157 38 Q157 46 150 51 Q143 46 143 38 Z" fill="#c89a00"/></svg></a>
-  <a href="samenwerken.html" class="subpage-link" data-tip="Samenwerken — Pharos helpt organisaties hun communicatie, processen en beleid zo in te richten dat iedereen passende zorg krijgt."><svg viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="80" fill="#3d1a2a"/><circle cx="100" cy="40" r="12" fill="#cc2060" opacity="0.8"/><circle cx="64" cy="26" r="9" fill="#6b4f9e" opacity="0.7"/><circle cx="136" cy="26" r="9" fill="#4a8a3a" opacity="0.7"/><circle cx="64" cy="56" r="9" fill="#e05a20" opacity="0.7"/><circle cx="136" cy="56" r="9" fill="#3060a0" opacity="0.7"/><line x1="70" y1="30" x2="92" y2="40" stroke="#b01458" stroke-width="2" opacity="0.6"/><line x1="130" y1="30" x2="108" y2="40" stroke="#b01458" stroke-width="2" opacity="0.6"/></svg></a>
-  <a href="preventie.html" class="subpage-link" data-tip="Preventie — 16 succesfactoren voor preventiebeleid dat gezondheidsverschillen verkleint. Pharos ondersteunt gemeenten en zorgorganisaties bij effectieve preventie."><svg viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="80" fill="#1a2a1a"/><path d="M100 8 L132 24 L132 50 Q132 68 100 76 Q68 68 68 50 L68 24 Z" fill="#4a8a3a" opacity="0.7"/><path d="M83 43 Q92 54 97 48 Q104 36 116 32" stroke="white" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-  <a href="spuk.html" class="subpage-link" data-tip="SPUK-regeling — Hoe gemeenten stevig kunnen inzetten op het terugdringen van vermijdbare gezondheidsverschillen bij kwetsbare groepen."><svg viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="80" fill="#1a2030"/><rect x="75" y="4" width="50" height="34" fill="#d4c8b0" rx="2"/><rect x="82" y="10" width="5" height="24" fill="#c4b8a0"/><rect x="92" y="10" width="5" height="24" fill="#c4b8a0"/><rect x="102" y="10" width="5" height="24" fill="#c4b8a0"/><rect x="112" y="10" width="5" height="24" fill="#c4b8a0"/><polygon points="68,6 132,6 100,0" fill="#c4b8a0"/><line x1="100" y1="38" x2="100" y2="50" stroke="#f5c842" stroke-width="3"/><line x1="100" y1="50" x2="62" y2="60" stroke="#f5c842" stroke-width="2"/><line x1="100" y1="50" x2="138" y2="60" stroke="#f5c842" stroke-width="2"/><circle cx="62" cy="67" r="8" fill="#f5c842" opacity="0.7"/><circle cx="100" cy="67" r="8" fill="#f5c842" opacity="0.7"/><circle cx="138" cy="67" r="8" fill="#f5c842" opacity="0.7"/></svg></a>
+  <div class="sublink-wrap" data-tip="Pharos — Gezondheid en kwaliteit van zorg voor iedereen in Nederland">
+  <a href="index.html" class="subpage-link"><svg viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="80" fill="#2d1b5e"/><polygon points="100,8 132,36 122,36 122,62 78,62 78,36 68,36" fill="#b01458" opacity="0.8"/></svg></a>
+</div>
+  <div class="sublink-wrap" data-tip="Missie en visie — Onze missie: het terugdringen van grote gezondheidsverschillen. Ons uitgangspunt: gezondheid en kwaliteit van zorg voor iedereen in Nederland.">
+  <a href="missie.html" class="subpage-link"><svg viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="80" fill="#2d1820"/><polygon points="100,62 92,30 108,30" fill="#b01458"/><rect x="90" y="26" width="20" height="8" fill="#f5c842" rx="2"/><circle cx="100" cy="32" r="16" fill="#f5c842" opacity="0.3"/></svg></a>
+</div>
+  <div class="sublink-wrap" data-tip="Gezondheidsvaardigheden en laaggeletterdheid — Ruim 2,5 miljoen Nederlanders hebben moeite met lezen en schrijven. Dit beïnvloedt sterk hoe zij omgaan met hun gezondheid.">
+  <a href="laaggeletterdheid.html" class="subpage-link"><svg viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="80" fill="#3d2b1e"/><rect x="30" y="10" width="55" height="70" fill="white" opacity="0.8" transform="rotate(-10,57,45)"/><path d="M40 35 Q57 31 70 35" stroke="#999" stroke-width="2" fill="none"/><path d="M40 44 Q57 40 70 44" stroke="#999" stroke-width="2" fill="none"/><circle cx="150" cy="40" r="20" fill="#f5c842" opacity="0.8"/><path d="M143 38 Q150 32 157 38 Q157 46 150 51 Q143 46 143 38 Z" fill="#c89a00"/></svg></a>
+</div>
+  <div class="sublink-wrap" data-tip="Samenwerken — Pharos helpt organisaties hun communicatie, processen en beleid zo in te richten dat iedereen passende zorg krijgt.">
+  <a href="samenwerken.html" class="subpage-link"><svg viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="80" fill="#3d1a2a"/><circle cx="100" cy="40" r="12" fill="#cc2060" opacity="0.8"/><circle cx="64" cy="26" r="9" fill="#6b4f9e" opacity="0.7"/><circle cx="136" cy="26" r="9" fill="#4a8a3a" opacity="0.7"/><circle cx="64" cy="56" r="9" fill="#e05a20" opacity="0.7"/><circle cx="136" cy="56" r="9" fill="#3060a0" opacity="0.7"/><line x1="70" y1="30" x2="92" y2="40" stroke="#b01458" stroke-width="2" opacity="0.6"/><line x1="130" y1="30" x2="108" y2="40" stroke="#b01458" stroke-width="2" opacity="0.6"/></svg></a>
+</div>
+  <div class="sublink-wrap" data-tip="Preventie — 16 succesfactoren voor preventiebeleid dat gezondheidsverschillen verkleint. Pharos ondersteunt gemeenten en zorgorganisaties bij effectieve preventie.">
+  <a href="preventie.html" class="subpage-link"><svg viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="80" fill="#1a2a1a"/><path d="M100 8 L132 24 L132 50 Q132 68 100 76 Q68 68 68 50 L68 24 Z" fill="#4a8a3a" opacity="0.7"/><path d="M83 43 Q92 54 97 48 Q104 36 116 32" stroke="white" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+</div>
+  <div class="sublink-wrap" data-tip="SPUK-regeling — Hoe gemeenten stevig kunnen inzetten op het terugdringen van vermijdbare gezondheidsverschillen bij kwetsbare groepen.">
+  <a href="spuk.html" class="subpage-link"><svg viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="80" fill="#1a2030"/><rect x="75" y="4" width="50" height="34" fill="#d4c8b0" rx="2"/><rect x="82" y="10" width="5" height="24" fill="#c4b8a0"/><rect x="92" y="10" width="5" height="24" fill="#c4b8a0"/><rect x="102" y="10" width="5" height="24" fill="#c4b8a0"/><rect x="112" y="10" width="5" height="24" fill="#c4b8a0"/><polygon points="68,6 132,6 100,0" fill="#c4b8a0"/><line x1="100" y1="38" x2="100" y2="50" stroke="#f5c842" stroke-width="3"/><line x1="100" y1="50" x2="62" y2="60" stroke="#f5c842" stroke-width="2"/><line x1="100" y1="50" x2="138" y2="60" stroke="#f5c842" stroke-width="2"/><circle cx="62" cy="67" r="8" fill="#f5c842" opacity="0.7"/><circle cx="100" cy="67" r="8" fill="#f5c842" opacity="0.7"/><circle cx="138" cy="67" r="8" fill="#f5c842" opacity="0.7"/></svg></a>
+</div>
 </div>
 
 <footer>
