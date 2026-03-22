@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pharos — Preventie</title>
+<style>
+  :root{--pp:#3d2b6e;--ppd:#2d1b5e;--ppm:#6b4f9e;--pl:#d0c4e8;--pm:#b01458;--vg:#f5c842;--vgb:#1a3e6e;}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--ppd);font-family:sans-serif;color:var(--pl);overflow-x:hidden;}
+  header{background:var(--ppd);border-bottom:3px solid var(--pm);display:flex;align-items:center;padding:10px 24px;gap:20px;position:sticky;top:0;z-index:100;flex-wrap:wrap;}
+  .logo-wrap{display:flex;align-items:center;gap:12px;text-decoration:none;}
+  .logo-circle{width:48px;height:48px;background:var(--pm);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:24px;color:white;flex-shrink:0;}
+  .back-btn{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--pl);background:var(--ppm);padding:8px 14px;border-radius:10px;margin-left:auto;transition:background 0.2s;}
+  .back-btn:hover{background:var(--pm);}
+  .back-btn svg{width:22px;height:22px;}
+  nav{display:flex;gap:6px;flex-wrap:wrap;}
+  .nav-item{display:flex;flex-direction:column;align-items:center;text-decoration:none;color:var(--pl);padding:4px 8px;border-radius:8px;transition:background 0.2s;gap:2px;}
+  .nav-item:hover{background:var(--ppm);}
+  /* ── ACTIEF MENU-ITEM: omcirkeld zodat je weet waar je bent ── */
+  .nav-item.active {
+    box-shadow: 0 0 0 2px var(--pm);
+    background: rgba(176, 20, 88, 0.18);
+    border-radius: 10px;
+  }
+  .nav-item.active .nav-label {
+    color: var(--pm);
+    font-weight: 700;
+    opacity: 1;
+  }
+  .nav-item.active svg { opacity: 1; }
+
+  .nav-item svg{width:26px;height:26px;}
+  .nav-label{font-size:9px;opacity:0.85;text-align:center;}
+  .hero-wrap{width:100%;overflow:hidden;}
+  .hero-wrap svg{display:block;width:100%;height:auto;}
+  .panels-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;padding:28px;max-width:1280px;margin:0 auto;}
+  .panel{background:var(--pp);border-radius:14px;overflow:hidden;border:2px solid var(--ppm);box-shadow:0 4px 16px rgba(0,0,0,0.4);}
+  .panel svg{width:100%;height:auto;display:block;}
+  .subpages-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding:0 28px 40px;max-width:1280px;margin:0 auto;}
+  .subpage-link{background:var(--pp);border-radius:12px;overflow:hidden;text-decoration:none;border:2px solid var(--ppm);transition:transform 0.2s;display:block;}
+  .subpage-link:hover{transform:translateY(-4px);border-color:var(--vg);}
+  .subpage-link svg{width:100%;height:auto;display:block;}
+  footer{background:var(--ppd);border-top:3px solid var(--pm);padding:28px 32px 18px;}
+  .footer-row{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;}
+  .footer-row a{color:var(--pl);opacity:0.8;transition:opacity 0.2s;}
+  .footer-row a:hover{opacity:1;}
+  .footer-row svg{width:28px;height:28px;}
+  @media(max-width:900px){.panels-grid{grid-template-columns:1fr;}.subpages-grid{grid-template-columns:1fr;padding:0 16px 32px;}}
+
+  /* ── PHAROS TOOLTIP: echte tekst van pharos.nl ── */
+  [data-tip] { position: relative; }
+  [data-tip]::after {
+    content: attr(data-tip);
+    position: absolute;
+    bottom: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: #2d1b5e;
+    color: #e8e0f5;
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: 13px;
+    line-height: 1.55;
+    max-width: 300px;
+    width: max-content;
+    white-space: normal;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.25s;
+    z-index: 9999;
+    text-align: left;
+    border: 1px solid #b01458;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.55);
+    font-family: system-ui, -apple-system, sans-serif;
+  }
+  [data-tip]:hover::after { opacity: 1; }
+  /* Zorg dat tooltip niet buiten beeld valt */
+  [data-tip]:first-child::after, .logo-wrap::after { left: 0; transform: none; }
+  /* Nav-tooltips verschijnen ONDER het item, kaart-tooltips BOVEN */
+  header [data-tip]::after {
+    bottom: auto;
+    top: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+  }
+</style>
+</head>
+<body>
+<header>
+  <a href="index.html" class="logo-wrap" data-tip="Pharos — Gezondheid en kwaliteit van zorg voor iedereen in Nederland">
+    <div class="logo-circle">P</div>
+    <svg viewBox="0 0 120 36" width="110" height="34" fill="none"><path d="M4 26 Q14 10 24 22 Q34 34 44 18 Q54 4 64 18 Q74 32 84 16 Q94 2 104 18 Q114 32 120 22" stroke="#b01458" stroke-width="3" fill="none"/></svg>
+  </a>
+  <nav>
+    <a href="index.html" class="nav-item" data-tip="Pharos — Gezondheid en kwaliteit van zorg voor iedereen in Nederland">
+      <svg viewBox="0 0 26 26" fill="none"><polygon points="13,3 22,10 22,22 4,22 4,10" fill="#d0c4e8" fill-opacity="0.15" stroke="#d0c4e8" stroke-width="1.5"/><rect x="10" y="14" width="6" height="8" fill="#b01458" opacity="0.8"/><line x1="13" y1="3" x2="13" y2="8" stroke="#f5c842" stroke-width="2" stroke-linecap="round"/></svg>
+      <span class="nav-label">Home</span>
+    </a>
+    <a href="missie.html" class="nav-item" data-tip="Missie en visie — Onze missie: het terugdringen van grote gezondheidsverschillen. Ons uitgangspunt: gezondheid en kwaliteit van zorg voor iedereen in Nederland.">
+      <svg viewBox="0 0 26 26" fill="none"><circle cx="13" cy="13" r="10" stroke="#d0c4e8" stroke-width="1.5" fill="#d0c4e8" fill-opacity="0.1"/><line x1="13" y1="11" x2="13" y2="19" stroke="#d0c4e8" stroke-width="2.5"/><circle cx="13" cy="8" r="1.8" fill="#b01458"/></svg>
+      <span class="nav-label">Missie</span>
+    </a>
+    <a href="laaggeletterdheid.html" class="nav-item" data-tip="Gezondheidsvaardigheden en laaggeletterdheid — Ruim 2,5 miljoen Nederlanders hebben moeite met lezen en schrijven. Dit beïnvloedt sterk hoe zij omgaan met hun gezondheid.">
+      <svg viewBox="0 0 26 26" fill="none"><rect x="4" y="3" width="14" height="18" rx="2" fill="#d0c4e8" fill-opacity="0.15" stroke="#d0c4e8" stroke-width="1.5"/><line x1="7" y1="8" x2="15" y2="8" stroke="#d0c4e8" stroke-width="1.5"/><line x1="7" y1="12" x2="13" y2="12" stroke="#d0c4e8" stroke-width="1.5"/><path d="M17 13 Q22 10 22 17 Q22 22 17 22" stroke="#f5c842" stroke-width="1.5" fill="none"/></svg>
+      <span class="nav-label">Kennis</span>
+    </a>
+    <a href="samenwerken.html" class="nav-item" data-tip="Samenwerken — Pharos helpt organisaties hun communicatie, processen en beleid zo in te richten dat iedereen passende zorg krijgt.">
+      <svg viewBox="0 0 26 26" fill="none"><circle cx="9" cy="10" r="4.5" fill="#d0c4e8" fill-opacity="0.2" stroke="#d0c4e8" stroke-width="1.5"/><circle cx="17" cy="10" r="4.5" fill="#d0c4e8" fill-opacity="0.2" stroke="#d0c4e8" stroke-width="1.5"/><path d="M3 22 Q3 16 9 16 Q13 16 13 19 Q13 16 17 16 Q23 16 23 22" stroke="#d0c4e8" stroke-width="1.5" fill="none"/><line x1="9" y1="10" x2="17" y2="10" stroke="#b01458" stroke-width="1.5"/></svg>
+      <span class="nav-label">Samen</span>
+    </a>
+    <a href="ehealth.html" class="nav-item" data-tip="e-health en digitale zorg — Digitale vernieuwingen zoals AI en apps veranderen de zorg razendsnel. Maar deze oplossingen zijn niet voor iedereen toegankelijk, begrijpelijk of gebruiksvriendelijk.">
+      <svg viewBox="0 0 26 26" fill="none"><rect x="7" y="2" width="12" height="22" rx="2.5" stroke="#d0c4e8" stroke-width="1.5" fill="#d0c4e8" fill-opacity="0.1"/><circle cx="13" cy="20" r="1.8" fill="#b01458"/><line x1="10" y1="7" x2="16" y2="7" stroke="#d0c4e8" stroke-width="1.5"/><line x1="10" y1="11" x2="16" y2="11" stroke="#d0c4e8" stroke-width="1"/></svg>
+      <span class="nav-label">e-Health</span>
+    </a>
+    <a href="preventie.html" class="nav-item active" aria-current="page" data-tip="Preventie — 16 succesfactoren voor preventiebeleid dat gezondheidsverschillen verkleint. Pharos ondersteunt gemeenten en zorgorganisaties bij effectieve preventie.">
+      <svg viewBox="0 0 26 26" fill="none"><path d="M13 3 L21 7 L21 16 Q21 22 13 25 Q5 22 5 16 L5 7 Z" fill="#4a8a3a" fill-opacity="0.25" stroke="#d0c4e8" stroke-width="1.5"/><path d="M9 13 L12 16 L17 10" stroke="#f5c842" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span class="nav-label">Preventie</span>
+    </a>
+    <a href="spuk.html" class="nav-item" data-tip="SPUK-regeling — Hoe gemeenten stevig kunnen inzetten op het terugdringen van vermijdbare gezondheidsverschillen bij kwetsbare groepen.">
+      <svg viewBox="0 0 26 26" fill="none"><rect x="5" y="11" width="16" height="12" rx="1" fill="#d0c4e8" fill-opacity="0.15" stroke="#d0c4e8" stroke-width="1.5"/><polygon points="3,12 13,4 23,12" fill="#d0c4e8" fill-opacity="0.2" stroke="#d0c4e8" stroke-width="1.5"/><rect x="10" y="16" width="6" height="7" fill="#b01458" opacity="0.7"/></svg>
+      <span class="nav-label">SPUK</span>
+    </a>
+    <a href="https://www.pharos.nl/contact/" class="nav-item" data-tip="Contact — Neem contact op met Pharos: info@pharos.nl">
+      <svg viewBox="0 0 26 26" fill="none"><rect x="2" y="6" width="22" height="16" rx="2" stroke="#d0c4e8" stroke-width="1.5" fill="#d0c4e8" fill-opacity="0.1"/><polyline points="2,8 13,15 24,8" stroke="#d0c4e8" stroke-width="1.5" fill="none"/></svg>
+      <span class="nav-label">Contact</span>
+    </a>
+    <a href="https://www.pharos.nl/" class="nav-item" data-tip="Zoek in alle kennis, publicaties en nieuws van Pharos">
+      <svg viewBox="0 0 26 26" fill="none"><circle cx="11" cy="11" r="7" stroke="#d0c4e8" stroke-width="1.5" fill="#d0c4e8" fill-opacity="0.1"/><line x1="16" y1="16" x2="23" y2="23" stroke="#b01458" stroke-width="2.5" stroke-linecap="round"/></svg>
+      <span class="nav-label">Zoeken</span>
+    </a>
+  </nav>
+  <a href="index.html" class="back-btn" data-tip="Terug naar de startpagina van Pharos Beeldtaal"><svg viewBox="0 0 22 22" fill="none"><polyline points="14,4 6,11 14,18" stroke="#d0c4e8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg><svg viewBox="0 0 22 22" fill="none"><path d="M3 11 L11 4 L19 11 L19 19 L14 19 L14 14 L8 14 L8 19 L3 19 Z" fill="#d0c4e8" opacity="0.8"/></svg></a>
+</header>
+
+<div class="hero-wrap">
+<svg viewBox="0 0 1200 500" xmlns="http://www.w3.org/2000/svg" aria-label="Preventie: van risicofactoren naar beschermd gezond leven">
+  <defs>
+    <filter id="prevglow"><feGaussianBlur stdDeviation="5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <filter id="prevpaint"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="3" seed="4" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="5"/></filter>
+    <linearGradient id="prevbg" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#1a2a10"/>
+      <stop offset="40%" stop-color="#2a4a28"/>
+      <stop offset="100%" stop-color="#3a6a30"/>
+    </linearGradient>
+    <linearGradient id="prevground" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#4a8a3a"/>
+      <stop offset="100%" stop-color="#2d5020"/>
+    </linearGradient>
+    <linearGradient id="prevsky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1a3a50"/>
+      <stop offset="60%" stop-color="#3a6a40"/>
+      <stop offset="100%" stop-color="#4a8a3a"/>
+    </linearGradient>
+    <linearGradient id="shieldGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#4aaa3a"/>
+      <stop offset="100%" stop-color="#2a8a20"/>
+    </linearGradient>
+    <radialGradient id="shieldGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#4a8a3a" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#4a8a3a" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1200" height="500" fill="url(#prevsky)"/>
+  <!-- Ground -->
+  <rect x="0" y="420" width="1200" height="80" fill="url(#prevground)"/>
+
+  <!-- Van Gogh fresh green-blue sky swirls -->
+  <g filter="url(#prevpaint)" opacity="0.55">
+    <path d="M0 80 Q80 50 180 75 Q280 98 380 65 Q480 32 580 68 Q680 102 780 72 Q880 44 980 75 Q1080 104 1200 78" stroke="#3a8a50" stroke-width="28" fill="none" stroke-linecap="round"/>
+    <path d="M0 130 Q100 98 220 124 Q340 148 460 118 Q580 88 700 120 Q820 150 940 124 Q1060 100 1200 128" stroke="#2a7a3a" stroke-width="22" fill="none" stroke-linecap="round"/>
+    <path d="M0 60 Q70 30 150 55 Q230 78 310 48 Q390 18 470 50 Q550 80 630 55 Q710 32 790 58 Q870 82 950 60 Q1030 38 1100 62 Q1160 80 1200 68" stroke="#1a6a2a" stroke-width="16" fill="none" stroke-linecap="round"/>
+    <path d="M0 168 Q120 138 260 164 Q400 188 540 158 Q680 128 820 160 Q960 188 1100 164 Q1160 148 1200 168" stroke="#4a9a60" stroke-width="14" fill="none" stroke-linecap="round"/>
+  </g>
+
+  <!-- SUN (fresh, energetic) -->
+  <circle cx="100" cy="90" r="55" fill="#f5c842" opacity="0.8" filter="url(#prevglow)"/>
+  <circle cx="100" cy="90" r="42" fill="#f5c842"/>
+  <line x1="100" y1="32" x2="100" y2="20" stroke="#f5c842" stroke-width="4"/>
+  <line x1="100" y1="148" x2="100" y2="160" stroke="#f5c842" stroke-width="4"/>
+  <line x1="42" y1="90" x2="30" y2="90" stroke="#f5c842" stroke-width="4"/>
+  <line x1="158" y1="90" x2="170" y2="90" stroke="#f5c842" stroke-width="4"/>
+  <line x1="59" y1="49" x2="51" y2="41" stroke="#f5c842" stroke-width="3.5"/>
+  <line x1="141" y1="131" x2="149" y2="139" stroke="#f5c842" stroke-width="3.5"/>
+  <line x1="141" y1="49" x2="149" y2="41" stroke="#f5c842" stroke-width="3.5"/>
+  <line x1="59" y1="131" x2="51" y2="139" stroke="#f5c842" stroke-width="3.5"/>
+
+  <!-- TIMELINE ARROW (the journey) -->
+  <line x1="60" y1="420" x2="1140" y2="420" stroke="#d0c4e8" stroke-width="3" opacity="0.4"/>
+  <polygon points="1140,413 1160,420 1140,427" fill="#d0c4e8" opacity="0.4"/>
+
+  <!-- LEFT: PERSON WITH RISK FACTORS -->
+  <!-- person slightly unwell, worried -->
+  <ellipse cx="220" cy="365" rx="24" ry="36" fill="#3d2b6e"/>
+  <path d="M198 352 Q185 368 183 385" stroke="#3d2b6e" stroke-width="11" stroke-linecap="round" fill="none"/>
+  <path d="M242 352 Q255 370 257 387" stroke="#3d2b6e" stroke-width="11" stroke-linecap="round" fill="none"/>
+  <rect x="213" y="325" width="14" height="20" fill="#c9a882" rx="3"/>
+  <circle cx="220" cy="308" r="26" fill="#c9a882"/>
+  <path d="M198 300 Q206 280 220 278 Q234 280 242 300" fill="#3a2010"/>
+  <!-- slightly worried face -->
+  <line x1="210" y1="303" x2="216" y2="303" stroke="#3a2010" stroke-width="3"/>
+  <line x1="224" y1="302" x2="230" y2="303" stroke="#3a2010" stroke-width="3"/>
+  <path d="M212 315 Q220 310 228 315" stroke="#8a4030" stroke-width="2.5" fill="none"/>
+  <!-- worry indicator -->
+  <path d="M240 295 Q244 287 248 295 Q248 301 244 303 Q240 301 240 295 Z" fill="#4488cc" opacity="0.6"/>
+
+  <!-- RISK FACTOR SYMBOLS around person -->
+  <!-- Crossed-out cigarette -->
+  <rect x="80" y="270" width="5" height="38" fill="#f0f0a0" rx="2" transform="rotate(-25,82,289)"/>
+  <rect x="65" y="285" width="40" height="8" fill="#e0d870" opacity="0.7" rx="1" transform="rotate(-25,85,289)"/>
+  <line x1="65" y1="262" x2="112" y2="308" stroke="#cc2020" stroke-width="4.5" stroke-linecap="round"/>
+  <line x1="112" y1="262" x2="65" y2="308" stroke="#cc2020" stroke-width="4.5" stroke-linecap="round"/>
+  <!-- Fast food crossed out -->
+  <path d="M100" y="355" fill="none"/>
+  <path d="M96 348 Q102 338 112 338 Q122 338 128 348" stroke="#f0a030" stroke-width="3" fill="none"/>
+  <rect x="96" y="348" width="32" height="18" fill="#f0a030" opacity="0.7" rx="2"/>
+  <line x1="90" y1="348" x2="136" y2="368" stroke="#cc2020" stroke-width="4" stroke-linecap="round"/>
+  <line x1="90" y1="348" x2="136" y2="348" stroke="#cc2020" stroke-width="4" stroke-linecap="round"/>
+  <!-- Stress bolt -->
+  <polygon points="316,248 302,278 316,278 300,308" fill="#cc2020" opacity="0.7"/>
+  <!-- Social isolation (person behind wall) -->
+  <rect x="338" y="296" width="8" height="100" fill="#3d2b6e" stroke="#2a1a55" stroke-width="1"/>
+  <ellipse cx="360" cy="355" rx="12" ry="18" fill="#3d2b6e" opacity="0.5"/>
+  <circle cx="360" cy="334" r="11" fill="#c9a882" opacity="0.5"/>
+  <!-- confusing health sign near left person -->
+  <rect x="240" y="230" width="50" height="40" fill="#2a1840" rx="3" stroke="#3d2550" stroke-width="1.5"/>
+  <path d="M246 244 Q262 240 278 244" stroke="#6b4f9e" stroke-width="2" fill="none"/>
+  <path d="M246 252 Q264 248 278 252" stroke="#6b4f9e" stroke-width="2" fill="none"/>
+
+  <!-- CENTER: SCREENING/INTERVENTION with Pharos -->
+  <!-- Healthcare worker in community (not clinic) reaching out -->
+  <!-- worker -->
+  <ellipse cx="600" cy="358" rx="24" ry="36" fill="white"/>
+  <rect x="591" y="342" width="18" height="32" fill="#4a80c0"/>
+  <path d="M578 348 Q558 358 550 374" stroke="white" stroke-width="12" stroke-linecap="round" fill="none"/>
+  <circle cx="548" cy="377" r="11" fill="#c9b090"/>
+  <path d="M622 350 Q642 362 650 378" stroke="white" stroke-width="12" stroke-linecap="round" fill="none"/>
+  <circle cx="652" cy="381" r="11" fill="#c9b090"/>
+  <!-- handshake/reaching toward person -->
+  <rect x="593" y="320" width="14" height="20" fill="#c9b090" rx="3"/>
+  <circle cx="600" cy="304" r="24" fill="#c9b090"/>
+  <path d="M580 298 Q587 280 600 278 Q613 280 620 298" fill="#8a6428"/>
+  <circle cx="591" cy="300" r="4" fill="#3a2010"/>
+  <circle cx="609" cy="300" r="4" fill="#3a2010"/>
+  <path d="M591 312 Q600 320 609 312" stroke="#8a4020" stroke-width="2.5" fill="none"/>
+  <circle cx="588" cy="310" r="5" fill="#e07060" opacity="0.5"/>
+  <circle cx="612" cy="310" r="5" fill="#e07060" opacity="0.5"/>
+
+  <!-- MAGNIFYING GLASS finding early warning (early detection!) -->
+  <circle cx="528" cy="290" r="36" fill="none" stroke="#f5c842" stroke-width="5" filter="url(#prevglow)"/>
+  <line x1="555" y1="315" x2="578" y2="338" stroke="#f5c842" stroke-width="7" stroke-linecap="round"/>
+  <!-- small dot inside (early, tiny) = EARLY DETECTION -->
+  <circle cx="528" cy="290" r="8" fill="#cc2020" opacity="0.8"/>
+  <!-- vs big dot outside (it would have grown without prevention) -->
+  <circle cx="580" cy="240" r="22" fill="#cc2020" opacity="0.15"/>
+  <circle cx="580" cy="240" r="16" fill="#cc2020" opacity="0.2"/>
+  <line x1="548" y1="280" x2="568" y2="248" stroke="#cc2020" stroke-width="2" stroke-dasharray="5,4" opacity="0.5"/>
+
+  <!-- PHAROS SHIELD being offered -->
+  <path d="M610" y1="245" fill="none"/>
+  <path d="M648 210 L692 228 L692 268 Q692 302 648 320 Q604 302 604 268 L604 228 Z" fill="url(#shieldGrad)" opacity="0.85"/>
+  <circle cx="648" cy="265" rx="35" fill="url(#shieldGlow)"/>
+  <!-- Heart in shield -->
+  <path d="M628 256 Q635 243 642 250 Q648 243 655 250 Q661 243 668 250 Q668 268 648 280 Q628 268 628 256 Z" fill="white" opacity="0.9"/>
+  <!-- Magnifying glass (research) inside shield -->
+  <!-- pictogram info card -->
+  <rect x="558" y="240" width="42" height="34" fill="white" opacity="0.85" rx="3"/>
+  <path d="M564 250 Q574 247 580 250 Q586 252 592 250" stroke="#3a6a3a" stroke-width="2.5"/>
+  <path d="M564 258 Q574 255 580 258 Q586 260 592 258" stroke="#3a6a3a" stroke-width="2.5"/>
+  <!-- accessible health info: lightbulb above -->
+  <circle cx="576" cy="232" r="10" fill="#f5c842" opacity="0.85"/>
+
+  <!-- RIGHT: PROTECTED HEALTHY PERSON -->
+  <!-- LARGE SHIELD in front of person (protected!) -->
+  <circle cx="950" cy="260" r="80" fill="url(#shieldGlow)"/>
+  <path d="M908 188 L990 214 L990 278 Q990 330 908 358 Q826 330 826 278 L826 214 Z" fill="url(#shieldGrad)" opacity="0.9" filter="url(#prevglow)"/>
+  <!-- Heart in large shield -->
+  <path d="M866 258 Q880 235 895 248 Q908 235 922 248 Q936 235 950 248 Q964 235 978 248 Q992 235 990 258 Q990 295 908 325 Q826 295 866 258 Z" fill="white" opacity="0.85"/>
+  <!-- Heart inside the shield heart -->
+  <path d="M888 268 Q895 258 902 264 Q908 258 915 264 Q922 258 928 268 Q928 282 908 295 Q888 282 888 268 Z" fill="#cc2060" opacity="0.8"/>
+
+  <!-- Protected healthy person standing behind shield -->
+  <ellipse cx="980" cy="365" rx="24" ry="36" fill="#4a8a3a"/>
+  <path d="M958 354 Q944 370 942 386" stroke="#4a8a3a" stroke-width="11" stroke-linecap="round" fill="none"/>
+  <path d="M1002 354 Q1016 372 1018 388" stroke="#4a8a3a" stroke-width="11" stroke-linecap="round" fill="none"/>
+  <rect x="973" y="324" width="14" height="20" fill="#c9b090" rx="3"/>
+  <circle cx="980" cy="307" r="26" fill="#c9b090"/>
+  <path d="M958 299 Q966 279 980 277 Q994 279 1002 299" fill="#3a2010"/>
+  <!-- HEALTHY HAPPY FACE -->
+  <circle cx="970" cy="301" r="4.5" fill="#3a2010"/>
+  <circle cx="990" cy="301" r="4.5" fill="#3a2010"/>
+  <circle cx="972" cy="299" r="1.5" fill="white"/>
+  <circle cx="992" cy="299" r="1.5" fill="white"/>
+  <path d="M970 314 Q980 323 990 314" stroke="#8a3015" stroke-width="2.5" fill="none"/>
+  <circle cx="967" cy="312" r="5" fill="#e07060" opacity="0.5"/>
+  <circle cx="993" cy="312" r="5" fill="#e07060" opacity="0.5"/>
+
+  <!-- HEALTHY FOOD symbols -->
+  <circle cx="1060" cy="360" r="20" fill="#4a8a3a" opacity="0.8"/>
+  <path d="M1048 360 Q1060 348 1072 360" stroke="#3a6a2a" stroke-width="2.5" fill="none"/>
+  <line x1="1060" y1="342" x2="1060" y2="336" stroke="#4a8a3a" stroke-width="2"/>
+  <!-- apple/healthy food shape -->
+  <ellipse cx="1060" cy="360" rx="15" ry="18" fill="#4a8a3a"/>
+  <path d="M1053 348 Q1060 342 1067 348" stroke="#3a6a2a" stroke-width="2" fill="none"/>
+  <!-- Active lifestyle (movement lines) -->
+  <path d="M1040" y="395" fill="none"/>
+  <!-- Social connections -->
+  <circle cx="1100" cy="330" r="10" fill="#b87040"/>
+  <circle cx="1120" cy="335" r="10" fill="#c9b090"/>
+  <line x1="1110" y1="330" x2="1110" y2="330" stroke="#f5c842" stroke-width="2"/>
+  <!-- pictogram guide in hand -->
+  <rect x="1080" y="370" width="38" height="48" fill="white" stroke="#4a8a40" stroke-width="2" rx="4"/>
+  <path d="M1086 382 Q1090 377 1094 381 Q1098 377 1102 381 Q1102 387 1094 393 Q1086 387 1086 382 Z" fill="#cc2060"/>
+  <polyline points="1087,402 1092,410 1108,394" stroke="#2a7a20" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- BIG GREEN CHECKMARK -->
+  <polyline points="1130,310 1148,336 1180,296" stroke="#4a8a3a" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round" filter="url(#prevglow)"/>
+
+  <!-- LUSH PLANTS all around (life, health thriving) -->
+  <line x1="1140" y1="420" x2="1140" y2="378" stroke="#4a8a3a" stroke-width="3"/>
+  <ellipse cx="1128" cy="372" rx="14" ry="18" fill="#3a9030"/>
+  <ellipse cx="1152" cy="374" rx="13" ry="17" fill="#4aaa38"/>
+  <ellipse cx="1140" cy="360" rx="11" ry="14" fill="#5ac040"/>
+  <circle cx="1142" cy="348" r="9" fill="#f5c842" opacity="0.8"/>
+  <line x1="780" y1="420" x2="780" y2="392" stroke="#4a8a3a" stroke-width="2.5"/>
+  <ellipse cx="772" cy="388" rx="10" ry="13" fill="#3a9030"/>
+  <ellipse cx="788" cy="390" rx="9" ry="12" fill="#4aaa38"/>
+</svg>
+</div>
+
+<!-- 3 STORY PANELS -->
+<div class="panels-grid">
+  <!-- Panel 1: Risk Factors -->
+  <div class="panel">
+    <svg viewBox="0 0 400 380" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="pp1bg" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#1a2810"/><stop offset="100%" stop-color="#2d1b5e"/>
+        </linearGradient>
+      </defs>
+      <rect width="400" height="380" fill="url(#pp1bg)"/>
+      <!-- Environment with risk factors -->
+      <!-- Street/community setting -->
+      <rect x="0" y="320" width="400" height="60" fill="#4a4030" opacity="0.8"/>
+      <rect x="0" y="310" width="400" height="12" fill="#3a3020" opacity="0.8"/>
+      <!-- building in background -->
+      <rect x="20" y="160" width="80" height="150" fill="#3a3828" opacity="0.7"/>
+      <rect x="28" y="175" width="14" height="12" fill="#a0c0a0" opacity="0.4" rx="1"/>
+      <rect x="50" y="175" width="14" height="12" fill="#a0c0a0" opacity="0.4" rx="1"/>
+      <rect x="72" y="175" width="14" height="12" fill="#a0c0a0" opacity="0.4" rx="1"/>
+
+      <!-- Person center (worried, risk environment) -->
+      <ellipse cx="200" cy="278" rx="24" ry="36" fill="#4a3570"/>
+      <path d="M178 265 Q165 280 163 298" stroke="#4a3570" stroke-width="11" stroke-linecap="round" fill="none"/>
+      <path d="M222 265 Q235 282 237 300" stroke="#4a3570" stroke-width="11" stroke-linecap="round" fill="none"/>
+      <rect x="193" y="240" width="14" height="22" fill="#c9a882" rx="3"/>
+      <circle cx="200" cy="222" r="26" fill="#c9a882"/>
+      <path d="M178 215 Q186 196 200 194 Q214 196 222 215" fill="#3a2010"/>
+      <!-- worried face -->
+      <line x1="190" y1="218" x2="196" y2="219" stroke="#3a2010" stroke-width="3"/>
+      <line x1="204" y1="217" x2="210" y2="218" stroke="#3a2010" stroke-width="3"/>
+      <path d="M191 232 Q200 226 209 232" stroke="#8a4030" stroke-width="2.5" fill="none"/>
+      <!-- sweat drop -->
+      <path d="M220" y1="208" fill="none"/>
+      <path d="M218 208 Q222 200 226 208 Q226 215 222 217 Q218 215 218 208 Z" fill="#4488cc" opacity="0.6"/>
+
+      <!-- RISK FACTOR SYMBOLS (environment/context around person) -->
+      <!-- Cigarette crossed (upper left) -->
+      <rect x="62" y="88" width="6" height="44" fill="#f0f0a0" rx="3" transform="rotate(-20,65,110)"/>
+      <rect x="52" y="102" width="44" height="10" fill="#e8d860" opacity="0.7" rx="2" transform="rotate(-20,74,107)"/>
+      <line x1="48" y1="80" x2="102" y2="138" stroke="#cc2020" stroke-width="5" stroke-linecap="round"/>
+      <line x1="102" y1="80" x2="48" y2="138" stroke="#cc2020" stroke-width="5" stroke-linecap="round"/>
+
+      <!-- Fast food bag crossed (upper right) -->
+      <path d="M280 90 Q285 78 298 78 Q311 78 316 90" stroke="#f0a030" stroke-width="3" fill="none"/>
+      <rect x="280" y="90" width="36" height="22" fill="#f0a030" opacity="0.7" rx="3"/>
+      <line x1="270" y1="90" x2="328" y2="116" stroke="#cc2020" stroke-width="5" stroke-linecap="round"/>
+      <line x1="270" y1="90" x2="328" y2="90" stroke="#cc2020" stroke-width="5" stroke-linecap="round"/>
+
+      <!-- Stress lightning bolt (top center) -->
+      <polygon points="198,88 186,118 200,118 186,148" fill="#cc2020" opacity="0.75"/>
+
+      <!-- Couch/sedentary figure (lower right) -->
+      <rect x="292" y="248" width="80" height="28" fill="#6a4820" rx="6" opacity="0.7"/>
+      <rect x="292" y="228" width="20" height="28" fill="#7a5830" rx="4" opacity="0.7"/>
+      <rect x="352" y="228" width="20" height="28" fill="#7a5830" rx="4" opacity="0.7"/>
+      <!-- sedentary figure on couch -->
+      <ellipse cx="332" cy="258" rx="16" ry="14" fill="#6b4f9e" opacity="0.7"/>
+      <circle cx="332" cy="243" r="12" fill="#c9a882" opacity="0.7"/>
+
+      <!-- Isolation symbol (person alone behind wall) -->
+      <rect x="310" y="148" width="8" height="80" fill="#3d2b6e" opacity="0.7"/>
+      <!-- NOT-symbol on wall -->
+      <circle cx="314" cy="175" r="14" fill="none" stroke="#cc2020" stroke-width="2.5" opacity="0.6"/>
+      <line x1="304" y1="165" x2="324" y2="185" stroke="#cc2020" stroke-width="2.5" opacity="0.6"/>
+
+      <!-- Confusing health signs (illegible) -->
+      <rect x="130" y="128" width="60" height="48" fill="#2a1840" rx="4" stroke="#3d2550" stroke-width="1.5"/>
+      <path d="M138 140 Q152 136 168 140" stroke="#6b4f9e" stroke-width="2" fill="none"/>
+      <path d="M138 150 Q156 146 172 150" stroke="#6b4f9e" stroke-width="2" fill="none"/>
+      <path d="M138 160 Q150 156 165 160" stroke="#6b4f9e" stroke-width="2" fill="none"/>
+      <text x="138" y="175" font-size="12" fill="#6b4f9e" font-weight="bold">?</text>
+    </svg>
+  </div>
+
+  <!-- Panel 2: Prevention in Action -->
+  <div class="panel">
+    <svg viewBox="0 0 400 380" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="pp2bg" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#1a3818"/><stop offset="100%" stop-color="#3d1a40"/>
+        </linearGradient>
+        <radialGradient id="pp2glow" cx="50%" cy="40%" r="55%">
+          <stop offset="0%" stop-color="#b01458" stop-opacity="0.25"/>
+          <stop offset="100%" stop-color="#b01458" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+      <rect width="400" height="380" fill="url(#pp2bg)"/>
+      <rect width="400" height="380" fill="url(#pp2glow)"/>
+      <!-- Community setting (street/home - NOT clinic) -->
+      <rect x="0" y="320" width="400" height="60" fill="#4a4030" opacity="0.6"/>
+      <!-- Simple house/home -->
+      <rect x="28" y="230" width="85" height="90" fill="#5a6840" opacity="0.7"/>
+      <polygon points="18,232 123,232 70,198" fill="#3a4828" opacity="0.7"/>
+      <rect x="44" y="250" width="16" height="14" fill="#a0c0b0" rx="2"/>
+      <rect x="72" y="250" width="16" height="14" fill="#a0c0b0" rx="2"/>
+      <!-- open door on house -->
+      <rect x="57" y="280" width="22" height="40" fill="#c8e8c0" rx="2"/>
+
+      <!-- HEALTHCARE WORKER reaching out to person in COMMUNITY -->
+      <!-- worker -->
+      <ellipse cx="220" cy="285" rx="22" ry="34" fill="white"/>
+      <rect x="211" y="270" width="18" height="30" fill="#4a80c0"/>
+      <path d="M200 275 Q182 286 176 302" stroke="white" stroke-width="11" stroke-linecap="round" fill="none"/>
+      <!-- offering hand with simple health info (picture card) -->
+      <path d="M240 278 Q264 272 278 268" stroke="white" stroke-width="11" stroke-linecap="round" fill="none"/>
+      <circle cx="280" cy="266" r="10" fill="#c9b090"/>
+      <!-- picture card held -->
+      <rect x="284" y="250" width="48" height="38" fill="white" stroke="#4a8a40" stroke-width="2" rx="3"/>
+      <path d="M290 262 Q294 257 298 261 Q302 257 306 261 Q306 267 298 273 Q290 267 290 262 Z" fill="#cc2060"/>
+      <polyline points="316,261 320,268 330,257" stroke="#2a7a20" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <rect x="212" y="255" width="14" height="18" fill="#c9b090" rx="3"/>
+      <circle cx="219" cy="239" r="22" fill="#c9b090"/>
+      <path d="M200 233 Q207 216 219 214 Q231 216 238 233" fill="#8a6428"/>
+      <circle cx="211" cy="236" r="4" fill="#3a2010"/>
+      <circle cx="227" cy="236" r="4" fill="#3a2010"/>
+      <path d="M212 247 Q219 255 226 247" stroke="#8a4020" stroke-width="2.5" fill="none"/>
+      <circle cx="209" cy="245" r="5" fill="#e07060" opacity="0.5"/>
+      <circle cx="229" cy="245" r="5" fill="#e07060" opacity="0.5"/>
+
+      <!-- MAGNIFYING GLASS finding small dot (EARLY detection) -->
+      <circle cx="130" cy="165" r="44" fill="none" stroke="#f5c842" stroke-width="5"/>
+      <line x1="162" y1="196" x2="188" y2="224" stroke="#f5c842" stroke-width="7" stroke-linecap="round"/>
+      <!-- tiny dot inside glass = EARLY, small -->
+      <circle cx="130" cy="165" r="6" fill="#cc2020" opacity="0.9"/>
+      <!-- What it would have become (ghost of large dot with X) -->
+      <circle cx="80" cy="85" r="28" fill="#cc2020" opacity="0.1" stroke="#cc2020" stroke-width="2" stroke-dasharray="5,4"/>
+      <line x1="64" y1="69" x2="96" y2="101" stroke="#cc2020" stroke-width="2.5" opacity="0.4"/>
+      <line x1="96" y1="69" x2="64" y2="101" stroke="#cc2020" stroke-width="2.5" opacity="0.4"/>
+      <!-- PHAROS SHIELD (protection being offered) -->
+      <path d="M340" y1="175" fill="none"/>
+      <path d="M330 100 L370 116 L370 148 Q370 175 330 188 Q290 175 290 148 L290 116 Z" fill="#4a8a3a" opacity="0.8"/>
+      <!-- heart in small shield -->
+      <path d="M310 142 Q316 133 323 138 Q330 133 337 138 Q344 133 350 138 Q350 152 330 162 Q310 152 310 142 Z" fill="white" opacity="0.85"/>
+      <!-- Community person receiving care (patient) -->
+      <ellipse cx="98" cy="300" rx="20" ry="30" fill="#e05a20"/>
+      <path d="M80 290 Q68 305 66 322" stroke="#e05a20" stroke-width="10" stroke-linecap="round" fill="none"/>
+      <path d="M116 290 Q128 307 130 324" stroke="#e05a20" stroke-width="10" stroke-linecap="round" fill="none"/>
+      <rect x="91" y="265" width="14" height="20" fill="#b87040" rx="3"/>
+      <circle cx="98" cy="248" r="22" fill="#b87040"/>
+      <path d="M80 242 Q86 226 98 224 Q110 226 116 242" fill="#1a1008"/>
+      <!-- open, receptive face (slight positive expression) -->
+      <circle cx="89" cy="245" r="4" fill="#1a1008"/>
+      <circle cx="107" cy="245" r="4" fill="#1a1008"/>
+      <path d="M89 256 Q98 262 107 256" stroke="#8a3015" stroke-width="2" fill="none"/>
+      <!-- Welcoming/accessible (NO-SCARY) healthcare symbol -->
+      <!-- warm colors, community setting visible -->
+    </svg>
+  </div>
+
+  <!-- Panel 3: Protected & Healthy -->
+  <div class="panel">
+    <svg viewBox="0 0 400 380" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="pp3bg" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#1a3a1a"/><stop offset="60%" stop-color="#2a5a28"/><stop offset="100%" stop-color="#3a7a30"/>
+        </linearGradient>
+        <radialGradient id="pp3glow" cx="50%" cy="30%" r="50%">
+          <stop offset="0%" stop-color="#f5c842" stop-opacity="0.35"/>
+          <stop offset="100%" stop-color="#f5c842" stop-opacity="0"/>
+        </radialGradient>
+        <linearGradient id="bigshield" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#4aaa3a"/><stop offset="100%" stop-color="#2a8a20"/>
+        </linearGradient>
+      </defs>
+      <rect width="400" height="380" fill="url(#pp3bg)"/>
+      <rect width="400" height="380" fill="url(#pp3glow)"/>
+      <!-- SUN shining -->
+      <circle cx="340" cy="52" r="45" fill="#f5c842" opacity="0.85"/>
+      <line x1="340" y1="3" x2="340" y2="-4" stroke="#f5c842" stroke-width="4"/>
+      <line x1="298" y1="52" x2="290" y2="52" stroke="#f5c842" stroke-width="4"/>
+      <line x1="382" y1="52" x2="390" y2="52" stroke="#f5c842" stroke-width="4"/>
+      <line x1="310" y1="22" x2="303" y2="15" stroke="#f5c842" stroke-width="3.5"/>
+      <line x1="370" y1="22" x2="377" y2="15" stroke="#f5c842" stroke-width="3.5"/>
+      <line x1="310" y1="82" x2="303" y2="89" stroke="#f5c842" stroke-width="3.5"/>
+      <line x1="370" y1="82" x2="377" y2="89" stroke="#f5c842" stroke-width="3.5"/>
+
+      <!-- LARGE SHIELD (main visual) -->
+      <circle cx="185" cy="200" rx="100" fill="url(#pp3glow)"/>
+      <path d="M120 118 L250 148 L250 228 Q250 298 120 330 Q-10 298 -10 228 L-10 148 Z" fill="url(#bigshield)" opacity="0.9"/>
+      <!-- wait, center it -->
+      <path d="M140 100 L266 128 L266 215 Q266 288 140 322 Q14 288 14 215 L14 128 Z" fill="url(#bigshield)" opacity="0.9"/>
+      <!-- BIG HEART in shield -->
+      <path d="M60 200 Q82 170 105 186 Q140 162 165 186 Q190 162 215 186 Q240 170 260 200 Q260 252 140 295 Q20 252 60 200 Z" fill="white" opacity="0.85"/>
+      <!-- Heart inside heart -->
+      <path d="M100 210 Q115 190 130 200 Q140 190 152 200 Q162 190 178 200 Q178 224 140 248 Q100 224 100 210 Z" fill="#cc2060" opacity="0.8"/>
+
+      <!-- Protected healthy person BEHIND shield -->
+      <!-- Shadow -->
+      <ellipse cx="300" cy="365" rx="36" ry="9" fill="black" opacity="0.25"/>
+      <!-- Legs upright tall -->
+      <line x1="288" y1="318" x2="278" y2="362" stroke="#4a8a3a" stroke-width="14" stroke-linecap="round"/>
+      <line x1="312" y1="318" x2="322" y2="362" stroke="#4a8a3a" stroke-width="14" stroke-linecap="round"/>
+      <ellipse cx="276" cy="364" rx="16" ry="7" fill="#2a6028"/>
+      <ellipse cx="324" cy="365" rx="16" ry="7" fill="#2a6028"/>
+      <!-- Body upright -->
+      <path d="M270 228 Q282 218 300 216 Q318 214 330 224 L334 305 Q326 320 300 322 Q274 318 268 304 Z" fill="#4a8a3a"/>
+      <!-- arms happy/open -->
+      <path d="M270 238 Q248 246 240 262" stroke="#4a8a3a" stroke-width="13" stroke-linecap="round" fill="none"/>
+      <path d="M330 238 Q352 248 360 264" stroke="#4a8a3a" stroke-width="13" stroke-linecap="round" fill="none"/>
+      <circle cx="237" cy="265" r="13" fill="#c9b090"/>
+      <circle cx="363" cy="267" r="13" fill="#c9b090"/>
+      <!-- Neck + Head -->
+      <rect x="293" y="200" width="14" height="22" fill="#c9b090" rx="3"/>
+      <circle cx="300" cy="182" r="28" fill="#c9b090"/>
+      <path d="M276 175 Q284 154 300 152 Q316 154 324 175" fill="#3a2010"/>
+      <!-- BEAMING FACE -->
+      <circle cx="290" cy="178" r="5" fill="#3a2010"/>
+      <circle cx="310" cy="178" r="5" fill="#3a2010"/>
+      <circle cx="292" cy="176" r="2" fill="white"/>
+      <circle cx="312" cy="176" r="2" fill="white"/>
+      <path d="M283 192 Q300 208 317 192" stroke="#8a3015" stroke-width="3.5" fill="none"/>
+      <circle cx="281" cy="190" r="7" fill="#e07060" opacity="0.55"/>
+      <circle cx="319" cy="190" r="7" fill="#e07060" opacity="0.55"/>
+      <!-- Pictogram guide card in hand -->
+      <rect x="364" y="248" width="40" height="52" fill="white" stroke="#4a8a40" stroke-width="2" rx="4"/>
+      <path d="M370 260 Q374 255 378 259 Q382 255 386 259 Q386 265 378 271 Q370 265 370 260 Z" fill="#cc2060"/>
+      <polyline points="371,281 376,289 390,273" stroke="#2a7a20" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      <!-- LARGE GREEN CHECKMARK next to person -->
+      <polyline points="240,295 254,318 285,280" stroke="#4a8a3a" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+
+      <!-- Lush plants around (health flourishing) -->
+      <line x1="360" y1="378" x2="360" y2="340" stroke="#4a8a3a" stroke-width="3"/>
+      <ellipse cx="348" cy="333" rx="13" ry="18" fill="#3a9030"/>
+      <ellipse cx="372" cy="336" rx="12" ry="16" fill="#4aaa38"/>
+      <circle cx="360" cy="322" r="9" fill="#f5c842" opacity="0.8"/>
+      <line x1="30" y1="378" x2="30" y2="345" stroke="#4a8a3a" stroke-width="3"/>
+      <ellipse cx="20" cy="340" rx="11" ry="14" fill="#3a9030"/>
+      <ellipse cx="40" cy="342" rx="10" ry="13" fill="#4aaa38"/>
+      <line x1="200" y1="378" x2="200" y2="350" stroke="#4a8a3a" stroke-width="2.5"/>
+      <ellipse cx="192" cy="346" rx="9" ry="12" fill="#3a9030" opacity="0.8"/>
+      <ellipse cx="208" cy="348" rx="8" ry="11" fill="#4aaa38" opacity="0.75"/>
+      <circle cx="200" cy="337" r="7" fill="#f5c842" opacity="0.7"/>
+    </svg>
+  </div>
+</div>
+
+<div class="subpages-grid">
+  <a href="index.html" class="subpage-link" data-tip="Pharos — Gezondheid en kwaliteit van zorg voor iedereen in Nederland"><svg viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="80" fill="#2d1b5e"/><polygon points="100,8 132,36 122,36 122,62 78,62 78,36 68,36" fill="#b01458" opacity="0.8"/></svg></a>
+  <a href="missie.html" class="subpage-link" data-tip="Missie en visie — Onze missie: het terugdringen van grote gezondheidsverschillen. Ons uitgangspunt: gezondheid en kwaliteit van zorg voor iedereen in Nederland."><svg viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="80" fill="#2d1820"/><polygon points="100,62 92,30 108,30" fill="#b01458"/><rect x="90" y="26" width="20" height="8" fill="#f5c842" rx="2"/><circle cx="100" cy="32" r="16" fill="#f5c842" opacity="0.3"/></svg></a>
+  <a href="laaggeletterdheid.html" class="subpage-link" data-tip="Gezondheidsvaardigheden en laaggeletterdheid — Ruim 2,5 miljoen Nederlanders hebben moeite met lezen en schrijven. Dit beïnvloedt sterk hoe zij omgaan met hun gezondheid."><svg viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="80" fill="#3d2b1e"/><rect x="30" y="10" width="55" height="65" fill="white" opacity="0.8" transform="rotate(-10,57,42)"/><circle cx="150" cy="40" r="18" fill="#f5c842" opacity="0.8"/></svg></a>
+  <a href="samenwerken.html" class="subpage-link" data-tip="Samenwerken — Pharos helpt organisaties hun communicatie, processen en beleid zo in te richten dat iedereen passende zorg krijgt."><svg viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="80" fill="#3d1a2a"/><circle cx="100" cy="40" r="12" fill="#cc2060" opacity="0.8"/><circle cx="64" cy="26" r="9" fill="#6b4f9e" opacity="0.7"/><circle cx="136" cy="26" r="9" fill="#4a8a3a" opacity="0.7"/><circle cx="64" cy="56" r="9" fill="#e05a20" opacity="0.7"/><circle cx="136" cy="56" r="9" fill="#3060a0" opacity="0.7"/></svg></a>
+  <a href="ehealth.html" class="subpage-link" data-tip="e-health en digitale zorg — Digitale vernieuwingen zoals AI en apps veranderen de zorg razendsnel. Maar deze oplossingen zijn niet voor iedereen toegankelijk, begrijpelijk of gebruiksvriendelijk."><svg viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="80" fill="#1a2a40"/><rect x="75" y="6" width="50" height="90" fill="#f0f0f0" rx="8" stroke="#4a8a3a" stroke-width="2"/><rect x="80" y="13" width="40" height="52" fill="white" rx="2"/><rect x="83" y="16" width="16" height="16" fill="#cc2060" rx="3"/></svg></a>
+  <a href="spuk.html" class="subpage-link" data-tip="SPUK-regeling — Hoe gemeenten stevig kunnen inzetten op het terugdringen van vermijdbare gezondheidsverschillen bij kwetsbare groepen."><svg viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="80" fill="#1a2030"/><rect x="75" y="4" width="50" height="34" fill="#d4c8b0" rx="2"/><polygon points="68,6 132,6 100,0" fill="#c4b8a0"/><line x1="100" y1="38" x2="100" y2="50" stroke="#f5c842" stroke-width="3"/><line x1="100" y1="50" x2="62" y2="60" stroke="#f5c842" stroke-width="2"/><line x1="100" y1="50" x2="138" y2="60" stroke="#f5c842" stroke-width="2"/><circle cx="100" cy="67" r="8" fill="#f5c842" opacity="0.7"/></svg></a>
+</div>
+
+<footer>
+  <div class="footer-row">
+    <a href="index.html" data-tip="Pharos — Gezondheid en kwaliteit van zorg voor iedereen in Nederland"><svg viewBox="0 0 28 28" fill="none"><path d="M3 13 L14 4 L25 13 L25 24 L19 24 L19 18 L9 18 L9 24 L3 24 Z" fill="#d0c4e8" opacity="0.7"/></svg></a>
+    <a href="missie.html" data-tip="Missie en visie — Onze missie: het terugdringen van grote gezondheidsverschillen. Ons uitgangspunt: gezondheid en kwaliteit van zorg voor iedereen in Nederland."><svg viewBox="0 0 28 28" fill="none"><circle cx="13" cy="13" r="10" stroke="#d0c4e8" stroke-width="1.5" fill="#d0c4e8" opacity="0.1"/><line x1="13" y1="11" x2="13" y2="19" stroke="#d0c4e8" stroke-width="2.5"/><circle cx="13" cy="8" r="1.5" fill="#b01458"/></svg></a>
+    <a href="laaggeletterdheid.html" data-tip="Gezondheidsvaardigheden en laaggeletterdheid — Ruim 2,5 miljoen Nederlanders hebben moeite met lezen en schrijven. Dit beïnvloedt sterk hoe zij omgaan met hun gezondheid."><svg viewBox="0 0 28 28" fill="none"><rect x="4" y="3" width="13" height="19" rx="2" stroke="#d0c4e8" stroke-width="1.5" fill="#d0c4e8" opacity="0.1"/><circle cx="20" cy="18" r="6" fill="#f5c842" opacity="0.6"/></svg></a>
+    <a href="samenwerken.html" data-tip="Samenwerken — Pharos helpt organisaties hun communicatie, processen en beleid zo in te richten dat iedereen passende zorg krijgt."><svg viewBox="0 0 28 28" fill="none"><circle cx="9" cy="11" r="5" fill="#d0c4e8" opacity="0.7"/><circle cx="19" cy="11" r="5" fill="#d0c4e8" opacity="0.7"/><line x1="9" y1="16" x2="19" y2="16" stroke="#b01458" stroke-width="2"/></svg></a>
+    <a href="ehealth.html" data-tip="e-health en digitale zorg — Digitale vernieuwingen zoals AI en apps veranderen de zorg razendsnel. Maar deze oplossingen zijn niet voor iedereen toegankelijk, begrijpelijk of gebruiksvriendelijk."><svg viewBox="0 0 28 28" fill="none"><rect x="8" y="3" width="12" height="22" rx="2.5" stroke="#d0c4e8" stroke-width="1.5" fill="#d0c4e8" opacity="0.1"/><circle cx="14" cy="21" r="2" fill="#b01458"/></svg></a>
+    <a href="spuk.html" data-tip="SPUK-regeling — Hoe gemeenten stevig kunnen inzetten op het terugdringen van vermijdbare gezondheidsverschillen bij kwetsbare groepen."><svg viewBox="0 0 28 28" fill="none"><rect x="10" y="3" width="8" height="8" rx="1" fill="#d4c8b0"/><line x1="14" y1="11" x2="14" y2="18" stroke="#f5c842" stroke-width="2.5"/><circle cx="14" cy="21" r="4" fill="#f5c842" opacity="0.8"/></svg></a>
+    <a href="#" data-tip="Privacybeleid van Pharos — Hoe wij omgaan met uw persoonsgegevens"><svg viewBox="0 0 28 28" fill="none"><rect x="7" y="13" width="14" height="12" rx="2" stroke="#d0c4e8" stroke-width="1.5" fill="#d0c4e8" opacity="0.1"/><path d="M10 13 Q10 7 14 7 Q18 7 18 13" stroke="#d0c4e8" stroke-width="2" fill="none"/></svg></a>
+  </div>
+</footer>
+</body>
+</html>

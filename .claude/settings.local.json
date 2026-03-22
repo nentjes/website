@@ -19,7 +19,15 @@
       "Bash(/dev/null -maxdepth 4 -name *.css)",
       "Bash(find /Users/1roel/Autestme -name *.css -o -name *.html -o -name *.scss)",
       "Bash(grep -E \"color|background|font|gradient|#[0-9a-fA-F]{3,6}|rgb\\\\\\(|--\" /Users/1roel/Autestme/Autestme/website/styles.css)",
-      "Bash(/Users/1roel/Documents/Projecten/Presentatie/website/pharos-pictogram/index.html:*)"
+      "Bash(/Users/1roel/Documents/Projecten/Presentatie/website/pharos-pictogram/index.html:*)",
+      "Bash(/Users/1roel/Documents/Projecten/Presentatie/website/pharos-pictogram/laaggeletterdheid.html:*)",
+      "Bash(/Users/1roel/Documents/Projecten/Presentatie/website/pharos-pictogram/ehealth.html:*)",
+      "Bash(/Users/1roel/Documents/Projecten/Presentatie/website/pharos-pictogram/samenwerken.html:*)",
+      "Bash(/Users/1roel/Documents/Projecten/Presentatie/website/pharos-pictogram/preventie.html:*)",
+      "Bash(/Users/1roel/Documents/Projecten/Presentatie/website/pharos-pictogram/spuk.html:*)",
+      "Bash(ls -la /Users/1roel/Documents/Projecten/Presentatie/website/pharos-pictogram/*.html)",
+      "Bash(grep -h \"data-tip=\" /Users/1roel/Documents/Projecten/Presentatie/website/pharos-pictogram/*.html)",
+      "Bash(grep -n \"<nav\" /Users/1roel/Documents/Projecten/Presentatie/website/pharos-pictogram/*.html)"
     ]
   }
 }

@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pharos — SPUK-Regeling</title>
+<style>
+
+  :root{--pp:#3d2b6e;--ppd:#2d1b5e;--ppm:#6b4f9e;--pl:#d0c4e8;--pm:#b01458;--vg:#f5c842;--vgb:#1a3e6e;}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--ppd);font-family:sans-serif;color:var(--pl);overflow-x:hidden;}
+  header{background:var(--ppd);border-bottom:3px solid var(--pm);display:flex;align-items:center;padding:10px 24px;gap:20px;position:sticky;top:0;z-index:100;flex-wrap:wrap;}
+  .logo-wrap{display:flex;align-items:center;gap:12px;text-decoration:none;}
+  .logo-circle{width:48px;height:48px;background:var(--pm);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:24px;color:white;flex-shrink:0;}
+  .back-btn{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--pl);background:var(--ppm);padding:8px 14px;border-radius:10px;margin-left:auto;transition:background 0.2s;}
+  .back-btn:hover{background:var(--pm);}
+  .back-btn svg{width:22px;height:22px;}
+  nav{display:flex;gap:6px;flex-wrap:wrap;}
+  .nav-item{display:flex;flex-direction:column;align-items:center;text-decoration:none;color:var(--pl);padding:4px 8px;border-radius:8px;transition:background 0.2s;gap:2px;}
+  .nav-item:hover{background:var(--ppm);}
+  /* ── ACTIEF MENU-ITEM: omcirkeld zodat je weet waar je bent ── */
+  .nav-item.active {
+    box-shadow: 0 0 0 2px var(--pm);
+    background: rgba(176, 20, 88, 0.18);
+    border-radius: 10px;
+  }
+  .nav-item.active .nav-label {
+    color: var(--pm);
+    font-weight: 700;
+    opacity: 1;
+  }
+  .nav-item.active svg { opacity: 1; }
+
+  .nav-item svg{width:26px;height:26px;}
+  .nav-label{font-size:9px;opacity:0.85;text-align:center;}
+  .hero-wrap{width:100%;overflow:hidden;}
+  .hero-wrap svg{display:block;width:100%;height:auto;}
+  .panels-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;padding:28px;max-width:1280px;margin:0 auto;}
+  .panel{background:var(--pp);border-radius:14px;overflow:hidden;border:2px solid var(--ppm);box-shadow:0 4px 16px rgba(0,0,0,0.4);}
+  .panel svg{width:100%;height:auto;display:block;}
+  .subpages-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding:0 28px 40px;max-width:1280px;margin:0 auto;}
+  .subpage-link{background:var(--pp);border-radius:12px;overflow:hidden;text-decoration:none;border:2px solid var(--ppm);transition:transform 0.2s;display:block;}
+  .subpage-link:hover{transform:translateY(-4px);border-color:var(--vg);}
+  .subpage-link svg{width:100%;height:auto;display:block;}
+  footer{background:var(--ppd);border-top:3px solid var(--pm);padding:28px 32px 18px;}
+  .footer-row{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;}
+  .footer-row a{color:var(--pl);opacity:0.8;transition:opacity 0.2s;}
+  .footer-row a:hover{opacity:1;}
+  .footer-row svg{width:28px;height:28px;}
+  @media(max-width:900px){.panels-grid{grid-template-columns:1fr;}.subpages-grid{grid-template-columns:1fr;padding:0 16px 32px;}}
+
+  /* ── PHAROS TOOLTIP: echte tekst van pharos.nl ── */
+  [data-tip] { position: relative; }
+  [data-tip]::after {
+    content: attr(data-tip);
+    position: absolute;
+    bottom: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: #2d1b5e;
+    color: #e8e0f5;
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: 13px;
+    line-height: 1.55;
+    max-width: 300px;
+    width: max-content;
+    white-space: normal;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.25s;
+    z-index: 9999;
+    text-align: left;
+    border: 1px solid #b01458;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.55);
+    font-family: system-ui, -apple-system, sans-serif;
+  }
+  [data-tip]:hover::after { opacity: 1; }
+  /* Zorg dat tooltip niet buiten beeld valt */
+  [data-tip]:first-child::after, .logo-wrap::after { left: 0; transform: none; }
+  /* Nav-tooltips verschijnen ONDER het item, kaart-tooltips BOVEN */
+  header [data-tip]::after {
+    bottom: auto;
+    top: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+</style>
+</head>
+<body>
+<header>
+  <a href="index.html" class="logo-wrap" data-tip="Pharos — Gezondheid en kwaliteit van zorg voor iedereen in Nederland">
+    <div class="logo-circle">P</div>
+    <svg viewBox="0 0 120 36" width="110" height="34" fill="none"><path d="M4 26 Q14 10 24 22 Q34 34 44 18 Q54 4 64 18 Q74 32 84 16 Q94 2 104 18 Q114 32 120 22" stroke="#b01458" stroke-width="3" fill="none"/></svg>
+  </a>
+  <nav>
+    <a href="index.html" class="nav-item" data-tip="Pharos — Gezondheid en kwaliteit van zorg voor iedereen in Nederland">
+      <svg viewBox="0 0 26 26" fill="none"><polygon points="13,3 22,10 22,22 4,22 4,10" fill="#d0c4e8" fill-opacity="0.15" stroke="#d0c4e8" stroke-width="1.5"/><rect x="10" y="14" width="6" height="8" fill="#b01458" opacity="0.8"/><line x1="13" y1="3" x2="13" y2="8" stroke="#f5c842" stroke-width="2" stroke-linecap="round"/></svg>
+      <span class="nav-label">Home</span>
+    </a>
+    <a href="missie.html" class="nav-item" data-tip="Missie en visie — Onze missie: het terugdringen van grote gezondheidsverschillen. Ons uitgangspunt: gezondheid en kwaliteit van zorg voor iedereen in Nederland.">
+      <svg viewBox="0 0 26 26" fill="none"><circle cx="13" cy="13" r="10" stroke="#d0c4e8" stroke-width="1.5" fill="#d0c4e8" fill-opacity="0.1"/><line x1="13" y1="11" x2="13" y2="19" stroke="#d0c4e8" stroke-width="2.5"/><circle cx="13" cy="8" r="1.8" fill="#b01458"/></svg>
+      <span class="nav-label">Missie</span>
+    </a>
+    <a href="laaggeletterdheid.html" class="nav-item" data-tip="Gezondheidsvaardigheden en laaggeletterdheid — Ruim 2,5 miljoen Nederlanders hebben moeite met lezen en schrijven. Dit beïnvloedt sterk hoe zij omgaan met hun gezondheid.">
+      <svg viewBox="0 0 26 26" fill="none"><rect x="4" y="3" width="14" height="18" rx="2" fill="#d0c4e8" fill-opacity="0.15" stroke="#d0c4e8" stroke-width="1.5"/><line x1="7" y1="8" x2="15" y2="8" stroke="#d0c4e8" stroke-width="1.5"/><line x1="7" y1="12" x2="13" y2="12" stroke="#d0c4e8" stroke-width="1.5"/><path d="M17 13 Q22 10 22 17 Q22 22 17 22" stroke="#f5c842" stroke-width="1.5" fill="none"/></svg>
+      <span class="nav-label">Kennis</span>
+    </a>
+    <a href="samenwerken.html" class="nav-item" data-tip="Samenwerken — Pharos helpt organisaties hun communicatie, processen en beleid zo in te richten dat iedereen passende zorg krijgt.">
+      <svg viewBox="0 0 26 26" fill="none"><circle cx="9" cy="10" r="4.5" fill="#d0c4e8" fill-opacity="0.2" stroke="#d0c4e8" stroke-width="1.5"/><circle cx="17" cy="10" r="4.5" fill="#d0c4e8" fill-opacity="0.2" stroke="#d0c4e8" stroke-width="1.5"/><path d="M3 22 Q3 16 9 16 Q13 16 13 19 Q13 16 17 16 Q23 16 23 22" stroke="#d0c4e8" stroke-width="1.5" fill="none"/><line x1="9" y1="10" x2="17" y2="10" stroke="#b01458" stroke-width="1.5"/></svg>
+      <span class="nav-label">Samen</span>
+    </a>
+    <a href="ehealth.html" class="nav-item" data-tip="e-health en digitale zorg — Digitale vernieuwingen zoals AI en apps veranderen de zorg razendsnel. Maar deze oplossingen zijn niet voor iedereen toegankelijk, begrijpelijk of gebruiksvriendelijk.">
+      <svg viewBox="0 0 26 26" fill="none"><rect x="7" y="2" width="12" height="22" rx="2.5" stroke="#d0c4e8" stroke-width="1.5" fill="#d0c4e8" fill-opacity="0.1"/><circle cx="13" cy="20" r="1.8" fill="#b01458"/><line x1="10" y1="7" x2="16" y2="7" stroke="#d0c4e8" stroke-width="1.5"/><line x1="10" y1="11" x2="16" y2="11" stroke="#d0c4e8" stroke-width="1"/></svg>
+      <span class="nav-label">e-Health</span>
+    </a>
+    <a href="preventie.html" class="nav-item" data-tip="Preventie — 16 succesfactoren voor preventiebeleid dat gezondheidsverschillen verkleint. Pharos ondersteunt gemeenten en zorgorganisaties bij effectieve preventie.">
+      <svg viewBox="0 0 26 26" fill="none"><path d="M13 3 L21 7 L21 16 Q21 22 13 25 Q5 22 5 16 L5 7 Z" fill="#4a8a3a" fill-opacity="0.25" stroke="#d0c4e8" stroke-width="1.5"/><path d="M9 13 L12 16 L17 10" stroke="#f5c842" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span class="nav-label">Preventie</span>
+    </a>
+    <a href="spuk.html" class="nav-item active" aria-current="page" data-tip="SPUK-regeling — Hoe gemeenten stevig kunnen inzetten op het terugdringen van vermijdbare gezondheidsverschillen bij kwetsbare groepen.">
+      <svg viewBox="0 0 26 26" fill="none"><rect x="5" y="11" width="16" height="12" rx="1" fill="#d0c4e8" fill-opacity="0.15" stroke="#d0c4e8" stroke-width="1.5"/><polygon points="3,12 13,4 23,12" fill="#d0c4e8" fill-opacity="0.2" stroke="#d0c4e8" stroke-width="1.5"/><rect x="10" y="16" width="6" height="7" fill="#b01458" opacity="0.7"/></svg>
+      <span class="nav-label">SPUK</span>
+    </a>
+    <a href="https://www.pharos.nl/contact/" class="nav-item" data-tip="Contact — Neem contact op met Pharos: info@pharos.nl">
+      <svg viewBox="0 0 26 26" fill="none"><rect x="2" y="6" width="22" height="16" rx="2" stroke="#d0c4e8" stroke-width="1.5" fill="#d0c4e8" fill-opacity="0.1"/><polyline points="2,8 13,15 24,8" stroke="#d0c4e8" stroke-width="1.5" fill="none"/></svg>
+      <span class="nav-label">Contact</span>
+    </a>
+    <a href="https://www.pharos.nl/" class="nav-item" data-tip="Zoek in alle kennis, publicaties en nieuws van Pharos">
+      <svg viewBox="0 0 26 26" fill="none"><circle cx="11" cy="11" r="7" stroke="#d0c4e8" stroke-width="1.5" fill="#d0c4e8" fill-opacity="0.1"/><line x1="16" y1="16" x2="23" y2="23" stroke="#b01458" stroke-width="2.5" stroke-linecap="round"/></svg>
+      <span class="nav-label">Zoeken</span>
+    </a>
+  </nav>
+  <a href="index.html" class="back-btn" data-tip="Terug naar de startpagina van Pharos Beeldtaal"><svg viewBox="0 0 22 22" fill="none"><polyline points="14,4 6,11 14,18" stroke="#d0c4e8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg><svg viewBox="0 0 22 22" fill="none"><path d="M3 11 L11 4 L19 11 L19 19 L14 19 L14 14 L8 14 L8 19 L3 19 Z" fill="#d0c4e8" opacity="0.8"/></svg></a>
+</header>
+
+<svg viewBox="0 0 1200 500" xmlns="http://www.w3.org/2000/svg" aria-label="Illustratie: Geldstroom van het Ministerie via gemeenten naar inwoners">
+  <defs>
+    <!-- Sky gradient: urban blue tones -->
+    <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0d2a4a"/>
+      <stop offset="60%" stop-color="#1a4a7a"/>
+      <stop offset="100%" stop-color="#2a6a5a"/>
+    </linearGradient>
+
+    <!-- Government building gradient -->
+    <linearGradient id="govGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2a5a9a"/>
+      <stop offset="100%" stop-color="#1a3a6a"/>
+    </linearGradient>
+
+    <!-- Municipality building gradient -->
+    <linearGradient id="munGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#3a7a5a"/>
+      <stop offset="100%" stop-color="#1a5a3a"/>
+    </linearGradient>
+
+    <!-- Gold coin gradient -->
+    <radialGradient id="coinGrad" cx="50%" cy="40%">
+      <stop offset="0%" stop-color="#ffe066"/>
+      <stop offset="60%" stop-color="#f5c842"/>
+      <stop offset="100%" stop-color="#c89820"/>
+    </radialGradient>
+
+    <!-- Pharos document gradient -->
+    <linearGradient id="docGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#cc2060"/>
+      <stop offset="100%" stop-color="#8a1040"/>
+    </linearGradient>
+
+    <!-- People ground gradient -->
+    <linearGradient id="groundGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1a5a3a"/>
+      <stop offset="100%" stop-color="#0d3a20"/>
+    </linearGradient>
+
+    <!-- Glow filter -->
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+
+    <!-- Gold glow -->
+    <filter id="goldglow">
+      <feGaussianBlur stdDeviation="5" result="blur"/>
+      <feFlood flood-color="#f5c842" flood-opacity="0.6" result="color"/>
+      <feComposite in="color" in2="blur" operator="in" result="glowblur"/>
+      <feMerge><feMergeNode in="glowblur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+
+    <!-- Urban grid pattern -->
+    <pattern id="urbanGrid" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="0.5"/>
+    </pattern>
+
+    <!-- Flow arrow marker -->
+    <marker id="flowArrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#f5c842" opacity="0.9"/>
+    </marker>
+    <marker id="greenArrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#4aaa3a" opacity="0.9"/>
+    </marker>
+  </defs>
+
+  <!-- BACKGROUND -->
+  <rect width="1200" height="500" fill="url(#skyGrad)"/>
+  <rect width="1200" height="500" fill="url(#urbanGrid)"/>
+
+  <!-- Horizontal dividers suggesting layers -->
+  <rect x="0" y="158" width="1200" height="2" fill="rgba(255,255,255,0.06)"/>
+  <rect x="0" y="318" width="1200" height="2" fill="rgba(255,255,255,0.06)"/>
+
+  <!-- Layer labels -->
+
+  <!-- ==================== TOP LAYER: GOVERNMENT BUILDING ==================== -->
+  <!-- Large government/ministry building centered at top -->
+  <!-- Base -->
+  <rect x="430" y="65" width="340" height="88" fill="url(#govGrad)" rx="3"/>
+  <!-- Pillars -->
+  <rect x="445" y="68" width="18" height="82" fill="rgba(255,255,255,0.12)"/>
+  <rect x="475" y="68" width="18" height="82" fill="rgba(255,255,255,0.12)"/>
+  <rect x="505" y="68" width="18" height="82" fill="rgba(255,255,255,0.12)"/>
+  <rect x="535" y="68" width="18" height="82" fill="rgba(255,255,255,0.12)"/>
+  <rect x="565" y="68" width="18" height="82" fill="rgba(255,255,255,0.12)"/>
+  <rect x="595" y="68" width="18" height="82" fill="rgba(255,255,255,0.12)"/>
+  <rect x="625" y="68" width="18" height="82" fill="rgba(255,255,255,0.12)"/>
+  <rect x="655" y="68" width="18" height="82" fill="rgba(255,255,255,0.12)"/>
+  <rect x="685" y="68" width="18" height="82" fill="rgba(255,255,255,0.12)"/>
+  <rect x="715" y="68" width="18" height="82" fill="rgba(255,255,255,0.12)"/>
+  <rect x="745" y="68" width="18" height="82" fill="rgba(255,255,255,0.12)"/>
+  <!-- Roof / pediment -->
+  <polygon points="420,65 600,28 780,65" fill="#1a3a6a"/>
+  <polygon points="440,65 600,34 760,65" fill="#2a5a9a"/>
+  <!-- Flag -->
+  <rect x="596" y="20" width="3" height="18" fill="#aaa"/>
+  <polygon points="599,20 618,26 599,32" fill="#cc2060"/>
+  <!-- Windows -->
+  <rect x="460" y="80" width="22" height="28" fill="rgba(255,220,80,0.4)" rx="2"/>
+  <rect x="492" y="80" width="22" height="28" fill="rgba(255,220,80,0.4)" rx="2"/>
+  <rect x="524" y="80" width="22" height="28" fill="rgba(255,220,80,0.4)" rx="2"/>
+  <rect x="556" y="80" width="22" height="28" fill="rgba(255,220,80,0.4)" rx="2"/>
+  <rect x="624" y="80" width="22" height="28" fill="rgba(255,220,80,0.4)" rx="2"/>
+  <rect x="656" y="80" width="22" height="28" fill="rgba(255,220,80,0.4)" rx="2"/>
+  <rect x="688" y="80" width="22" height="28" fill="rgba(255,220,80,0.4)" rx="2"/>
+  <rect x="720" y="80" width="22" height="28" fill="rgba(255,220,80,0.4)" rx="2"/>
+  <!-- Door (center) -->
+  <rect x="578" y="105" width="44" height="48" fill="rgba(255,200,60,0.25)" rx="3"/>
+  <rect x="580" y="107" width="19" height="42" fill="rgba(255,200,60,0.2)"/>
+  <rect x="601" y="107" width="19" height="42" fill="rgba(255,200,60,0.2)"/>
+
+  <!-- SPUK text on building -->
+  <text x="600" y="145" fill="#f5c842" font-size="13" font-weight="bold" text-anchor="middle" font-family="Georgia">SPUK</text>
+
+  <!-- Pharos document/seal being issued from building -->
+  <!-- Document shape -->
+  <rect x="532" y="155" width="52" height="66" fill="white" rx="4" opacity="0.95"/>
+  <rect x="532" y="155" width="52" height="14" fill="url(#docGrad)" rx="4"/>
+  <!-- Pharos P on doc -->
+  <circle cx="558" cy="162" r="8" fill="#cc2060"/>
+  <text x="558" y="167" fill="white" font-size="10" font-weight="bold" text-anchor="middle" font-family="Georgia">P</text>
+  <!-- Lines on document = text lines -->
+  <rect x="537" y="178" width="42" height="3" fill="#ddd" rx="1"/>
+  <rect x="537" y="185" width="36" height="3" fill="#ddd" rx="1"/>
+  <rect x="537" y="192" width="42" height="3" fill="#ddd" rx="1"/>
+  <rect x="537" y="199" width="30" height="3" fill="#ddd" rx="1"/>
+  <!-- Stamp / seal -->
+  <circle cx="573" cy="212" r="9" fill="none" stroke="#cc2060" stroke-width="2"/>
+  <text x="573" y="216" fill="#cc2060" font-size="8" font-weight="bold" text-anchor="middle">OK</text>
+
+  <!-- Document on right side too -->
+  <rect x="616" y="155" width="52" height="66" fill="white" rx="4" opacity="0.95"/>
+  <rect x="616" y="155" width="52" height="14" fill="#2a5a9a" rx="4"/>
+  <text x="642" y="167" fill="white" font-size="9" font-weight="bold" text-anchor="middle" font-family="Georgia">€€€</text>
+  <rect x="621" y="178" width="42" height="3" fill="#ddd" rx="1"/>
+  <rect x="621" y="185" width="38" height="3" fill="#ddd" rx="1"/>
+  <rect x="621" y="192" width="42" height="3" fill="#ddd" rx="1"/>
+  <rect x="621" y="199" width="32" height="3" fill="#ddd" rx="1"/>
+  <!-- Euro symbol -->
+  <text x="642" y="218" fill="#2a7a40" font-size="20" font-weight="bold" text-anchor="middle">€</text>
+
+  <!-- ==================== FLOW ARROWS: GOV → MUNICIPALITIES ==================== -->
+  <!-- Big downward gold flow lines -->
+  <!-- Center flow -->
+  <line x1="558" y1="221" x2="558" y2="298" stroke="#f5c842" stroke-width="4" stroke-dasharray="8,4" opacity="0.85" marker-end="url(#flowArrow)"/>
+  <line x1="642" y1="221" x2="642" y2="298" stroke="#f5c842" stroke-width="4" stroke-dasharray="8,4" opacity="0.85" marker-end="url(#flowArrow)"/>
+
+  <!-- Spreader horizontal line at mid-flow -->
+  <line x1="160" y1="258" x2="1040" y2="258" stroke="#f5c842" stroke-width="3" opacity="0.7"/>
+  <!-- Coins on the flow -->
+  <circle cx="380" cy="258" r="12" fill="url(#coinGrad)" filter="url(#goldglow)" opacity="0.9"/>
+  <text x="380" y="263" fill="#7a5800" font-size="10" font-weight="bold" text-anchor="middle">€</text>
+  <circle cx="500" cy="258" r="12" fill="url(#coinGrad)" filter="url(#goldglow)" opacity="0.9"/>
+  <text x="500" y="263" fill="#7a5800" font-size="10" font-weight="bold" text-anchor="middle">€</text>
+  <circle cx="600" cy="258" r="14" fill="url(#coinGrad)" filter="url(#goldglow)" opacity="0.95"/>
+  <text x="600" y="264" fill="#7a5800" font-size="12" font-weight="bold" text-anchor="middle">€</text>
+  <circle cx="700" cy="258" r="12" fill="url(#coinGrad)" filter="url(#goldglow)" opacity="0.9"/>
+  <text x="700" y="263" fill="#7a5800" font-size="10" font-weight="bold" text-anchor="middle">€</text>
+  <circle cx="820" cy="258" r="12" fill="url(#coinGrad)" filter="url(#goldglow)" opacity="0.9"/>
+  <text x="820" y="263" fill="#7a5800" font-size="10" font-weight="bold" text-anchor="middle">€</text>
+
+  <!-- Vertical drops to each municipality -->
+  <line x1="160" y1="258" x2="160" y2="300" stroke="#f5c842" stroke-width="2.5" marker-end="url(#flowArrow)" opacity="0.8"/>
+  <line x1="330" y1="258" x2="330" y2="300" stroke="#f5c842" stroke-width="2.5" marker-end="url(#flowArrow)" opacity="0.8"/>
+  <line x1="500" y1="258" x2="500" y2="300" stroke="#f5c842" stroke-width="2.5" marker-end="url(#flowArrow)" opacity="0.8"/>
+  <line x1="700" y1="258" x2="700" y2="300" stroke="#f5c842" stroke-width="2.5" marker-end="url(#flowArrow)" opacity="0.8"/>
+  <line x1="870" y1="258" x2="870" y2="300" stroke="#f5c842" stroke-width="2.5" marker-end="url(#flowArrow)" opacity="0.8"/>
+  <line x1="1040" y1="258" x2="1040" y2="300" stroke="#f5c842" stroke-width="2.5" marker-end="url(#flowArrow)" opacity="0.8"/>
+
+  <!-- ==================== MIDDLE LAYER: 6 MUNICIPALITY BUILDINGS ==================== -->
+  <!-- Municipality 1 (far left) -->
+  <rect x="120" y="300" width="80" height="70" fill="url(#munGrad)" rx="2"/>
+  <polygon points="110,300 160,272 210,300" fill="#1a5a3a"/>
+  <rect x="132" y="310" width="16" height="20" fill="rgba(255,220,80,0.35)" rx="1"/>
+  <rect x="154" y="310" width="16" height="20" fill="rgba(255,220,80,0.35)" rx="1"/>
+  <rect x="176" y="310" width="16" height="20" fill="rgba(255,220,80,0.35)" rx="1"/>
+  <rect x="148" y="338" width="24" height="32" fill="rgba(255,200,60,0.2)" rx="2"/>
+
+  <!-- Municipality 2 -->
+  <rect x="290" y="300" width="80" height="70" fill="url(#munGrad)" rx="2"/>
+  <polygon points="280,300 330,272 380,300" fill="#1a5a3a"/>
+  <rect x="302" y="310" width="16" height="20" fill="rgba(255,220,80,0.35)" rx="1"/>
+  <rect x="324" y="310" width="16" height="20" fill="rgba(255,220,80,0.35)" rx="1"/>
+  <rect x="346" y="310" width="16" height="20" fill="rgba(255,220,80,0.35)" rx="1"/>
+  <rect x="318" y="338" width="24" height="32" fill="rgba(255,200,60,0.2)" rx="2"/>
+
+  <!-- Municipality 3 -->
+  <rect x="460" y="300" width="80" height="70" fill="url(#munGrad)" rx="2"/>
+  <polygon points="450,300 500,272 550,300" fill="#1a5a3a"/>
+  <rect x="472" y="310" width="16" height="20" fill="rgba(255,220,80,0.35)" rx="1"/>
+  <rect x="494" y="310" width="16" height="20" fill="rgba(255,220,80,0.35)" rx="1"/>
+  <rect x="516" y="310" width="16" height="20" fill="rgba(255,220,80,0.35)" rx="1"/>
+  <rect x="488" y="338" width="24" height="32" fill="rgba(255,200,60,0.2)" rx="2"/>
+
+  <!-- Municipality 4 -->
+  <rect x="660" y="300" width="80" height="70" fill="url(#munGrad)" rx="2"/>
+  <polygon points="650,300 700,272 750,300" fill="#1a5a3a"/>
+  <rect x="672" y="310" width="16" height="20" fill="rgba(255,220,80,0.35)" rx="1"/>
+  <rect x="694" y="310" width="16" height="20" fill="rgba(255,220,80,0.35)" rx="1"/>
+  <rect x="716" y="310" width="16" height="20" fill="rgba(255,220,80,0.35)" rx="1"/>
+  <rect x="688" y="338" width="24" height="32" fill="rgba(255,200,60,0.2)" rx="2"/>
+
+  <!-- Municipality 5 -->
+  <rect x="830" y="300" width="80" height="70" fill="url(#munGrad)" rx="2"/>
+  <polygon points="820,300 870,272 920,300" fill="#1a5a3a"/>
+  <rect x="842" y="310" width="16" height="20" fill="rgba(255,220,80,0.35)" rx="1"/>
+  <rect x="864" y="310" width="16" height="20" fill="rgba(255,220,80,0.35)" rx="1"/>
+  <rect x="886" y="310" width="16" height="20" fill="rgba(255,220,80,0.35)" rx="1"/>
+  <rect x="858" y="338" width="24" height="32" fill="rgba(255,200,60,0.2)" rx="2"/>
+
+  <!-- Municipality 6 (far right) -->
+  <rect x="1000" y="300" width="80" height="70" fill="url(#munGrad)" rx="2"/>
+  <polygon points="990,300 1040,272 1090,300" fill="#1a5a3a"/>
+  <rect x="1012" y="310" width="16" height="20" fill="rgba(255,220,80,0.35)" rx="1"/>
+  <rect x="1034" y="310" width="16" height="20" fill="rgba(255,220,80,0.35)" rx="1"/>
+  <rect x="1056" y="310" width="16" height="20" fill="rgba(255,220,80,0.35)" rx="1"/>
+  <rect x="1028" y="338" width="24" height="32" fill="rgba(255,200,60,0.2)" rx="2"/>
+
+  <!-- ==================== FLOW ARROWS: MUNICIPALITIES → PEOPLE ==================== -->
+  <line x1="160" y1="370" x2="160" y2="408" stroke="#4aaa3a" stroke-width="3" marker-end="url(#greenArrow)" opacity="0.85"/>
+  <line x1="330" y1="370" x2="330" y2="408" stroke="#4aaa3a" stroke-width="3" marker-end="url(#greenArrow)" opacity="0.85"/>
+  <line x1="500" y1="370" x2="500" y2="408" stroke="#4aaa3a" stroke-width="3" marker-end="url(#greenArrow)" opacity="0.85"/>
+  <line x1="700" y1="370" x2="700" y2="408" stroke="#4aaa3a" stroke-width="3" marker-end="url(#greenArrow)" opacity="0.85"/>
+  <line x1="870" y1="370" x2="870" y2="408" stroke="#4aaa3a" stroke-width="3" marker-end="url(#greenArrow)" opacity="0.85"/>
+  <line x1="1040" y1="370" x2="1040" y2="408" stroke="#4aaa3a" stroke-width="3" marker-end="url(#greenArrow)" opacity="0.85"/>
+
+  <!-- ==================== BOTTOM LAYER: PEOPLE RECEIVING SERVICES ==================== -->
+  <rect x="0" y="415" width="1200" height="85" fill="url(#groundGrad)" opacity="0.6"/>
+
+  <!-- Group 1: Elderly person + caregiver (under Gem 1) -->
+  <!-- Caregiver -->
+  <circle cx="145" cy="425" r="11" fill="#f5c087"/>
+  <rect x="139" y="436" width="12" height="22" fill="#2a7a5a" rx="3"/>
+  <path d="M134 442 Q128 450 130 458" stroke="#f5c087" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M151 442 Q157 450 154 460" stroke="#f5c087" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <!-- Elderly patient -->
+  <circle cx="175" cy="428" r="10" fill="#e8b88a"/>
+  <rect x="170" y="438" width="10" height="18" fill="#8a6040" rx="2"/>
+  <!-- Walking cane -->
+  <line x1="180" y1="440" x2="186" y2="465" stroke="#8a6040" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- Heart between them = care -->
+  <path d="M158 432 Q160 427 163 430 Q166 427 168 432 Q168 438 163 442 Q158 438 158 432 Z" fill="#cc2060" opacity="0.9" filter="url(#glow)"/>
+
+  <!-- Group 2: Family with children (under Gem 2) -->
+  <!-- Parent 1 -->
+  <circle cx="310" cy="425" r="11" fill="#d49060"/>
+  <rect x="304" y="436" width="12" height="22" fill="#3a6a9a" rx="3"/>
+  <!-- Parent 2 -->
+  <circle cx="340" cy="425" r="10" fill="#c07850"/>
+  <rect x="335" y="435" width="10" height="20" fill="#2a5a8a" rx="3"/>
+  <!-- Child -->
+  <circle cx="325" cy="438" r="8" fill="#e0a070"/>
+  <rect x="321" y="446" width="8" height="16" fill="#5a9a5a" rx="2"/>
+  <!-- Happy faces -->
+  <path d="M307 428 Q310 432 313 428" stroke="#333" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  <path d="M337 428 Q340 432 343 428" stroke="#333" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+
+  <!-- Group 3: Person with diverse background accessing health info (under Gem 3) -->
+  <!-- Person holding paper/card -->
+  <circle cx="490" cy="426" r="11" fill="#8a5030"/>
+  <rect x="484" y="437" width="12" height="22" fill="#7a3a8a" rx="3"/>
+  <!-- Picture card in hand -->
+  <rect x="498" y="440" width="20" height="26" fill="white" rx="2"/>
+  <rect x="498" y="440" width="20" height="8" fill="#cc2060" rx="2"/>
+  <circle cx="508" cy="455" r="5" fill="#4aaa3a" opacity="0.7"/>
+  <!-- Lightbulb above head = understanding -->
+  <circle cx="490" cy="410" r="9" fill="#ffe066" opacity="0.9" filter="url(#glow)"/>
+  <path d="M486 420 Q490 416 494 420" stroke="#f5c842" stroke-width="2" fill="none"/>
+  <rect x="488" y="420" width="4" height="4" fill="#c89820"/>
+
+  <!-- Group 4: Wheelchair user + health worker (under Gem 4) -->
+  <!-- Health worker -->
+  <circle cx="680" cy="426" r="11" fill="#f5c087"/>
+  <rect x="674" y="437" width="12" height="22" fill="white" rx="3"/>
+  <rect x="681" y="438" width="2" height="10" fill="#cc2060"/>
+  <rect x="677" y="442" width="10" height="2" fill="#cc2060"/>
+  <!-- Wheelchair user -->
+  <circle cx="718" cy="428" r="9" fill="#d49060"/>
+  <!-- Wheelchair -->
+  <ellipse cx="718" cy="452" rx="13" ry="4" fill="none" stroke="#888" stroke-width="2.5"/>
+  <rect x="712" y="436" width="12" height="14" fill="#888" rx="2" opacity="0.7"/>
+  <circle cx="706" cy="458" r="7" fill="none" stroke="#888" stroke-width="2"/>
+  <circle cx="730" cy="458" r="7" fill="none" stroke="#888" stroke-width="2"/>
+  <!-- Checkmark above: receiving service -->
+  <path d="M700 416 L703 420 L710 412" stroke="#4aaa3a" stroke-width="3" fill="none" stroke-linecap="round"/>
+
+  <!-- Group 5: Pregnant woman + midwife (under Gem 5) -->
+  <!-- Midwife -->
+  <circle cx="852" cy="426" r="11" fill="#e8a870"/>
+  <rect x="846" y="437" width="12" height="22" fill="#4a8a6a" rx="3"/>
+  <!-- Pregnant woman -->
+  <circle cx="883" cy="424" r="10" fill="#c87848"/>
+  <!-- Pregnant body (larger ellipse) -->
+  <ellipse cx="883" cy="442" rx="9" ry="14" fill="#a05828" opacity="0.9"/>
+  <!-- Heart = healthy baby -->
+  <path d="M879 442 Q881 438 883 440 Q885 438 887 442 Q887 446 883 449 Q879 446 879 442 Z" fill="white" opacity="0.8"/>
+
+  <!-- Group 6: Isolated person becoming connected (under Gem 6) -->
+  <!-- Person 1 (was alone, now connected) -->
+  <circle cx="1025" cy="426" r="10" fill="#8a6040"/>
+  <rect x="1020" y="436" width="10" height="20" fill="#4a6a9a" rx="2"/>
+  <!-- Person 2 -->
+  <circle cx="1055" cy="424" r="10" fill="#5a3020"/>
+  <rect x="1050" y="434" width="10" height="20" fill="#3a5a8a" rx="2"/>
+  <!-- Connection lines (network) -->
+  <line x1="1030" y1="430" x2="1050" y2="428" stroke="#4aaa3a" stroke-width="2" opacity="0.8"/>
+  <!-- Network node dot -->
+  <circle cx="1040" cy="429" r="4" fill="#f5c842" filter="url(#goldglow)" opacity="0.9"/>
+  <!-- Rising sun/hope arc -->
+  <path d="M1010 415 Q1040 400 1070 415" stroke="#f5c842" stroke-width="2.5" fill="none" opacity="0.7" stroke-dasharray="4,3"/>
+
+  <!-- PHAROS as intermediary / bridge label in center -->
+  <!-- Pharos document/guide floating between gov and municipalities -->
+  <circle cx="600" cy="195" r="22" fill="#cc2060" opacity="0.15"/>
+  <circle cx="600" cy="195" r="18" fill="#cc2060" opacity="0.2"/>
+  <circle cx="600" cy="195" r="14" fill="#cc2060" opacity="0.85" filter="url(#glow)"/>
+  <text x="600" y="200" fill="white" font-size="11" font-weight="bold" text-anchor="middle" font-family="Georgia">P</text>
+
+  <!-- PHAROS label -->
+
+  <!-- Connecting lines from Pharos to each municipality (guidance lines) -->
+  <line x1="590" y1="208" x2="165" y2="295" stroke="#cc2060" stroke-width="1.5" stroke-dasharray="5,4" opacity="0.5"/>
+  <line x1="592" y1="210" x2="335" y2="295" stroke="#cc2060" stroke-width="1.5" stroke-dasharray="5,4" opacity="0.5"/>
+  <line x1="597" y1="212" x2="503" y2="295" stroke="#cc2060" stroke-width="1.5" stroke-dasharray="5,4" opacity="0.5"/>
+  <line x1="603" y1="212" x2="697" y2="295" stroke="#cc2060" stroke-width="1.5" stroke-dasharray="5,4" opacity="0.5"/>
+  <line x1="608" y1="210" x2="865" y2="295" stroke="#cc2060" stroke-width="1.5" stroke-dasharray="5,4" opacity="0.5"/>
+  <line x1="610" y1="208" x2="1035" y2="295" stroke="#cc2060" stroke-width="1.5" stroke-dasharray="5,4" opacity="0.5"/>
+
+</svg>
+</div>
+
+<!-- STORY PANELS -->
+<section class="panels-section">
+  <div class="panels-grid">
+
+    <!-- Panel 1: Resources Available -->
+    <div class="panel-card" data-tip="Ministerie van VWS stelt budget beschikbaar via de SPUK-regeling. Pharos ondersteunt gemeenten met kennis en werkwijzen voor sport, bewegen en een gezonde leefstijl.">
+      <svg viewBox="0 0 400 320" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="p1bg" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#0d2a4a"/>
+            <stop offset="100%" stop-color="#1a4a7a"/>
+          </linearGradient>
+          <radialGradient id="p1glow" cx="50%" cy="40%">
+            <stop offset="0%" stop-color="#f5c842" stop-opacity="0.4"/>
+            <stop offset="100%" stop-color="transparent"/>
+          </radialGradient>
+          <filter id="p1goldglow">
+            <feGaussianBlur stdDeviation="4" result="blur"/>
+            <feFlood flood-color="#f5c842" flood-opacity="0.5" result="color"/>
+            <feComposite in="color" in2="blur" operator="in" result="gb"/>
+            <feMerge><feMergeNode in="gb"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+        <rect width="400" height="320" fill="url(#p1bg)"/>
+        <rect width="400" height="320" fill="url(#p1glow)"/>
+
+        <!-- Government building (smaller) -->
+        <rect x="130" y="40" width="140" height="80" fill="#2a5a9a" rx="2"/>
+        <polygon points="120,40 200,15 280,40" fill="#1a3a6a"/>
+        <!-- Pillars -->
+        <rect x="140" y="43" width="10" height="74" fill="rgba(255,255,255,0.1)"/>
+        <rect x="158" y="43" width="10" height="74" fill="rgba(255,255,255,0.1)"/>
+        <rect x="176" y="43" width="10" height="74" fill="rgba(255,255,255,0.1)"/>
+        <rect x="194" y="43" width="10" height="74" fill="rgba(255,255,255,0.1)"/>
+        <rect x="212" y="43" width="10" height="74" fill="rgba(255,255,255,0.1)"/>
+        <rect x="230" y="43" width="10" height="74" fill="rgba(255,255,255,0.1)"/>
+        <rect x="248" y="43" width="10" height="74" fill="rgba(255,255,255,0.1)"/>
+        <!-- Windows -->
+        <rect x="143" y="53" width="14" height="18" fill="rgba(255,220,80,0.45)" rx="1"/>
+        <rect x="163" y="53" width="14" height="18" fill="rgba(255,220,80,0.45)" rx="1"/>
+        <rect x="183" y="53" width="14" height="18" fill="rgba(255,220,80,0.45)" rx="1"/>
+        <rect x="223" y="53" width="14" height="18" fill="rgba(255,220,80,0.45)" rx="1"/>
+        <rect x="243" y="53" width="14" height="18" fill="rgba(255,220,80,0.45)" rx="1"/>
+        <!-- Door -->
+        <rect x="192" y="94" width="16" height="26" fill="rgba(255,200,60,0.2)" rx="2"/>
+
+        <!-- Pharos document being issued -->
+        <rect x="155" y="128" width="40" height="52" fill="white" rx="3" opacity="0.95"/>
+        <rect x="155" y="128" width="40" height="12" fill="#cc2060" rx="3"/>
+        <circle cx="175" cy="134" r="6" fill="#cc2060"/>
+        <text x="175" y="138" fill="white" font-size="7" font-weight="bold" text-anchor="middle">P</text>
+        <rect x="160" y="146" width="30" height="2" fill="#ccc" rx="1"/>
+        <rect x="160" y="152" width="24" height="2" fill="#ccc" rx="1"/>
+        <rect x="160" y="158" width="30" height="2" fill="#ccc" rx="1"/>
+        <rect x="160" y="164" width="20" height="2" fill="#ccc" rx="1"/>
+        <!-- Seal -->
+        <circle cx="186" cy="172" r="6" fill="none" stroke="#cc2060" stroke-width="1.5"/>
+        <text x="186" y="175" fill="#cc2060" font-size="5" font-weight="bold" text-anchor="middle">OK</text>
+
+        <!-- Coins / budget -->
+        <circle cx="235" cy="145" r="15" fill="#f5c842" filter="url(#p1goldglow)" opacity="0.95"/>
+        <text x="235" y="151" fill="#7a5800" font-size="18" font-weight="bold" text-anchor="middle">€</text>
+        <circle cx="260" cy="155" r="10" fill="#f5c842" opacity="0.85"/>
+        <text x="260" y="160" fill="#7a5800" font-size="12" font-weight="bold" text-anchor="middle">€</text>
+        <circle cx="255" cy="133" r="8" fill="#e0b030" opacity="0.8"/>
+        <text x="255" y="138" fill="#7a5800" font-size="10" font-weight="bold" text-anchor="middle">€</text>
+
+        <!-- Arrow downward -->
+        <line x1="200" y1="185" x2="200" y2="245" stroke="#f5c842" stroke-width="3" stroke-dasharray="6,3"/>
+        <polygon points="194,240 200,255 206,240" fill="#f5c842"/>
+
+        <!-- Text labels -->
+      </svg>
+    </div>
+
+    <!-- Panel 2: Municipal Action -->
+    <div class="panel-card" data-tip="De gemeente maakt een lokaal plan samen met bewoners en zorgprofessionals. Ze brengen in kaart wie extra ondersteuning nodig heeft bij het bereiken van een gezonde leefstijl.">
+      <svg viewBox="0 0 400 320" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="p2bg" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#1a3a28"/>
+            <stop offset="100%" stop-color="#0d2a1a"/>
+          </linearGradient>
+          <filter id="p2glow">
+            <feGaussianBlur stdDeviation="3" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+        <rect width="400" height="320" fill="url(#p2bg)"/>
+
+        <!-- Table (round planning table viewed from slight angle) -->
+        <ellipse cx="200" cy="175" rx="100" ry="55" fill="#3a5a3a" opacity="0.7"/>
+        <ellipse cx="200" cy="170" rx="100" ry="55" fill="#4a7a4a"/>
+        <!-- Table edge highlight -->
+        <ellipse cx="200" cy="168" rx="98" ry="53" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="2"/>
+
+        <!-- Map on table -->
+        <rect x="160" y="147" width="80" height="52" fill="#e8d8a0" rx="4" opacity="0.85"/>
+        <!-- Map grid lines -->
+        <line x1="173" y1="147" x2="173" y2="199" stroke="rgba(100,80,40,0.4)" stroke-width="0.8"/>
+        <line x1="186" y1="147" x2="186" y2="199" stroke="rgba(100,80,40,0.4)" stroke-width="0.8"/>
+        <line x1="199" y1="147" x2="199" y2="199" stroke="rgba(100,80,40,0.4)" stroke-width="0.8"/>
+        <line x1="212" y1="147" x2="212" y2="199" stroke="rgba(100,80,40,0.4)" stroke-width="0.8"/>
+        <line x1="225" y1="147" x2="225" y2="199" stroke="rgba(100,80,40,0.4)" stroke-width="0.8"/>
+        <line x1="160" y1="163" x2="240" y2="163" stroke="rgba(100,80,40,0.4)" stroke-width="0.8"/>
+        <line x1="160" y1="179" x2="240" y2="179" stroke="rgba(100,80,40,0.4)" stroke-width="0.8"/>
+        <!-- Location markers on map -->
+        <circle cx="178" cy="158" r="4" fill="#cc2060"/>
+        <circle cx="200" cy="172" r="4" fill="#cc2060"/>
+        <circle cx="222" cy="160" r="4" fill="#cc2060"/>
+        <circle cx="190" cy="185" r="4" fill="#cc2060"/>
+
+        <!-- Pharos document on table -->
+        <rect x="100" y="152" width="52" height="36" fill="white" rx="3" opacity="0.9" transform="rotate(-12,126,170)"/>
+        <rect x="100" y="152" width="52" height="10" fill="#cc2060" rx="3" transform="rotate(-12,126,157)"/>
+        <rect x="103" y="166" width="40" height="2" fill="#ddd" rx="1" transform="rotate(-12,123,167)"/>
+        <rect x="103" y="171" width="32" height="2" fill="#ddd" rx="1" transform="rotate(-12,119,172)"/>
+        <rect x="103" y="176" width="40" height="2" fill="#ddd" rx="1" transform="rotate(-12,123,177)"/>
+
+        <!-- Person 1: Municipality employee (top of table) -->
+        <circle cx="200" cy="112" r="14" fill="#d49060"/>
+        <rect x="193" y="126" width="14" height="26" fill="#3a7a5a" rx="3"/>
+        <!-- Pointing at map -->
+        <path d="M200 136 Q200 148 205 153" stroke="#d49060" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <!-- Happy face -->
+        <path d="M195 115 Q200 120 205 115" stroke="#333" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <circle cx="197" cy="112" r="1.5" fill="#333"/>
+        <circle cx="203" cy="112" r="1.5" fill="#333"/>
+
+        <!-- Person 2: Left of table -->
+        <circle cx="108" cy="170" r="13" fill="#8a5030"/>
+        <rect x="102" y="183" width="12" height="24" fill="#2a5a8a" rx="3"/>
+        <!-- Person 3: Right of table -->
+        <circle cx="295" cy="168" r="13" fill="#c07848"/>
+        <rect x="289" y="181" width="12" height="24" fill="#5a3a7a" rx="3"/>
+        <!-- Person 4: Bottom -->
+        <circle cx="200" cy="232" r="12" fill="#e0a070"/>
+        <rect x="194" y="244" width="12" height="22" fill="#6a3a5a" rx="3"/>
+
+        <!-- Plan/checkmarks floating -->
+        <path d="M248 128 L253 134 L264 120" stroke="#4aaa3a" stroke-width="3" fill="none" stroke-linecap="round" filter="url(#p2glow)"/>
+
+        <!-- Thought bubble from table center: healthy person -->
+        <ellipse cx="310" cy="75" rx="36" ry="28" fill="rgba(74,170,58,0.15)" stroke="rgba(74,170,58,0.4)" stroke-width="1.5"/>
+        <circle cx="285" cy="100" r="4" fill="rgba(74,170,58,0.3)"/>
+        <circle cx="292" cy="107" r="3" fill="rgba(74,170,58,0.3)"/>
+        <circle cx="298" cy="112" r="2" fill="rgba(74,170,58,0.3)"/>
+        <!-- Person (healthy) in thought bubble -->
+        <circle cx="310" cy="68" r="10" fill="#d49060" opacity="0.8"/>
+        <rect x="305" y="78" width="10" height="18" fill="#3a7a5a" rx="2" opacity="0.8"/>
+        <path d="M306 72 Q310 77 314 72" stroke="#333" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.8"/>
+
+      </svg>
+    </div>
+
+    <!-- Panel 3: Community Health Impact -->
+    <div class="panel-card" data-tip="Alle inwoners hebben gelijke toegang tot gezonde zorg en een gezonde leefstijl. Barrières zijn weggenomen. De SPUK-regeling maakt dit structureel mogelijk.">
+      <svg viewBox="0 0 400 320" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="p3bg" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#0a2a1a"/>
+            <stop offset="60%" stop-color="#1a4a2a"/>
+            <stop offset="100%" stop-color="#0a3a1a"/>
+          </linearGradient>
+          <radialGradient id="p3sunGlow" cx="50%" cy="25%">
+            <stop offset="0%" stop-color="#f5c842" stop-opacity="0.5"/>
+            <stop offset="60%" stop-color="#f5c842" stop-opacity="0.1"/>
+            <stop offset="100%" stop-color="transparent"/>
+          </radialGradient>
+          <filter id="p3glow">
+            <feGaussianBlur stdDeviation="4" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+        <rect width="400" height="320" fill="url(#p3bg)"/>
+        <rect width="400" height="320" fill="url(#p3sunGlow)"/>
+
+        <!-- Rising sun / hope -->
+        <circle cx="200" cy="55" r="38" fill="#f5c842" opacity="0.2" filter="url(#p3glow)"/>
+        <circle cx="200" cy="55" r="26" fill="#f5c842" opacity="0.35"/>
+        <circle cx="200" cy="55" r="18" fill="#f5c842" opacity="0.8" filter="url(#p3glow)"/>
+        <!-- Sun rays -->
+        <line x1="200" y1="22" x2="200" y2="10" stroke="#f5c842" stroke-width="2.5" stroke-linecap="round" opacity="0.8"/>
+        <line x1="223" y1="32" x2="232" y2="22" stroke="#f5c842" stroke-width="2.5" stroke-linecap="round" opacity="0.8"/>
+        <line x1="233" y1="55" x2="246" y2="55" stroke="#f5c842" stroke-width="2.5" stroke-linecap="round" opacity="0.8"/>
+        <line x1="177" y1="32" x2="168" y2="22" stroke="#f5c842" stroke-width="2.5" stroke-linecap="round" opacity="0.8"/>
+        <line x1="167" y1="55" x2="154" y2="55" stroke="#f5c842" stroke-width="2.5" stroke-linecap="round" opacity="0.8"/>
+        <line x1="223" y1="78" x2="232" y2="88" stroke="#f5c842" stroke-width="2.5" stroke-linecap="round" opacity="0.8"/>
+        <line x1="177" y1="78" x2="168" y2="88" stroke="#f5c842" stroke-width="2.5" stroke-linecap="round" opacity="0.8"/>
+
+        <!-- Ground / grass -->
+        <rect x="0" y="255" width="400" height="65" fill="#1a5a2a" opacity="0.8"/>
+        <ellipse cx="60" cy="255" rx="40" ry="8" fill="#2a7a3a" opacity="0.7"/>
+        <ellipse cx="200" cy="255" rx="60" ry="8" fill="#2a7a3a" opacity="0.6"/>
+        <ellipse cx="340" cy="255" rx="40" ry="8" fill="#2a7a3a" opacity="0.7"/>
+
+        <!-- Health center / community building -->
+        <rect x="155" y="195" width="90" height="62" fill="#2a5a3a" rx="2"/>
+        <polygon points="148,195 200,168 252,195" fill="#1a4a2a"/>
+        <rect x="168" y="205" width="20" height="22" fill="rgba(255,220,80,0.4)" rx="2"/>
+        <rect x="212" y="205" width="20" height="22" fill="rgba(255,220,80,0.4)" rx="2"/>
+        <rect x="190" y="218" width="20" height="38" fill="rgba(255,200,60,0.2)" rx="2"/>
+        <!-- Plus sign on building = health -->
+        <rect x="196" y="175" width="8" height="22" fill="#cc2060" rx="2" opacity="0.9"/>
+        <rect x="190" y="181" width="20" height="8" fill="#cc2060" rx="2" opacity="0.9"/>
+
+        <!-- Person 1: Healthy elderly (far left) -->
+        <circle cx="60" cy="208" r="13" fill="#d49060"/>
+        <rect x="54" y="221" width="12" height="26" fill="#5a3a2a" rx="3"/>
+        <!-- Standing straight (no cane) -->
+        <path d="M57 230 Q50 242 52 255" stroke="#d49060" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <path d="M66 230 Q72 242 70 255" stroke="#d49060" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <!-- Happy face -->
+        <path d="M55 212 Q60 217 65 212" stroke="#333" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <!-- Green checkmark above -->
+        <path d="M50 196 L53 200 L62 190" stroke="#4aaa3a" stroke-width="2.5" fill="none" stroke-linecap="round" filter="url(#p3glow)"/>
+
+        <!-- Person 2: Family (center-left) -->
+        <circle cx="112" cy="210" r="12" fill="#8a5030"/>
+        <rect x="106" y="222" width="12" height="24" fill="#3a6a9a" rx="3"/>
+        <!-- Child beside -->
+        <circle cx="130" cy="220" r="9" fill="#c07848"/>
+        <rect x="126" y="229" width="8" height="18" fill="#5a9a5a" rx="2"/>
+        <!-- Happy face on parent -->
+        <path d="M108 213 Q112 218 116 213" stroke="#333" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <!-- Heart between parent and child -->
+        <path d="M120 218 Q122 214 124 216 Q126 214 128 218 Q128 222 124 225 Q120 222 120 218 Z" fill="#cc2060" opacity="0.9"/>
+
+        <!-- Person 3: Wheelchair user now engaged -->
+        <circle cx="285" cy="210" r="12" fill="#d08050"/>
+        <!-- Wheelchair -->
+        <rect x="278" y="220" width="14" height="16" fill="#888" rx="2" opacity="0.7"/>
+        <ellipse cx="285" cy="242" rx="15" ry="5" fill="none" stroke="#888" stroke-width="2.5"/>
+        <circle cx="272" cy="248" r="8" fill="none" stroke="#888" stroke-width="2"/>
+        <circle cx="298" cy="248" r="8" fill="none" stroke="#888" stroke-width="2"/>
+        <!-- Happy! -->
+        <path d="M280 213 Q285 218 290 213" stroke="#333" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <!-- Check above -->
+        <path d="M276 198 L279 202 L288 192" stroke="#4aaa3a" stroke-width="2.5" fill="none" stroke-linecap="round" filter="url(#p3glow)"/>
+
+        <!-- Person 4: Diverse person (far right) -->
+        <circle cx="345" cy="208" r="12" fill="#5a3020"/>
+        <rect x="339" y="220" width="12" height="24" fill="#7a3a8a" rx="3"/>
+        <!-- Carrying medicine -->
+        <rect x="348" y="222" width="16" height="20" fill="white" rx="2" opacity="0.9"/>
+        <rect x="350" y="222" width="12" height="6" fill="#cc2060" rx="1" opacity="0.8"/>
+        <!-- Rx symbol on medicine box -->
+        <text x="356" y="235" fill="#cc2060" font-size="8" font-weight="bold" text-anchor="middle">Rx</text>
+        <!-- Happy face -->
+        <path d="M340 211 Q345 216 350 211" stroke="#333" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+
+        <!-- Barrier CROSSED OUT (barriers removed) -->
+        <rect x="75" y="235" width="4" height="20" fill="#cc2060" rx="2" opacity="0.3"/>
+        <!-- X through barrier -->
+        <line x1="72" y1="232" x2="82" y2="258" stroke="#4aaa3a" stroke-width="3" stroke-linecap="round"/>
+        <line x1="82" y1="232" x2="72" y2="258" stroke="#4aaa3a" stroke-width="3" stroke-linecap="round"/>
+
+        <!-- Plants/nature growing = health flourishing -->
+        <path d="M25 255 Q22 240 28 230 Q34 240 31 255" fill="#4aaa3a" opacity="0.8"/>
+        <path d="M370 255 Q367 238 374 228 Q380 238 377 255" fill="#4aaa3a" opacity="0.8"/>
+        <path d="M390 255 Q387 244 393 237 Q398 244 396 255" fill="#3a9a2a" opacity="0.7"/>
+
+      </svg>
+    </div>
+
+  </div>
+</section>
+
+<!-- SUBPAGES NAVIGATION -->
+<section class="subpages-section">
+  <div class="subpages-grid">
+
+    <!-- Missie -->
+    <a href="missie.html" class="subpage-mini-card" data-tip="Missie en visie — Onze missie: het terugdringen van grote gezondheidsverschillen. Ons uitgangspunt: gezondheid en kwaliteit van zorg voor iedereen in Nederland.">
+      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+        <rect width="64" height="64" fill="#1a4a7a" rx="8"/>
+        <!-- Lighthouse -->
+        <polygon points="26,52 38,52 35,20 29,20" fill="#cc2060"/>
+        <rect x="24" y="17" width="16" height="5" fill="#f5c842"/>
+        <polygon points="28,17 36,17 34,10 30,10" fill="#cc2060"/>
+        <!-- Glow -->
+        <ellipse cx="32" cy="14" rx="8" ry="4" fill="#f5c842" opacity="0.5"/>
+        <!-- Light beam -->
+        <polygon points="36,14 52,8 50,20" fill="#f5c842" opacity="0.3"/>
+      </svg>
+    </a>
+
+    <!-- Laaggeletterdheid -->
+    <a href="laaggeletterdheid.html" class="subpage-mini-card" data-tip="Gezondheidsvaardigheden en laaggeletterdheid — Ruim 2,5 miljoen Nederlanders hebben moeite met lezen en schrijven. Dit beïnvloedt sterk hoe zij omgaan met hun gezondheid.">
+      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+        <rect width="64" height="64" fill="#4a2a10" rx="8"/>
+        <!-- Book with picture -->
+        <rect x="10" y="18" width="44" height="34" fill="#e8d8a0" rx="3"/>
+        <rect x="10" y="18" width="22" height="34" fill="#f0e8b0" rx="3"/>
+        <line x1="32" y1="18" x2="32" y2="52" stroke="#c8a860" stroke-width="1.5"/>
+        <!-- Pictures instead of text -->
+        <circle cx="21" cy="30" r="6" fill="#f5c842" opacity="0.8"/>
+        <circle cx="43" cy="32" r="5" fill="#4aaa3a" opacity="0.7"/>
+        <!-- Lightbulb -->
+        <circle cx="32" cy="10" r="6" fill="#f5c842" opacity="0.9"/>
+        <rect x="30" y="14" width="4" height="4" fill="#c89820"/>
+      </svg>
+    </a>
+
+    <!-- e-Health -->
+    <a href="ehealth.html" class="subpage-mini-card" data-tip="e-health en digitale zorg — Digitale vernieuwingen zoals AI en apps veranderen de zorg razendsnel. Maar deze oplossingen zijn niet voor iedereen toegankelijk, begrijpelijk of gebruiksvriendelijk.">
+      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+        <rect width="64" height="64" fill="#1a2a4a" rx="8"/>
+        <!-- Phone/device -->
+        <rect x="20" y="12" width="24" height="40" fill="#2a4a7a" rx="4"/>
+        <rect x="22" y="16" width="20" height="28" fill="#3a7aaa" rx="2"/>
+        <!-- Big button on screen -->
+        <rect x="25" y="20" width="14" height="10" fill="#cc2060" rx="3"/>
+        <path d="M28 24 Q32 21 36 24 Q36 28 32 31 Q28 28 28 24 Z" fill="white" opacity="0.7"/>
+        <!-- Tick = accessible -->
+        <path d="M24 50 L27 54 L36 44" stroke="#4aaa3a" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      </svg>
+    </a>
+
+    <!-- Samenwerken -->
+    <a href="samenwerken.html" class="subpage-mini-card" data-tip="Samenwerken — Pharos helpt organisaties hun communicatie, processen en beleid zo in te richten dat iedereen passende zorg krijgt.">
+      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+        <rect width="64" height="64" fill="#2a1a4a" rx="8"/>
+        <!-- Network: 3 people connected -->
+        <circle cx="32" cy="18" r="7" fill="#d49060"/>
+        <circle cx="14" cy="46" r="7" fill="#8a5030"/>
+        <circle cx="50" cy="46" r="7" fill="#c07848"/>
+        <!-- Lines connecting -->
+        <line x1="32" y1="25" x2="16" y2="40" stroke="#cc2060" stroke-width="2" opacity="0.8"/>
+        <line x1="32" y1="25" x2="48" y2="40" stroke="#cc2060" stroke-width="2" opacity="0.8"/>
+        <line x1="20" y1="46" x2="44" y2="46" stroke="#cc2060" stroke-width="2" opacity="0.8"/>
+        <!-- Center heart -->
+        <path d="M29 35 Q32 31 35 35 Q35 39 32 42 Q29 39 29 35 Z" fill="#cc2060" opacity="0.9"/>
+      </svg>
+    </a>
+
+    <!-- Preventie -->
+    <a href="preventie.html" class="subpage-mini-card" data-tip="Preventie — 16 succesfactoren voor preventiebeleid dat gezondheidsverschillen verkleint. Pharos ondersteunt gemeenten en zorgorganisaties bij effectieve preventie.">
+      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+        <rect width="64" height="64" fill="#0a2a1a" rx="8"/>
+        <!-- Shield -->
+        <path d="M32 10 L52 18 L52 36 Q52 52 32 58 Q12 52 12 36 L12 18 Z" fill="#2a7a3a" opacity="0.7"/>
+        <path d="M32 14 L48 21 L48 36 Q48 50 32 55 Q16 50 16 36 L16 21 Z" fill="#3a9a4a"/>
+        <!-- Heart inside shield -->
+        <path d="M26 32 Q32 26 38 32 Q38 39 32 44 Q26 39 26 32 Z" fill="white" opacity="0.9"/>
+      </svg>
+    </a>
+
+    <!-- SPUK (current) -->
+    <a href="spuk.html" class="subpage-mini-card" data-tip="SPUK-regeling — Hoe gemeenten stevig kunnen inzetten op het terugdringen van vermijdbare gezondheidsverschillen bij kwetsbare groepen." style="border-color: var(--vg); background: rgba(245,200,66,0.12);">
+      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+        <rect width="64" height="64" fill="#1a4a7a" rx="8"/>
+        <!-- Building -->
+        <rect x="14" y="25" width="36" height="30" fill="#2a6a9a" rx="2"/>
+        <polygon points="10,25 32,10 54,25" fill="#1a3a6a"/>
+        <!-- Windows -->
+        <rect x="18" y="30" width="10" height="10" fill="rgba(255,220,80,0.5)" rx="1"/>
+        <rect x="38" y="30" width="10" height="10" fill="rgba(255,220,80,0.5)" rx="1"/>
+        <!-- Coins falling -->
+        <circle cx="26" cy="20" r="4" fill="#f5c842" opacity="0.9"/>
+        <circle cx="38" cy="16" r="4" fill="#f5c842" opacity="0.9"/>
+        <text x="26" y="23" fill="#7a5800" font-size="5" font-weight="bold" text-anchor="middle">€</text>
+        <text x="38" y="19" fill="#7a5800" font-size="5" font-weight="bold" text-anchor="middle">€</text>
+      </svg>
+    </a>
+
+  </div>
+</section>
+
+<!-- FOOTER -->
+
+
+<footer>
+  <div class="footer-row">
+    <a href="index.html" data-tip="Pharos — Gezondheid en kwaliteit van zorg voor iedereen in Nederland"><svg viewBox="0 0 28 28" fill="none"><path d="M3 13 L14 4 L25 13 L25 24 L19 24 L19 18 L9 18 L9 24 L3 24 Z" fill="#d0c4e8" opacity="0.7"/></svg></a>
+    <a href="missie.html" data-tip="Missie en visie — Onze missie: het terugdringen van grote gezondheidsverschillen. Ons uitgangspunt: gezondheid en kwaliteit van zorg voor iedereen in Nederland."><svg viewBox="0 0 28 28" fill="none"><circle cx="13" cy="13" r="10" stroke="#d0c4e8" stroke-width="1.5" fill="#d0c4e8" opacity="0.1"/><line x1="13" y1="11" x2="13" y2="19" stroke="#d0c4e8" stroke-width="2.5"/><circle cx="13" cy="8" r="1.5" fill="#b01458"/></svg></a>
+    <a href="laaggeletterdheid.html" data-tip="Gezondheidsvaardigheden en laaggeletterdheid — Ruim 2,5 miljoen Nederlanders hebben moeite met lezen en schrijven. Dit beïnvloedt sterk hoe zij omgaan met hun gezondheid."><svg viewBox="0 0 28 28" fill="none"><rect x="4" y="3" width="13" height="19" rx="2" stroke="#d0c4e8" stroke-width="1.5" fill="#d0c4e8" opacity="0.1"/><circle cx="20" cy="18" r="6" fill="#f5c842" opacity="0.6"/></svg></a>
+    <a href="ehealth.html" data-tip="e-health en digitale zorg — Digitale vernieuwingen zoals AI en apps veranderen de zorg razendsnel. Maar deze oplossingen zijn niet voor iedereen toegankelijk, begrijpelijk of gebruiksvriendelijk."><svg viewBox="0 0 28 28" fill="none"><rect x="8" y="3" width="12" height="22" rx="2.5" stroke="#d0c4e8" stroke-width="1.5" fill="#d0c4e8" opacity="0.1"/><circle cx="14" cy="21" r="2" fill="#b01458"/></svg></a>
+    <a href="preventie.html" data-tip="Preventie — 16 succesfactoren voor preventiebeleid dat gezondheidsverschillen verkleint. Pharos ondersteunt gemeenten en zorgorganisaties bij effectieve preventie."><svg viewBox="0 0 28 28" fill="none"><path d="M14 3 L23 8 L23 17 Q23 24 14 27 Q5 24 5 17 L5 8 Z" fill="#4a8a3a" opacity="0.5" stroke="#4a8a3a" stroke-width="1.5"/></svg></a>
+    <a href="spuk.html" data-tip="SPUK-regeling — Hoe gemeenten stevig kunnen inzetten op het terugdringen van vermijdbare gezondheidsverschillen bij kwetsbare groepen."><svg viewBox="0 0 28 28" fill="none"><rect x="10" y="3" width="8" height="8" rx="1" fill="#d4c8b0"/><line x1="14" y1="11" x2="14" y2="18" stroke="#f5c842" stroke-width="2.5"/><circle cx="14" cy="21" r="4" fill="#f5c842" opacity="0.8"/></svg></a>
+    <a href="#" data-tip="Privacybeleid van Pharos — Hoe wij omgaan met uw persoonsgegevens"><svg viewBox="0 0 28 28" fill="none"><rect x="7" y="13" width="14" height="12" rx="2" stroke="#d0c4e8" stroke-width="1.5" fill="#d0c4e8" opacity="0.1"/><path d="M10 13 Q10 7 14 7 Q18 7 18 13" stroke="#d0c4e8" stroke-width="2" fill="none"/></svg></a>
+  </div>
+</footer>
+</body>
+</html>
