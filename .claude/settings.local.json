@@ -28,7 +28,11 @@
       "Bash(ls -la /Users/1roel/Documents/Projecten/Presentatie/website/pharos-pictogram/*.html)",
       "Bash(grep -h \"data-tip=\" /Users/1roel/Documents/Projecten/Presentatie/website/pharos-pictogram/*.html)",
       "Bash(grep -n \"<nav\" /Users/1roel/Documents/Projecten/Presentatie/website/pharos-pictogram/*.html)",
-      "Bash(grep -c \"pharos.nl/contact\" /Users/1roel/Documents/Projecten/Presentatie/website/pharos-pictogram/*.html)"
+      "Bash(grep -c \"pharos.nl/contact\" /Users/1roel/Documents/Projecten/Presentatie/website/pharos-pictogram/*.html)",
+      "Bash(ls ~/Desktop/*.png)",
+      "Bash(ls -lt ~/Desktop/*.png)",
+      "Bash(osascript -e 'tell application \"\"Safari\"\" to get {name, URL} of tabs of windows')",
+      "Bash(osascript:*)"
     ]
   }
 }
