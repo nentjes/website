@@ -4,286 +4,281 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Workshop — Hands-on met AI | Roel Nentjes</title>
-    <meta name="description" content="Hands-on AI workshop: deelnemers gaan zelf aan de slag met AI-tools. Van prompting tot creatieve AI-toepassingen. Boek Roel Nentjes.">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+    <meta name="description" content="Hands-on AI workshop waarin deelnemers zelf aan de slag gaan met AI-tools. Van prompting tot creatieve toepassingen — met directe toepasbaarheid in het eigen werk.">
     <style>
         :root {
-            --bg-primary: #0A0E17;
-            --bg-secondary: #111827;
-            --bg-card: #1A2235;
-            --bg-card-hover: #1F2A40;
-            --text-primary: #F1F5F9;
-            --text-secondary: #94A3B8;
-            --text-muted: #64748B;
-            --accent: #E8871E;
-            --accent-glow: rgba(232, 135, 30, 0.15);
-            --accent-light: #F5A623;
-            --blue: #5FA8D3;
-            --blue-dark: #1B4965;
-            --border: rgba(255,255,255,0.06);
-            --font-display: 'DM Serif Display', Georgia, serif;
-            --font-body: 'DM Sans', -apple-system, sans-serif;
+            --blue:#007AFF; --blue-dark:#0062CC; --blue-light:rgba(0,122,255,0.08);
+            --green:#34C759; --green-brand-1:#43A047; --green-brand-2:#2E7D32; --green-text:#1B7A3D; --green-light:rgba(52,199,89,0.10);
+            --red:#FF3B30; --red-text:#C0392B; --red-light:rgba(255,59,48,0.07);
+            --gray-100:#F2F2F7; --gray-200:#E5E5EA; --gray-300:#D1D1D6;
+            --text:#000000; --text-secondary:#3C3C43; --text-tertiary:#8E8E93;
+            --bg:#FFFFFF; --separator:rgba(60,60,67,0.12);
+            --card-shadow:0 0.5px 0 0 rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.06);
+            --card-shadow-hover:0 4px 18px rgba(0,0,0,0.09);
+            --radius:12px; --radius-lg:16px;
         }
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        html { scroll-behavior: smooth; }
-        body { font-family: var(--font-body); background: var(--bg-primary); color: var(--text-primary); line-height: 1.7; overflow-x: hidden; }
-        body::before {
-            content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
-            pointer-events: none; z-index: 9999;
-        }
+        *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+        html { font-family:-apple-system, BlinkMacSystemFont,"SF Pro Text","SF Pro Display","Helvetica Neue",Arial,sans-serif;
+            -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+            background:var(--gray-100); color:var(--text); font-size:16px; line-height:1.5; scroll-behavior:smooth; }
+        body { overflow-x:hidden; }
+        a { color:inherit; text-decoration:none; }
+        .wrap { max-width:1120px; margin:0 auto; padding:0 24px; }
 
-        nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 1.2rem 2rem; display: flex; justify-content: space-between; align-items: center; backdrop-filter: blur(20px); background: rgba(10, 14, 23, 0.85); border-bottom: 1px solid var(--border); }
-        .nav-logo { font-family: var(--font-display); font-size: 1.3rem; color: var(--text-primary); text-decoration: none; }
-        .nav-logo span { color: var(--accent); }
-        .nav-links { display: flex; gap: 2rem; align-items: center; }
-        .nav-links a { color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: color 0.3s; }
-        .nav-links a:hover { color: var(--text-primary); }
-        .nav-links a.active { color: var(--accent); }
-        .nav-links a.cta-nav { background: var(--accent); color: var(--bg-primary); padding: 0.5rem 1.2rem; border-radius: 6px; font-weight: 700; }
-        .nav-links a.cta-nav:hover { background: var(--accent-light); }
-        .nav-toggle { display: none; background: none; border: none; cursor: pointer; padding: 0.5rem; }
-        .nav-toggle span { display: block; width: 24px; height: 2px; background: var(--text-primary); margin: 5px 0; }
+        /* ACCENTLIJN */
+        .accent-line { position:fixed; top:0; left:0; right:0; height:3px; z-index:101;
+            background:linear-gradient(90deg, #007AFF, #5AC8FA, #34C759, #AF52DE); }
 
-        .page-hero { padding: 10rem 2rem 5rem; position: relative; overflow: hidden; }
-        .page-hero::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(135deg, var(--bg-primary) 0%, rgba(232, 135, 30, 0.08) 50%, var(--bg-primary) 100%); }
-        .page-hero .container { position: relative; z-index: 2; max-width: 900px; margin: 0 auto; }
-        .page-hero .breadcrumb { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.5rem; }
-        .page-hero .breadcrumb a { color: var(--text-secondary); text-decoration: none; }
-        .page-hero .breadcrumb a:hover { color: var(--accent); }
-        .page-hero h1 { font-family: var(--font-display); font-size: clamp(2.2rem, 5vw, 3.5rem); line-height: 1.15; margin-bottom: 1rem; animation: fadeUp 0.8s ease forwards; }
-        .page-hero h1 em { font-style: normal; color: var(--accent); }
-        .page-hero .subtitle { font-size: 1.2rem; color: var(--text-secondary); max-width: 650px; margin-bottom: 2rem; animation: fadeUp 0.8s ease forwards 0.2s; opacity: 0; }
-        .page-hero .meta { display: flex; gap: 2rem; flex-wrap: wrap; animation: fadeUp 0.8s ease forwards 0.4s; opacity: 0; }
-        .page-hero .meta-item { display: flex; align-items: center; gap: 0.5rem; color: var(--text-secondary); font-size: 0.9rem; }
-        .page-hero .meta-item strong { color: var(--text-primary); }
+        /* TOPBAR */
+        .topbar { position:fixed; top:3px; left:0; right:0; z-index:100;
+            background:rgba(255,255,255,0.72); backdrop-filter:saturate(180%) blur(20px);
+            -webkit-backdrop-filter:saturate(180%) blur(20px); border-bottom:0.5px solid var(--separator); }
+        .topbar-inner { max-width:1120px; margin:0 auto; padding:11px 24px; display:flex; justify-content:space-between; align-items:center; }
+        .logo { display:flex; align-items:center; gap:10px; }
+        .logo-mark { width:30px; height:30px; border-radius:8px; flex-shrink:0;
+            background:linear-gradient(135deg, #43A047, #2E7D32);
+            display:flex; align-items:center; justify-content:center;
+            color:#fff; font-weight:700; font-size:16px; letter-spacing:-0.02em; }
+        .logo-word { font-size:17px; font-weight:700; letter-spacing:-0.02em; }
+        .logo-word .accent { color:var(--green-brand-2); }
+        .nav-links { display:flex; gap:6px; align-items:center; }
+        .nav-links a { color:var(--text-secondary); font-size:14px; font-weight:500; padding:8px 12px; border-radius:8px; transition:background .15s, color .15s; }
+        .nav-links a:hover { background:var(--gray-100); color:var(--text); }
+        .nav-links a.active { color:var(--green-text); }
+        .nav-toggle { display:none; background:none; border:0; cursor:pointer; padding:8px; }
+        .nav-toggle span { display:block; width:22px; height:2px; background:var(--text); margin:5px 0; border-radius:2px; }
 
-        @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+        /* BUTTONS */
+        .btn { display:inline-flex; align-items:center; gap:8px; cursor:pointer; border:0;
+            font:inherit; font-size:15px; font-weight:600; padding:11px 20px; border-radius:10px;
+            transition:background .15s, box-shadow .15s, transform .15s; text-decoration:none; }
+        .btn-primary { background:var(--blue); color:#fff; }
+        .btn-primary:hover { background:var(--blue-dark); }
+        .btn-ghost { background:var(--bg); color:var(--text); box-shadow:var(--card-shadow); }
+        .btn-ghost:hover { box-shadow:var(--card-shadow-hover); }
+        .btn:focus-visible { outline:none; box-shadow:0 0 0 3px rgba(0,122,255,0.25); }
+        .nav-cta { background:var(--blue); color:#fff !important; font-weight:600; }
+        .nav-cta:hover { background:var(--blue-dark) !important; color:#fff !important; }
 
-        section { padding: 5rem 2rem; }
-        .container { max-width: 900px; margin: 0 auto; }
-        .section-label { color: var(--accent); font-size: 0.8rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 1rem; }
-        .section-title { font-family: var(--font-display); font-size: clamp(1.6rem, 3.5vw, 2.2rem); line-height: 1.25; margin-bottom: 1.5rem; }
-        .divider { height: 1px; background: linear-gradient(90deg, transparent, var(--border), transparent); margin: 0 2rem; }
+        /* KICKER */
+        .kicker { display:inline-flex; align-items:center; gap:8px; font-size:13px; font-weight:600;
+            letter-spacing:.02em; text-transform:uppercase; color:var(--green-text); margin-bottom:14px; }
+        .kicker::before { content:''; width:22px; height:2px; border-radius:2px; background:var(--green-brand-1); }
 
-        .btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.9rem 2rem; border-radius: 8px; font-family: var(--font-body); font-size: 0.95rem; font-weight: 600; text-decoration: none; transition: all 0.3s ease; border: none; cursor: pointer; }
-        .btn-primary { background: var(--accent); color: var(--bg-primary); }
-        .btn-primary:hover { background: var(--accent-light); transform: translateY(-2px); box-shadow: 0 8px 30px var(--accent-glow); }
-        .btn-outline { background: transparent; color: var(--text-primary); border: 1px solid rgba(255,255,255,0.15); }
-        .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+        /* SECTIONS */
+        .section { padding:84px 0; }
+        .section.alt { background:var(--bg); border-top:0.5px solid var(--separator); border-bottom:0.5px solid var(--separator); }
+        h1, h2, h3 { letter-spacing:-0.025em; line-height:1.2; }
+        .section-title { font-size:clamp(1.7rem, 3.4vw, 2.3rem); font-weight:700; margin-bottom:16px; max-width:22ch; }
+        .section-title .accent { color:var(--green-brand-2); }
+        .lead { color:var(--text-secondary); font-size:1.05rem; max-width:62ch; margin-bottom:8px; }
+
+        /* HERO */
+        .hero { padding:150px 0 84px; }
+        .breadcrumb { color:var(--text-tertiary); font-size:0.85rem; margin-bottom:18px; }
+        .breadcrumb a { color:var(--text-secondary); }
+        .breadcrumb a:hover { color:var(--blue); }
+        .hero h1 { font-size:clamp(2.6rem, 6vw, 4.2rem); font-weight:700; letter-spacing:-0.035em; line-height:1.05; margin:0 0 20px; max-width:18ch; }
+        .hero h1 .accent { color:var(--green-brand-2); }
+        .hero-sub { font-size:1.2rem; color:var(--text-secondary); max-width:60ch; margin-bottom:30px; }
+        .hero-meta { display:flex; gap:24px; flex-wrap:wrap; }
+        .hero-meta-item { display:flex; align-items:center; gap:8px; color:var(--text-secondary); font-size:0.95rem; }
+        .hero-meta-item strong { color:var(--text); font-weight:600; }
+
+        /* INTRO */
+        .intro-text p { color:var(--text-secondary); font-size:1.1rem; max-width:64ch; margin-bottom:16px; }
+        .intro-text strong { color:var(--text); }
 
         /* MODULES */
-        .modules { background: var(--bg-secondary); }
-        .module-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
-        .module-card {
-            background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 2rem;
-            transition: all 0.4s; position: relative; overflow: hidden;
-        }
-        .module-card:hover { border-color: rgba(232, 135, 30, 0.2); transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0,0,0,0.3); }
-        .module-number { font-family: var(--font-display); font-size: 2.5rem; color: var(--accent); opacity: 0.25; line-height: 1; margin-bottom: 0.5rem; }
-        .module-card h3 { font-size: 1.1rem; margin-bottom: 0.5rem; }
-        .module-card p { color: var(--text-secondary); font-size: 0.9rem; }
-        .module-tag { display: inline-block; background: rgba(95, 168, 211, 0.12); color: var(--blue); font-size: 0.75rem; font-weight: 600; padding: 0.2rem 0.6rem; border-radius: 4px; margin-top: 0.8rem; }
-
-        /* WHAT THEY LEARN */
-        .outcomes { background: var(--bg-primary); }
-        .outcome-list { display: grid; gap: 1rem; }
-        .outcome-item {
-            display: flex; align-items: flex-start; gap: 1rem;
-            padding: 1.2rem 1.5rem; background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px;
-        }
-        .outcome-check { color: var(--accent); font-size: 1.2rem; flex-shrink: 0; margin-top: 0.1rem; }
-        .outcome-item p { color: var(--text-secondary); font-size: 0.95rem; }
-        .outcome-item strong { color: var(--text-primary); }
-
-        /* PRACTICAL */
-        .practical { background: var(--bg-secondary); }
-        .specs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
-        .spec { display: flex; align-items: flex-start; gap: 1rem; padding: 1.2rem 1.5rem; background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; }
-        .spec-icon { font-size: 1.4rem; flex-shrink: 0; }
-        .spec-label { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; }
-        .spec-value { font-weight: 600; font-size: 0.95rem; }
-
-        .cta-section { padding: 5rem 2rem; text-align: center; background: linear-gradient(to bottom, var(--bg-primary), var(--bg-secondary)); }
-        .cta-section h2 { font-family: var(--font-display); font-size: clamp(1.6rem, 3.5vw, 2.4rem); margin-bottom: 1rem; }
-        .cta-section p { color: var(--text-secondary); margin-bottom: 2rem; max-width: 500px; margin-left: auto; margin-right: auto; }
-        .cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+        .module-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+        .module-card { background:var(--bg); border-radius:var(--radius-lg); box-shadow:var(--card-shadow); padding:26px; transition:box-shadow .2s, transform .2s; }
+        .module-card:hover { box-shadow:var(--card-shadow-hover); transform:translateY(-2px); }
+        .module-number { font-size:1.4rem; font-weight:700; letter-spacing:-0.03em; color:var(--green-brand-2); line-height:1; margin-bottom:12px; }
+        .module-card h3 { font-size:1.15rem; font-weight:700; margin-bottom:6px; }
+        .module-card p { color:var(--text-secondary); font-size:0.92rem; line-height:1.55; }
+        .module-card p a { color:var(--blue); font-weight:600; }
+        .module-tag { display:inline-block; margin-top:14px; font-size:12px; font-weight:600; padding:4px 10px; border-radius:8px; background:#E6F7EC; color:#1B7A3D; }
 
         /* COMBO BANNER */
-        .combo {
-            background: linear-gradient(135deg, var(--blue-dark), rgba(232, 135, 30, 0.15));
-            border: 1px solid rgba(95, 168, 211, 0.2);
-            border-radius: 16px;
-            padding: 2.5rem;
-            margin-top: 3rem;
-            display: flex;
-            align-items: center;
-            gap: 2rem;
-        }
-        .combo-icon { font-size: 3rem; flex-shrink: 0; }
-        .combo h3 { font-family: var(--font-display); font-size: 1.3rem; margin-bottom: 0.5rem; }
-        .combo p { color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 1rem; }
+        .combo { background:var(--bg); border-radius:var(--radius-lg); box-shadow:var(--card-shadow); padding:30px;
+            margin-top:30px; display:flex; align-items:center; gap:24px; }
+        .combo-icon { font-size:2.6rem; flex-shrink:0; }
+        .combo h3 { font-size:1.2rem; font-weight:700; margin-bottom:8px; }
+        .combo p { color:var(--text-secondary); font-size:0.95rem; margin-bottom:16px; max-width:60ch; }
 
-        footer { padding: 2rem; text-align: center; color: var(--text-muted); font-size: 0.85rem; border-top: 1px solid var(--border); }
-        footer a { color: var(--accent); text-decoration: none; }
+        /* OUTCOMES */
+        .outcome-list { display:grid; gap:12px; }
+        .outcome-item { display:flex; align-items:flex-start; gap:14px;
+            background:var(--bg); border-radius:var(--radius); box-shadow:var(--card-shadow); padding:16px 20px; }
+        .outcome-check { color:var(--green-text); font-size:1.1rem; flex-shrink:0; line-height:1.4; }
+        .outcome-item p { color:var(--text-secondary); font-size:0.95rem; }
+        .outcome-item strong { color:var(--text); font-weight:600; }
 
-        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.7s ease; }
-        .reveal.visible { opacity: 1; transform: translateY(0); }
+        /* PRACTICAL — apple-card rows */
+        .specs-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+        .spec { display:flex; align-items:flex-start; gap:14px;
+            background:var(--bg); border-radius:var(--radius); box-shadow:var(--card-shadow); padding:18px 20px; }
+        .spec-icon { font-size:1.4rem; flex-shrink:0; }
+        .spec-label { font-size:0.72rem; color:var(--text-tertiary); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:4px; }
+        .spec-value { font-weight:600; font-size:0.95rem; }
+
+        /* CTA */
+        .cta-section { text-align:center; }
+        .cta-section .section-title { margin-left:auto; margin-right:auto; max-width:24ch; }
+        .cta-section p { color:var(--text-secondary); margin:0 auto 28px; max-width:52ch; font-size:1.05rem; }
+        .cta-buttons { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
 
         /* AANKOMENDE WORKSHOPS */
-        .upcoming { background: var(--bg-secondary); }
-        .workshop-cards { display: grid; gap: 1rem; }
-        .workshop-card {
-            background: var(--bg-card); border: 1px solid var(--border);
-            border-radius: 14px; padding: 1.75rem;
-            display: grid; grid-template-columns: auto 1fr auto;
-            gap: 1.5rem; align-items: center;
-            transition: all 0.3s;
-        }
-        .workshop-card:hover { border-color: rgba(232,135,30,0.25); transform: translateY(-2px); }
-        .workshop-card.status-vol { opacity: 0.65; }
-        .wc-date-box {
-            background: var(--bg-primary); border: 1px solid var(--border);
-            border-radius: 10px; padding: 0.75rem 1rem;
-            text-align: center; min-width: 70px;
-        }
-        .wc-day { font-family: var(--font-display); font-size: 1.8rem; color: var(--accent); line-height: 1; }
-        .wc-month { font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; }
-        .wc-title { font-size: 1.05rem; font-weight: 600; margin-bottom: 0.3rem; }
-        .wc-meta { display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; margin-top: 0.4rem; }
-        .wc-meta-item { color: var(--text-secondary); font-size: 0.85rem; display: flex; align-items: center; gap: 0.3rem; }
-        .wc-badge { font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 4px; }
-        .badge-open { background: rgba(34,197,94,0.12); color: #22c55e; }
-        .badge-vol { background: rgba(239,68,68,0.12); color: #ef4444; }
-        .badge-niveau { background: rgba(95,168,211,0.12); color: var(--blue); }
-        .wc-desc { color: var(--text-secondary); font-size: 0.88rem; margin-top: 0.5rem; line-height: 1.5; }
-        .wc-spots { font-size: 0.82rem; color: var(--text-muted); margin-top: 0.3rem; }
-        .wc-spots strong { color: var(--text-primary); }
-        .no-workshops {
-            text-align: center; padding: 3rem 2rem;
-            background: var(--bg-card); border: 1px dashed var(--border);
-            border-radius: 12px; color: var(--text-secondary);
-        }
-        @media (max-width: 600px) {
-            .workshop-card { grid-template-columns: 1fr; }
-            .wc-date-box { display: flex; gap: 0.5rem; align-items: baseline; width: fit-content; }
-        }
+        .workshop-cards { display:grid; gap:14px; }
+        .workshop-card { background:var(--bg); border-radius:var(--radius-lg); box-shadow:var(--card-shadow);
+            padding:22px; display:grid; grid-template-columns:auto 1fr auto; gap:20px; align-items:center;
+            transition:box-shadow .2s, transform .2s; }
+        .workshop-card:hover { box-shadow:var(--card-shadow-hover); transform:translateY(-2px); }
+        .workshop-card.status-vol { opacity:0.7; }
+        .wc-date-box { background:var(--gray-100); border:0.5px solid var(--separator);
+            border-radius:var(--radius); padding:12px 14px; text-align:center; min-width:70px; }
+        .wc-day { font-size:1.8rem; font-weight:700; letter-spacing:-0.03em; color:var(--green-brand-2); line-height:1; }
+        .wc-month { font-size:0.72rem; font-weight:700; color:var(--text-tertiary); text-transform:uppercase; letter-spacing:0.06em; margin-top:2px; }
+        .wc-title { font-size:1.05rem; font-weight:700; margin-bottom:4px; }
+        .wc-meta { display:flex; gap:12px; flex-wrap:wrap; align-items:center; margin-top:6px; }
+        .wc-meta-item { color:var(--text-secondary); font-size:0.85rem; display:flex; align-items:center; gap:4px; }
+        .wc-badge { font-size:12px; font-weight:600; padding:4px 10px; border-radius:8px; }
+        .badge-open { background:#E6F7EC; color:#1B7A3D; }
+        .badge-vol { background:var(--red-light); color:var(--red-text); }
+        .badge-niveau { background:#E7F0FF; color:#0B5BD3; }
+        .wc-desc { color:var(--text-secondary); font-size:0.88rem; margin-top:8px; line-height:1.5; }
+        .wc-spots { font-size:0.82rem; color:var(--text-tertiary); margin-top:6px; }
+        .wc-spots strong { color:var(--text); }
+        .no-workshops { text-align:center; padding:40px 24px; background:var(--bg);
+            border:1px dashed var(--separator); border-radius:var(--radius-lg); color:var(--text-secondary); }
+        .no-workshops a { color:var(--blue); font-weight:600; }
 
-        @media (max-width: 768px) {
-            .nav-links { display: none; position: absolute; top: 100%; left: 0; right: 0; background: var(--bg-secondary); flex-direction: column; padding: 1.5rem; gap: 1rem; border-bottom: 1px solid var(--border); }
-            .nav-links.open { display: flex; }
-            .nav-toggle { display: block; }
-            .page-hero { padding: 7rem 1.5rem 3rem; }
-            .page-hero .meta { flex-direction: column; gap: 0.8rem; }
-            section { padding: 3.5rem 1.5rem; }
-            .module-grid, .specs-grid { grid-template-columns: 1fr; }
-            .combo { flex-direction: column; text-align: center; }
-            .cta-buttons { flex-direction: column; }
-            .btn { width: 100%; justify-content: center; }
+        /* FOOTER */
+        footer { padding:32px 0; text-align:center; color:var(--text-tertiary); font-size:0.85rem; border-top:0.5px solid var(--separator); background:var(--bg); }
+        footer a { color:var(--blue); }
+
+        /* REVEAL */
+        .reveal { opacity:0; transform:translateY(24px); transition:opacity .6s ease, transform .6s ease; }
+        .reveal.visible { opacity:1; transform:translateY(0); }
+
+        @media (max-width:860px) {
+            .nav-links { display:none; position:absolute; top:100%; left:0; right:0; background:rgba(255,255,255,0.97); backdrop-filter:blur(20px); flex-direction:column; align-items:stretch; padding:12px; gap:4px; border-bottom:0.5px solid var(--separator); }
+            .nav-links.open { display:flex; }
+            .nav-links a { padding:12px; }
+            .nav-toggle { display:block; }
+        }
+        @media (max-width:720px) {
+            .hero { padding:120px 0 56px; }
+            .section { padding:56px 0; }
+            .module-grid, .specs-grid { grid-template-columns:1fr; }
+            .combo { flex-direction:column; text-align:center; }
+            .cta-buttons { flex-direction:column; }
+            .hero-meta { flex-direction:column; gap:10px; }
+            .btn { width:100%; justify-content:center; }
+            .combo .btn { width:auto; }
+        }
+        @media (max-width:600px) {
+            .workshop-card { grid-template-columns:1fr; }
+            .wc-date-box { display:flex; gap:8px; align-items:baseline; width:fit-content; }
         }
     </style>
 </head>
 <body>
 
-<nav>
-    <a href="../index.html" class="nav-logo">Roel <span>Nentjes</span></a>
-    <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Menu">
-        <span></span><span></span><span></span>
-    </button>
-    <div class="nav-links">
-        <a href="../index.html#over">Over mij</a>
-        <a href="../index.html#aanbod">Aanbod</a>
-        <a href="../presentatie/index.html">Presentatie</a>
-        <a href="../workshop/index.html" class="active">Workshop</a>
-        <a href="../index.html#contact" class="cta-nav">Contact</a>
+<div class="accent-line"></div>
+
+<header class="topbar">
+    <div class="topbar-inner">
+        <a href="../index.html" class="logo">
+            <span class="logo-mark">R</span>
+            <span class="logo-word">Roel <span class="accent">Nentjes</span></span>
+        </a>
+        <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Menu">
+            <span></span><span></span><span></span>
+        </button>
+        <nav class="nav-links">
+            <a href="../index.html#over">Over Roel</a>
+            <a href="../index.html#aanbod">Aanbod</a>
+            <a href="../presentatie/index.html">Presentatie</a>
+            <a href="../workshop/index.html" class="active">Workshop</a>
+            <a href="../index.html#contact" class="nav-cta">Contact</a>
+        </nav>
     </div>
-</nav>
+</header>
 
 <!-- HERO -->
-<section class="page-hero">
-    <div class="container">
+<section class="hero">
+    <div class="wrap">
         <div class="breadcrumb"><a href="../index.html">Home</a> / Workshop</div>
-        <h1>Hands-on met <em>AI</em></h1>
-        <p class="subtitle">Deelnemers gaan zelf aan de slag met AI-tools. Ontdek wat werkt, wat niet werkt, en hoe je AI effectief inzet in je dagelijks werk.</p>
-        <div class="meta">
-            <div class="meta-item">⏱️ <strong>2 – 4 uur</strong></div>
-            <div class="meta-item">👥 <strong>8 – 30 personen</strong></div>
-            <div class="meta-item">💻 <strong>Laptop vereist</strong></div>
-            <div class="meta-item">🌍 <strong>NL of EN</strong></div>
+        <span class="kicker">Workshop · Hands-on</span>
+        <h1>Hands-on met <span class="accent">AI</span></h1>
+        <p class="hero-sub">Deelnemers gaan zelf aan de slag met AI-tools. Ontdekken wat werkt, wat niet werkt, en hoe je AI effectief inzet in je dagelijks werk.</p>
+        <div class="hero-meta">
+            <div class="hero-meta-item">⏱️ <strong>2 – 4 uur</strong></div>
+            <div class="hero-meta-item">👥 <strong>8 – 30 personen</strong></div>
+            <div class="hero-meta-item">💻 <strong>Laptop vereist</strong></div>
+            <div class="hero-meta-item">🌍 <strong>NL of EN</strong></div>
         </div>
     </div>
 </section>
 
-<div class="divider"></div>
-
 <!-- AANKOMENDE WORKSHOPS -->
-<section class="upcoming">
-    <div class="container">
-        <div class="section-label reveal">Agenda</div>
-        <h2 class="section-title reveal">Aankomende workshops</h2>
+<section class="section alt" id="agenda">
+    <div class="wrap">
+        <span class="kicker reveal">Agenda</span>
+        <h2 class="section-title reveal">Aankomende <span class="accent">workshops</span></h2>
         <div id="upcoming-workshops-list" class="workshop-cards reveal">
             <!-- Dynamisch geladen vanuit workshops-data.js -->
         </div>
     </div>
 </section>
 
-<div class="divider"></div>
-
 <!-- INTRO -->
-<section style="background: var(--bg-primary);">
-    <div class="container">
-        <div class="reveal">
-            <p style="color: var(--text-secondary); font-size: 1.1rem; max-width: 700px; margin-bottom: 1.5rem;">
-                Na de presentatie "Ontdek de Patronen" weet uw publiek <strong style="color: var(--text-primary);">wat</strong> AI kan.
-                In de workshop ontdekken ze <strong style="color: var(--text-primary);">hoe</strong> ze het zelf inzetten.
-            </p>
-            <p style="color: var(--text-secondary); font-size: 1.1rem; max-width: 700px;">
-                Deelnemers werken met echte AI-tools aan echte vraagstukken. Geen theorie, maar praktijk —
-                met directe toepasbaarheid in hun eigen werk en leven.
-            </p>
-        </div>
+<section class="section">
+    <div class="wrap intro-text reveal">
+        <span class="kicker">Van weten naar doen</span>
+        <h2 class="section-title">Wat als je het AI zelf laat <span class="accent">doen?</span></h2>
+        <p>Na de presentatie "Ontdek de Patronen" weet je publiek <strong>wat</strong> AI kan. In de workshop ontdekken deelnemers <strong>hoe</strong> ze het zelf inzetten.</p>
+        <p>Er wordt gewerkt met echte AI-tools aan echte vraagstukken. Geen theorie, maar praktijk — met directe toepasbaarheid in het eigen werk en leven.</p>
     </div>
 </section>
 
-<div class="divider"></div>
-
 <!-- MODULES -->
-<section class="modules">
-    <div class="container">
-        <div class="section-label reveal">Programma</div>
-        <h2 class="section-title reveal">Workshop-modules</h2>
-        <p class="reveal" style="color: var(--text-secondary); margin-bottom: 2.5rem; max-width: 600px;">De workshop is modulair opgebouwd. Kies de modules die passen bij uw doelgroep, of neem het volledige programma.</p>
+<section class="section alt">
+    <div class="wrap">
+        <span class="kicker reveal">Programma</span>
+        <h2 class="section-title reveal">Workshop-<span class="accent">modules</span></h2>
+        <p class="lead reveal" style="margin-bottom:32px;">De workshop is modulair opgebouwd. Kies de modules die passen bij je doelgroep, of neem het volledige programma.</p>
 
         <div class="module-grid">
             <div class="module-card reveal">
                 <div class="module-number">01</div>
                 <h3>Effectief prompting</h3>
-                <p>Leer hoe je de juiste vragen stelt aan AI. Het verschil tussen een matig en een excellent resultaat zit in de prompt. Deelnemers oefenen met concrete opdrachten.</p>
+                <p>De juiste vraag stellen aan AI maakt het verschil tussen een matig en een excellent resultaat. Deelnemers oefenen met concrete opdrachten.</p>
                 <span class="module-tag">Basis</span>
             </div>
             <div class="module-card reveal">
                 <div class="module-number">02</div>
-                <h3>AI voor tekst & communicatie</h3>
+                <h3>AI voor tekst &amp; communicatie</h3>
                 <p>Van e-mails en rapporten tot presentaties en social media. Deelnemers schrijven, herschrijven en verbeteren teksten met AI als co-auteur.</p>
                 <span class="module-tag">Praktisch</span>
             </div>
             <div class="module-card reveal">
                 <div class="module-number">03</div>
-                <h3>AI voor analyse & onderzoek</h3>
-                <p>Documenten samenvatten, data analyseren, vergelijkend onderzoek doen. Deelnemers ervaren hoe AI uren werk kan reduceren tot minuten.</p>
+                <h3>AI voor analyse &amp; onderzoek</h3>
+                <p>Documenten samenvatten, data analyseren, vergelijkend onderzoek doen. Deelnemers ervaren hoe AI uren werk kan terugbrengen tot minuten.</p>
                 <span class="module-tag">Verdieping</span>
             </div>
             <div class="module-card reveal">
                 <div class="module-number">04</div>
                 <h3>Creatieve AI-toepassingen</h3>
-                <p>Beeldgeneratie, muziek, video en podcasts. Deelnemers creëren hun eigen AI-content en ontdekken de mogelijkheden — en beperkingen.</p>
+                <p>Beeldgeneratie, muziek, video en podcasts. Deelnemers creëren hun eigen AI-content en ontdekken de mogelijkheden — en de beperkingen.</p>
                 <span class="module-tag">Creatief</span>
             </div>
             <div class="module-card reveal">
                 <div class="module-number">05</div>
                 <h3>Jaarplan in een uur met NotebookLM</h3>
-                <p>Interview een medewerker of afdeling, neem het gesprek op en laat de tekst structureren door ChatGPT of Gemini. Voed die structuur aan <a href="https://notebooklm.google.com" target="_blank" style="color: var(--accent);">NotebookLM</a> — inclusief huisstijldocumenten — en genereer in één uur een compleet jaarplan waar je anders dagen of weken over doet.</p>
+                <p>Interview een medewerker of afdeling, neem het gesprek op en laat de tekst structureren door ChatGPT of Gemini. Voed die structuur aan <a href="https://notebooklm.google.com" target="_blank">NotebookLM</a> — inclusief huisstijldocumenten — en genereer in één uur een compleet jaarplan waar je anders dagen of weken over doet.</p>
                 <span class="module-tag">Geavanceerd</span>
             </div>
         </div>
@@ -291,21 +286,19 @@
         <div class="combo reveal">
             <div class="combo-icon">🎯</div>
             <div>
-                <h3>Presentatie + Workshop = Dagprogramma</h3>
+                <h3>Presentatie + workshop = dagprogramma</h3>
                 <p>Combineer de presentatie "Ontdek de Patronen" in de ochtend met een hands-on workshop in de middag voor een complete AI-ervaring. Ideaal voor teamdagen en conferenties.</p>
-                <a href="../index.html#contact" class="btn btn-primary">Vraag een dagprogramma aan</a>
+                <a href="../index.html#contact" class="btn btn-primary">Vraag een dagprogramma aan →</a>
             </div>
         </div>
     </div>
 </section>
 
-<div class="divider"></div>
-
 <!-- WHAT THEY LEARN -->
-<section class="outcomes">
-    <div class="container">
-        <div class="section-label reveal">Resultaat</div>
-        <h2 class="section-title reveal">Na de workshop kunnen deelnemers:</h2>
+<section class="section">
+    <div class="wrap">
+        <span class="kicker reveal">Resultaat</span>
+        <h2 class="section-title reveal">Na de workshop kunnen <span class="accent">deelnemers:</span></h2>
 
         <div class="outcome-list reveal">
             <div class="outcome-item">
@@ -332,13 +325,11 @@
     </div>
 </section>
 
-<div class="divider"></div>
-
 <!-- PRACTICAL -->
-<section class="practical">
-    <div class="container">
-        <div class="section-label reveal">Praktisch</div>
-        <h2 class="section-title reveal">Wat heeft u nodig?</h2>
+<section class="section alt">
+    <div class="wrap">
+        <span class="kicker reveal">Praktisch</span>
+        <h2 class="section-title reveal">Wat heb je <span class="accent">nodig?</span></h2>
 
         <div class="specs-grid reveal">
             <div class="spec">
@@ -380,27 +371,30 @@
                 <div class="spec-icon">📋</div>
                 <div>
                     <div class="spec-label">Inclusief</div>
-                    <div class="spec-value">Handout met tips & bronnen</div>
+                    <div class="spec-value">Handout met tips &amp; bronnen</div>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<div class="divider"></div>
-
 <!-- CTA -->
-<section class="cta-section">
-    <h2>Workshop boeken voor uw team?</h2>
-    <p>Ik stel graag een programma samen dat past bij uw doelgroep en wensen.</p>
-    <div class="cta-buttons">
-        <a href="mailto:roel@nentjes.nl" class="btn btn-primary">✉️ Mail mij</a>
-        <a href="tel:+31612345678" class="btn btn-outline">📱 Bel mij</a>
+<section class="section cta-section">
+    <div class="wrap">
+        <span class="kicker reveal" style="justify-content:center;">Contact</span>
+        <h2 class="section-title reveal">Een workshop voor jouw <span class="accent">team?</span></h2>
+        <p class="reveal">Een programma op maat voor je doelgroep is zo samengesteld. Zullen we eens kijken wat past?</p>
+        <div class="cta-buttons reveal">
+            <a href="mailto:roel@nentjes.nl" class="btn btn-primary">✉️ Stuur een bericht</a>
+            <a href="tel:+31683660830" class="btn btn-ghost">📱 Bel Roel</a>
+        </div>
     </div>
 </section>
 
 <footer>
-    <p>&copy; 2026 Roel Nentjes · <a href="../index.html">Home</a> · <a href="../presentatie/index.html">Presentatie</a> · <a href="../index.html#contact">Contact</a></p>
+    <div class="wrap">
+        <p>&copy; 2026 Roel Nentjes &middot; <a href="../index.html">Home</a> &middot; <a href="../presentatie/index.html">Presentatie</a> &middot; <a href="../index.html#contact">Contact</a></p>
+    </div>
 </footer>
 
 <script src="../workshops-data.js"></script>
@@ -430,7 +424,7 @@ document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
         container.innerHTML = `
             <div class="no-workshops">
                 <p style="font-size:1.1rem;margin-bottom:0.5rem">Op dit moment zijn er geen open workshopdatums.</p>
-                <p style="font-size:0.9rem">Interesse? <a href="../index.html#contact" style="color:var(--accent)">Neem contact op</a> voor een workshop op maat.</p>
+                <p style="font-size:0.9rem">Interesse? <a href="../index.html#contact">Neem contact op</a> voor een workshop op maat.</p>
             </div>`;
         return;
     }
@@ -458,14 +452,14 @@ document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
                     <span class="wc-badge badge-niveau">${esc(w.niveau)}</span>
                 </div>
                 <div class="wc-desc">${esc(w.beschrijving)}</div>
-                <div class="wc-spots" ${spotsLow ? 'style="color:#ef4444"' : ''}>
+                <div class="wc-spots" ${spotsLow ? 'style="color:var(--red-text)"' : ''}>
                     <strong>${w.beschikbaar}</strong> van de ${w.max} plaatsen nog beschikbaar
                 </div>
             </div>
             <div>
                 ${w.status === 'open'
                     ? `<a href="${esc(w.link)}" class="btn btn-primary">Aanmelden →</a>`
-                    : `<span class="btn btn-outline" style="opacity:0.5;cursor:default">Vol</span>`
+                    : `<span class="btn btn-ghost" style="opacity:0.5;cursor:default">Vol</span>`
                 }
             </div>
         </div>`;
