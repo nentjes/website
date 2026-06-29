@@ -5,50 +5,92 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Pharos — Gezondheidsvaardigheden & Laaggeletterdheid</title>
 <style>
-  :root{--pp:#3d2b6e;--ppd:#2d1b5e;--ppm:#6b4f9e;--pl:#d0c4e8;--pm:#b01458;--vg:#f5c842;--vgb:#1a3e6e;}
+  :root {
+    --blue:#007AFF; --blue-dark:#0062CC; --blue-light:rgba(0,122,255,0.08);
+    --green:#34C759; --green-brand-1:#43A047; --green-brand-2:#2E7D32; --green-text:#1B7A3D; --green-light:rgba(52,199,89,0.10);
+    --red:#FF3B30; --red-text:#C0392B; --red-light:rgba(255,59,48,0.07);
+    --gray-100:#F2F2F7; --gray-200:#E5E5EA; --gray-300:#D1D1D6;
+    --text:#000000; --text-secondary:#3C3C43; --text-tertiary:#8E8E93;
+    --bg:#FFFFFF; --separator:rgba(60,60,67,0.12);
+    --card-shadow:0 0.5px 0 0 rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.06);
+    --card-shadow-hover:0 4px 18px rgba(0,0,0,0.09);
+    --radius:12px; --radius-lg:16px;
+  }
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-  body{background:var(--ppd);font-family:sans-serif;color:var(--pl);overflow-x:hidden;}
-  header{background:var(--ppd);border-bottom:3px solid var(--pm);display:flex;align-items:center;padding:10px 24px;gap:20px;position:sticky;top:0;z-index:100;flex-wrap:wrap;}
-  .logo-wrap{display:flex;align-items:center;gap:12px;text-decoration:none;}
-  .logo-circle{width:48px;height:48px;background:var(--pm);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:24px;color:white;flex-shrink:0;}
-  .back-btn{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--pl);background:var(--ppm);padding:8px 14px;border-radius:10px;margin-left:auto;transition:background 0.2s;}
-  .back-btn:hover{background:var(--pm);}
-  .back-btn svg{width:22px;height:22px;}
-  nav{display:flex;gap:6px;flex-wrap:wrap;}
-  .nav-item{display:flex;flex-direction:column;align-items:center;text-decoration:none;color:var(--pl);padding:4px 8px;border-radius:8px;transition:background 0.2s;gap:2px;}
-  .nav-item:hover{background:var(--ppm);}
-  /* ── ACTIEF MENU-ITEM: omcirkeld zodat je weet waar je bent ── */
-  .nav-item.active {
-    box-shadow: 0 0 0 2px var(--pm);
-    background: rgba(176, 20, 88, 0.18);
-    border-radius: 10px;
-  }
-  .nav-item.active .nav-label {
-    color: var(--pm);
-    font-weight: 700;
-    opacity: 1;
-  }
-  .nav-item.active svg { opacity: 1; }
+  html{font-family:-apple-system, BlinkMacSystemFont,"SF Pro Text","SF Pro Display","Helvetica Neue",Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+    background:var(--gray-100);color:var(--text);font-size:16px;line-height:1.5;scroll-behavior:smooth;}
+  body{overflow-x:hidden;}
+  a{color:inherit;text-decoration:none;}
+  h1,h2,h3{letter-spacing:-0.025em;line-height:1.2;}
 
-  .nav-item svg{width:26px;height:26px;}
-  .nav-label{font-size:9px;opacity:0.85;text-align:center;}
-  .hero-wrap{width:100%;overflow:hidden;}
-  .hero-wrap svg{display:block;width:100%;height:auto;}
+  /* ACCENTLIJN */
+  .accent-line{position:fixed;top:0;left:0;right:0;height:3px;z-index:101;
+    background:linear-gradient(90deg,#007AFF,#5AC8FA,#34C759,#AF52DE);}
+
+  /* TOPBAR (glasmorfisme) */
+  header{position:fixed;top:3px;left:0;right:0;z-index:100;
+    background:rgba(255,255,255,0.72);backdrop-filter:saturate(180%) blur(20px);
+    -webkit-backdrop-filter:saturate(180%) blur(20px);border-bottom:0.5px solid var(--separator);
+    display:flex;align-items:center;padding:8px 24px;gap:18px;flex-wrap:wrap;}
+  .logo-wrap{display:flex;align-items:center;gap:10px;text-decoration:none;}
+  .logo-circle{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#43A047,#2E7D32);
+    display:flex;align-items:center;justify-content:center;font-weight:700;font-size:17px;color:#fff;flex-shrink:0;letter-spacing:-0.02em;}
+  .logo-wrap svg{display:none;}
+  .back-btn{display:flex;align-items:center;gap:8px;text-decoration:none;color:#fff;background:var(--blue);
+    padding:9px 16px;border-radius:10px;margin-left:auto;font-size:14px;font-weight:600;transition:background 0.15s;}
+  .back-btn:hover{background:var(--blue-dark);}
+  .back-btn svg{width:18px;height:18px;}
+  .back-btn svg:last-child{display:none;}
+  .back-btn svg polyline{stroke:#fff;}
+  nav{display:flex;gap:2px;flex-wrap:wrap;}
+  .nav-item{display:flex;flex-direction:column;align-items:center;text-decoration:none;color:var(--text-secondary);
+    padding:5px 9px;border-radius:8px;transition:background 0.15s,color 0.15s;gap:2px;}
+  .nav-item:hover{background:var(--gray-100);color:var(--text);}
+  .nav-item svg{width:22px;height:22px;}
+  .nav-item svg [stroke="#d0c4e8"]{stroke:var(--text-tertiary);}
+  .nav-item svg [fill="#d0c4e8"]{fill:var(--text-tertiary);}
+  .nav-item svg [stroke="#b01458"]{stroke:var(--blue);}
+  .nav-item svg [fill="#b01458"]{fill:var(--blue);}
+  .nav-item svg [stroke="#f5c842"]{stroke:var(--green-brand-1);}
+  .nav-label{font-size:9px;opacity:0.9;text-align:center;letter-spacing:0.01em;}
+  /* ── ACTIEF MENU-ITEM ── */
+  .nav-item.active{background:var(--blue-light);box-shadow:0 0 0 1.5px var(--blue) inset;}
+  .nav-item.active .nav-label{color:var(--blue);font-weight:700;opacity:1;}
+  .nav-item.active svg [stroke="#d0c4e8"]{stroke:var(--blue);}
+  .nav-item.active svg [fill="#d0c4e8"]{fill:var(--blue);}
+
+  /* INTRO */
+  .intro{max-width:1280px;margin:0 auto;padding:108px 28px 8px;}
+  .kicker{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;
+    letter-spacing:.02em;text-transform:uppercase;color:var(--green-text);margin-bottom:12px;}
+  .kicker::before{content:'';width:22px;height:2px;border-radius:2px;background:var(--green-brand-1);}
+  .intro h1{font-size:clamp(1.8rem,3.6vw,2.4rem);font-weight:700;letter-spacing:-0.03em;margin-bottom:12px;max-width:20ch;}
+  .intro h1 .accent{color:var(--green-brand-2);}
+  .intro p{color:var(--text-secondary);font-size:1.05rem;max-width:64ch;}
+
+  .hero-wrap{width:100%;max-width:1280px;margin:20px auto 0;padding:0 28px;}
+  .hero-wrap svg{display:block;width:100%;height:auto;border-radius:var(--radius-lg);box-shadow:var(--card-shadow);}
   .panels-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;padding:28px 28px 40px;max-width:1280px;margin:0 auto;}
-  .panel{background:var(--pp);border-radius:14px;border:2px solid var(--ppm);box-shadow:0 4px 16px rgba(0,0,0,0.4);}
-  .panel svg{width:100%;height:auto;display:block;border-radius:14px 14px 0 0;}
-  .subpages-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding:0 28px 40px;max-width:1280px;margin:0 auto;}
-  .subpage-link{background:var(--pp);border-radius:12px;text-decoration:none;border:2px solid var(--ppm);transition:transform 0.2s;display:block;}
-  .subpage-link:hover{transform:translateY(-4px);border-color:var(--vg);}
-  .subpage-link svg{width:100%;height:auto;display:block;border-radius:10px;}
-  footer{background:var(--ppd);border-top:3px solid var(--pm);padding:28px 32px 18px;}
-  .footer-row{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;}
-  .footer-row a{color:var(--pl);opacity:0.8;transition:opacity 0.2s;}
-  .footer-row a:hover{opacity:1;}
-  .footer-row svg{width:28px;height:28px;}
-  @media(max-width:900px){.panels-grid{grid-template-columns:1fr 1fr;}.subpages-grid{grid-template-columns:1fr;padding:0 16px 32px;}}
+  .panel{background:var(--bg);border-radius:var(--radius);box-shadow:var(--card-shadow);overflow:hidden;transition:box-shadow .2s,transform .2s;}
+  .panel:hover{box-shadow:var(--card-shadow-hover);transform:translateY(-2px);}
+  .panel svg{width:100%;height:auto;display:block;}
+  .subpages-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding:0 28px 48px;max-width:1280px;margin:0 auto;}
+  .subpage-link{background:var(--bg);border-radius:var(--radius);box-shadow:var(--card-shadow);text-decoration:none;overflow:hidden;transition:box-shadow .2s,transform .2s;display:block;}
+  .subpage-link:hover{box-shadow:var(--card-shadow-hover);transform:translateY(-2px);}
+  .subpage-link svg{width:100%;height:auto;display:block;}
+  footer{background:var(--bg);border-top:0.5px solid var(--separator);padding:28px 32px 22px;}
+  .footer-row{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;align-items:center;}
+  .footer-row a{color:var(--text-tertiary);opacity:0.85;transition:opacity 0.2s,color 0.2s;}
+  .footer-row a:hover{opacity:1;color:var(--blue);}
+  .footer-row svg{width:26px;height:26px;}
+  .footer-row svg [stroke="#d0c4e8"]{stroke:var(--text-tertiary);}
+  .footer-row svg [fill="#d0c4e8"]{fill:var(--text-tertiary);}
+  .footer-row svg [stroke="#b01458"]{stroke:var(--blue);}
+  .footer-row svg [fill="#b01458"]{fill:var(--blue);}
+  @media(max-width:900px){.panels-grid{grid-template-columns:1fr 1fr;}.subpages-grid{grid-template-columns:1fr;padding:0 16px 32px;}.intro{padding-top:96px;}}
 
-  /* ── PHAROS TOOLTIP: echte tekst van pharos.nl ── */
+  /* ── PHAROS TOOLTIP ── */
   [data-tip] { position: relative; }
   .sublink-wrap { display: block; }
   [data-tip]::after {
@@ -57,8 +99,10 @@
     bottom: calc(100% + 10px);
     left: 50%;
     transform: translateX(-50%);
-    background: #2d1b5e;
-    color: #e8e0f5;
+    background: rgba(255,255,255,0.96);
+    backdrop-filter: saturate(180%) blur(12px);
+    -webkit-backdrop-filter: saturate(180%) blur(12px);
+    color: var(--text-secondary);
     padding: 10px 14px;
     border-radius: 10px;
     font-size: 13px;
@@ -71,9 +115,9 @@
     transition: opacity 0.25s;
     z-index: 9999;
     text-align: left;
-    border: 1px solid #b01458;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.55);
-    font-family: system-ui, -apple-system, sans-serif;
+    border: 0.5px solid var(--separator);
+    box-shadow: var(--card-shadow-hover);
+    font-family: inherit;
   }
   [data-tip]:hover::after { opacity: 1; }
   /* Zorg dat tooltip niet buiten beeld valt */
@@ -88,6 +132,7 @@
 </style>
 </head>
 <body>
+<div class="accent-line"></div>
 <header>
   <a href="index.html" class="logo-wrap" data-tip="Pharos — Gezondheid en kwaliteit van zorg voor iedereen in Nederland">
     <div class="logo-circle">P</div>
@@ -136,6 +181,13 @@
     <svg viewBox="0 0 22 22" fill="none"><path d="M3 11 L11 4 L19 11 L19 19 L14 19 L14 14 L8 14 L8 19 L3 19 Z" fill="#d0c4e8" opacity="0.8"/></svg>
   </a>
 </header>
+
+<!-- INTRO -->
+<section class="intro">
+  <span class="kicker">Gezondheidsvaardigheden</span>
+  <h1>Wat als een <span class="accent">plaatje</span> meer zegt dan de bijsluiter?</h1>
+  <p>Ruim 2,5 miljoen mensen in Nederland vinden lezen en schrijven lastig. Een formulier, een bijsluiter of een instructie wordt dan al snel een drempel. Wie lang genoeg in de zorg meeloopt, herkent het patroon: niet de techniek, maar de taal is vaak het echte struikelblok. Beeldtaal brengt de boodschap terug naar wat telt — herkenbaar, in één oogopslag.</p>
+</section>
 
 <!-- HERO: Van Gogh warm style -->
 <div class="hero-wrap">
@@ -707,7 +759,7 @@
     <a href="ehealth.html" data-tip="e-health en digitale zorg — Digitale vernieuwingen zoals AI en apps veranderen de zorg razendsnel. Maar deze oplossingen zijn niet voor iedereen toegankelijk, begrijpelijk of gebruiksvriendelijk."><svg viewBox="0 0 28 28" fill="none"><rect x="8" y="3" width="12" height="22" rx="2.5" stroke="#d0c4e8" stroke-width="1.5" fill="#d0c4e8" opacity="0.1"/><circle cx="14" cy="21" r="2" fill="#b01458"/></svg></a>
     <a href="preventie.html" data-tip="Preventie — 16 succesfactoren voor preventiebeleid dat gezondheidsverschillen verkleint. Pharos ondersteunt gemeenten en zorgorganisaties bij effectieve preventie."><svg viewBox="0 0 28 28" fill="none"><path d="M14 3 L23 8 L23 17 Q23 24 14 27 Q5 24 5 17 L5 8 Z" fill="#4a8a3a" opacity="0.5" stroke="#4a8a3a" stroke-width="1.5"/></svg></a>
     <a href="spuk.html" data-tip="SPUK-regeling — Hoe gemeenten stevig kunnen inzetten op het terugdringen van vermijdbare gezondheidsverschillen bij kwetsbare groepen."><svg viewBox="0 0 28 28" fill="none"><rect x="10" y="3" width="8" height="8" rx="1" fill="#d4c8b0"/><line x1="14" y1="11" x2="14" y2="18" stroke="#f5c842" stroke-width="2.5"/><circle cx="14" cy="21" r="4" fill="#f5c842" opacity="0.8"/></svg></a>
-    <a href="#" data-tip="Privacybeleid van Pharos — Hoe wij omgaan met uw persoonsgegevens"><svg viewBox="0 0 28 28" fill="none"><rect x="7" y="13" width="14" height="12" rx="2" stroke="#d0c4e8" stroke-width="1.5" fill="#d0c4e8" opacity="0.1"/><path d="M10 13 Q10 7 14 7 Q18 7 18 13" stroke="#d0c4e8" stroke-width="2" fill="none"/></svg></a>
+    <a href="#" data-tip="Privacybeleid van Pharos — Hoe we omgaan met jouw persoonsgegevens"><svg viewBox="0 0 28 28" fill="none"><rect x="7" y="13" width="14" height="12" rx="2" stroke="#d0c4e8" stroke-width="1.5" fill="#d0c4e8" opacity="0.1"/><path d="M10 13 Q10 7 14 7 Q18 7 18 13" stroke="#d0c4e8" stroke-width="2" fill="none"/></svg></a>
   </div>
 </footer>
 </body>
