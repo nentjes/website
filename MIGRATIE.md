@@ -39,20 +39,33 @@ Deploy maakt Worker **`nentjes-v2`** → preview op `https://nentjes-v2.<subdome
 | D1: `administratie-*`, `kindertekening-service`, `kampvuur-crm-*` · KV: `moneybird-queue`, `CACHE` | **behouden** |
 | MX / TXT / DNS e-mail | **ongemoeid** |
 
-## Huidige inrichting (Fase 1, voor zover vastgesteld)
-- Zone `nentjes.nl`: free, DNS Setup **Full**.
-- **Geen Worker aan de zone gekoppeld** ("No Workers connected") → `www` wordt vermoedelijk door een **Pages-project of origin** bediend (nog te bevestigen).
-- DNS-records (A/CNAME/MX/TXT/wildcards): **nog niet geïnventariseerd** — buiten bereik van de beschikbare tools; via dashboard vast te leggen.
+## Huidige inrichting (Fase 1 — DNS vastgelegd 2026-08-19)
+- Zone `nentjes.nl`: free, DNS Setup **Full**. 16/200 records.
+- **`www.nentjes.nl` = Worker `website1`** (Proxied) ← de huidige live site.
+- **Apex `nentjes.nl` heeft GEEN web-record** (A/AAAA/CNAME) → site draait alleen op `www`.
+- Preview v2: Worker **`nentjes-v2`**, branch `nentjes-v2-preview`, actieve versie `707a6802` (commit `e8d7032`) → `https://nentjes-v2.roelnentjes.workers.dev/`.
+- Subdomeinen (aparte Pages-projecten, **behouden**):
+  - `administratie` → administratie-1zo.pages.dev
+  - `delocatiemanager` → delocatiemanager.pages.dev
+  - `demo-delocatiemanager` → kampvuur-crm-demo.pages.dev
+  - `hetkampvuur` → nentjes.pages.dev
+  - `moneybird` → moneybird-kampvuur.pages.dev
+  - `roelbot` → roelbot.pages.dev
+- **E-mail (NIET aanraken):**
+  - MX `nentjes.nl` → chocobo.mxrouting.net (10), chocobo-relay.mxrouting.net (20)
+  - MX `delocatiemanager.nentjes.nl` → route1/2/3.mx.cloudflare.net
+  - TXT SPF `nentjes.nl` (`v=spf1 …`), TXT DKIM `x._domainkey`, TXT DMARC `_dmarc`, TXT `_da-verify… domain-verified`
 
 ## Fase 3 — www omzetten (pas na goedkeuring van de preview)
-1. Publiceer exact de goedgekeurde, geteste commit.
-2. Koppel `www.nentjes.nl` (en/of `nentjes.nl`) aan de `nentjes-v2` Worker via **Custom Domain** of Worker-route.
-3. Laat alle andere subdomeinen, workers, D1/KV en e-mail-DNS ongemoeid.
-4. Controleer direct na de flip: homepage NL/EN, mobiel, links, social-preview + alle behouden subdomeinen.
+De flip = `www.nentjes.nl` herbinden van Worker `website1` naar Worker `nentjes-v2`.
+1. **Ontkoppel** `www.nentjes.nl` als Custom Domain bij Worker **`website1`** (Settings → Domains & Routes → Remove).
+2. **Koppel** `www.nentjes.nl` als Custom Domain bij Worker **`nentjes-v2`** (Domains → Add → Custom Domain). Cloudflare zet cert + DNS-record automatisch.
+3. **Raak niets anders aan**: alle MX/TXT (e-mail) en de 6 subdomein-CNAMEs blijven staan.
+4. Controleer na ~1–2 min: `https://www.nentjes.nl/` (hard refresh), NL/EN, links, social-preview + alle subdomeinen + e-mail.
 
 ## Rollback
-- Vorige publieke site blijft in de git-historie (`main`) en de bestaande Pages/origin-inrichting blijft staan.
-- Terugdraaien = de in stap 2 toegevoegde Custom Domain / Worker-route voor `www` weer **verwijderen**, zodat `www` terugvalt op de huidige (ongewijzigde) origin/Pages.
+- Worker `website1` (huidige site) en `main` + branch `archief-oude-website` blijven ongemoeid.
+- Terugdraaien = Custom Domain `www.nentjes.nl` weer **verwijderen** bij `nentjes-v2` en **opnieuw toevoegen** bij `website1`. `www` valt dan terug op de huidige, ongewijzigde site.
 
 ## Beperkingen van deze uitvoering
 Claude's Cloudflare-verbinding is alleen-lezen voor Workers en heeft geen DNS-, Pages- of deploy-tools. Preview-deploy en de uiteindelijke www-flip gebeuren daarom via het Cloudflare-dashboard door Roel.
