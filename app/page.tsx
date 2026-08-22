@@ -179,7 +179,7 @@ export default function Home() {
           <Image className="architecture" src="/images/werkplaats.png" alt={lang === "nl" ? "Werktafel met laptop, robotica, VR, schetsen en elektronica" : "Workbench with laptop, robotics, VR, sketches and electronics"} fill priority sizes="(max-width: 900px) 100vw, 52vw" />
           <div className="visual-shade" />
           <div className="portrait-card">
-            <Image src="/images/roel-portret-werkplaats.png" alt="Roel Nentjes" width={220} height={220} priority />
+            <Image src="/images/roel-coltrui-2026.webp" alt={lang === "nl" ? "Roel Nentjes in zijn technologiewerkplaats" : "Roel Nentjes in his technology workshop"} width={220} height={220} priority />
             <div><b>Roel Nentjes</b><span>{t.role}</span></div>
           </div>
           <div className="route-card">
@@ -218,7 +218,7 @@ export default function Home() {
       </section>
 
       <section className="condition-section">
-        <div className="condition-image"><Image src="/images/roel-portret.png" alt="Roel Nentjes" fill sizes="(max-width: 800px) 100vw, 40vw" /></div>
+        <div className="condition-image"><Image src="/images/roel-pak-2026.webp" alt={lang === "nl" ? "Roel Nentjes als adviseur en projectleider" : "Roel Nentjes as adviser and project leader"} fill sizes="(max-width: 800px) 100vw, 40vw" /></div>
         <div className="condition-copy"><p className="eyebrow">{t.conditionLabel}</p><h2>{t.conditionTitle}</h2><p>{t.conditionText}</p><blockquote>{t.conditionQuote}</blockquote></div>
       </section>
 
@@ -240,7 +240,7 @@ export default function Home() {
       </section>
 
       <section className="about-section" id="over">
-        <div className="about-image"><Image src="/images/roel-atelier.png" alt="Roel Nentjes in een atelier" fill sizes="(max-width: 800px) 100vw, 48vw" /></div>
+        <div className="about-image"><Image src="/images/roel-vintage-polo-2026.webp" alt={lang === "nl" ? "Roel Nentjes in de Werkplaats van Morgen" : "Roel Nentjes in the Workshop of Tomorrow"} fill sizes="(max-width: 800px) 100vw, 48vw" /></div>
         <div className="about-copy"><p className="eyebrow">{t.aboutLabel}</p><h2>{t.aboutTitle}</h2><p>{t.aboutText}</p><div className="values">{t.values.map((value, i) => <div key={value}><span>0{i + 1}</span>{value}</div>)}</div></div>
       </section>
 
