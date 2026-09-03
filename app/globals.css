@@ -612,6 +612,79 @@ h1 strong { color: #f2ead0; }
 .tag-row small { background: rgba(31,182,201,.12); color: #8edce4; font-family: ui-monospace, monospace; }
 .project-copy > b { color: var(--orange); text-transform: uppercase; letter-spacing: .05em; }
 
+/* Projecten als etalage: beeld eerst, toelichting pas bij hover/focus. */
+@media (hover: hover) and (min-width: 761px) {
+  .project-card {
+    position: relative;
+    min-height: 420px;
+    aspect-ratio: 16 / 9;
+    display: block;
+    isolation: isolate;
+  }
+
+  .project-image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border-bottom: 0;
+  }
+
+  .project-image::after {
+    content: "";
+    position: absolute;
+    inset: 38% 0 0;
+    z-index: 1;
+    background: linear-gradient(180deg, transparent, rgba(7,32,28,.62) 70%, rgba(7,32,28,.92));
+    pointer-events: none;
+  }
+
+  .project-copy {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 2;
+    box-sizing: border-box;
+    max-height: 108px;
+    padding: 14px 22px 16px;
+    overflow: hidden;
+    background: linear-gradient(180deg, rgba(9,36,31,.84), rgba(9,36,31,.98));
+    backdrop-filter: blur(5px);
+    transition: max-height .42s cubic-bezier(.22,.61,.36,1), background .3s ease;
+  }
+
+  .project-copy h3 { margin: 8px 0 14px; font-size: clamp(24px, 2vw, 30px); }
+  .project-copy p,
+  .project-copy .tag-row,
+  .project-copy > b {
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity .22s ease, transform .32s ease;
+  }
+
+  .project-card:hover .project-copy,
+  .project-card:focus-visible .project-copy {
+    max-height: 430px;
+    background: linear-gradient(180deg, rgba(9,36,31,.94), rgba(9,36,31,.995));
+  }
+
+  .project-card:hover .project-copy p,
+  .project-card:hover .project-copy .tag-row,
+  .project-card:hover .project-copy > b,
+  .project-card:focus-visible .project-copy p,
+  .project-card:focus-visible .project-copy .tag-row,
+  .project-card:focus-visible .project-copy > b {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .project-card:focus-visible {
+    outline: 3px solid var(--orange);
+    outline-offset: 5px;
+  }
+}
+
 .experience-section { background: var(--paper); color: var(--ink); }
 .timeline article > span { color: #087f8c; font-family: ui-monospace, monospace; }
 .timeline article > i::before { background: var(--orange); border-color: var(--ink); border-radius: 0; transform: rotate(45deg); }
