@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
-type ModelPage = "metro" | "togaf" | "architecture" | "people";
+type ModelPage = "metro" | "togaf" | "architecture" | "people" | "automation";
 type PeopleLayer = "paper" | "people";
 
 const content = {
@@ -43,8 +43,8 @@ const content = {
     methodSteps: [
       { title: "Zien", sub: "De werkelijkheid", text: "Een organisatie heeft niet één werkelijkheid. Er bestaan financiële, juridische, operationele, relationele en informele werkelijkheden naast elkaar. Daarom begin ik met kijken, luisteren en mensen zichtbaar maken: wie doet wat, wie weet wat en wat draait er werkelijk?" },
       { title: "Modelleren", sub: "Samen begrijpen", text: "Een model is niet de waarheid, maar een gedeelde kaart. We verbinden doelen, processen, data, applicaties, infrastructuur, leveranciers en gedrag zodat keuzes bespreekbaar worden." },
-      { title: "Standaardiseren", sub: "De basis op orde", text: "Eén betekenis, één betrouwbare bron, duidelijke verantwoordelijkheden, beveiligingshygiëne en zo min mogelijk uitzonderingen. Pas dan kan technologie betrouwbaar versnellen." },
-      { title: "Automatiseren", sub: "Passend bij volwassenheid", text: "We kiezen AI, software of robotica die past bij wat de organisatie kan dragen. Tegelijk verhogen we die volwassenheid, zodat de volgende stap wél mogelijk wordt." },
+      { title: "Standaardiseren", sub: "De basis onderhouden", text: "Bij iedere organisatie waar ik werkte liep het project Basis op orde. Ik heb het nog nooit zien eindigen. Dat klopt ook: mensen, rollen, systemen en afspraken blijven veranderen. Standaardiseren is daarom geen eindtoestand, maar voortdurend onderhoud." },
+      { title: "Automatiseren", sub: "Door AI", text: "AI-agents kunnen niet alleen het afgesproken proces vooruit volgen, maar ook vanuit een persoon of factuur terugkijken. Ze vinden ontbrekende stappen, controleren wat werkelijk is gebeurd en helpen de basis herstellen terwijl het werk doorgaat." },
       { title: "Leren", sub: "Blijven verbeteren", text: "Besluiten en gesprekken worden terugvindbaar. We meten, vragen door, erkennen fouten en passen aan. Niet om gelijk te krijgen, maar om elke volgende stap beter te maken." },
     ],
     modelExplainer: {
@@ -110,6 +110,19 @@ const content = {
       peopleMaintenance: "Een NIMCO-organogram is nooit in één keer af. Pas na gesprekken en een paar correctierondes ontstaat een kaart waarin de organisatie zichzelf herkent.",
       peoplePrivacy: "Beide voorbeelden zijn volledig opnieuw getekend. Namen, contactgegevens, locaties en herkenbare organisatiegegevens zijn verwijderd; functies en indeling zijn bewust gegeneraliseerd.",
       peopleFullSize: "Open de kaart op ware grootte",
+      automationOpen: "Bekijk hoe AI de basis helpt herstellen",
+      automationLab: "Automatiseren door terug te kijken",
+      automationLabel: "AI als procesonderzoeker",
+      automationTitle: "De basis op orde is geen bestemming. Het is onderhoud.",
+      automationIntro: "Processen zijn beschreven, maar mensen wisselen van rol, afspraken verdwijnen en documenten raken verspreid. Een agent kan achteraf reconstrueren wat werkelijk is gebeurd — en zichtbaar maken wat nog ontbreekt.",
+      automationTracks: [
+        { number: "01", title: "Instroom · doorstroom · uitstroom", anchor: "Persoon", note: "Vanuit de medewerker terug naar rol, rechten, middelen en afspraken.", steps: [{ label: "Instroom", status: "gevonden" }, { label: "Arbeidsovereenkomst", status: "gevonden" }, { label: "Functie & rol", status: "controleren" }, { label: "Rechten & middelen", status: "ontbreekt" }, { label: "Uitstroom", status: "herstellen" }] },
+        { number: "02", title: "Inkoop & contractmanagement", anchor: "Factuur", note: "Vanuit de factuur terug naar levering, contract, akkoord en offerte.", steps: [{ label: "Offerte", status: "ontbreekt" }, { label: "Aanvraag", status: "herstellen" }, { label: "Akkoord", status: "controleren" }, { label: "Contract", status: "gevonden" }, { label: "Levering", status: "gevonden" }, { label: "Factuur", status: "bewijs" }] },
+      ],
+      automationAgent: ["kijkt terug", "legt verbanden", "signaleert gaten", "helpt herstellen"],
+      automationQuote: "AI automatiseert niet alleen het ideale proces. AI helpt de werkelijke organisatie ontbrekende stappen terug te vinden en te herstellen.",
+      automationAward: "Ingezonden voor de Computable Awards 2026 · Digitale Innovatie",
+      automationAwardCta: "Bekijk De Contractagent bij Computable",
     },
     conditionLabel: "Mensgerichte hardheid",
     conditionTitle: "Een technisch perfecte oplossing zonder draagvlak is nog steeds een mislukt project.",
@@ -176,8 +189,8 @@ const content = {
     methodSteps: [
       { title: "See", sub: "Reality", text: "An organisation does not have one single reality. Financial, legal, operational, relational and informal realities exist side by side. So I start by observing, listening and making people visible: who does what, who knows what and what is actually running?" },
       { title: "Model", sub: "Understand together", text: "A model is not the truth, but a shared map. We connect goals, processes, data, applications, infrastructure, suppliers and behaviour so choices become visible." },
-      { title: "Standardise", sub: "Build the foundation", text: "One meaning, one reliable source, clear responsibilities, security hygiene and as few exceptions as possible. Only then can technology accelerate reliably." },
-      { title: "Automate", sub: "Match maturity", text: "We choose AI, software or robotics that the organisation can carry. At the same time we raise its maturity, so the next step becomes possible." },
+      { title: "Standardise", sub: "Maintain the foundation", text: "Every organisation I worked for had a Foundation in Order programme. I have never seen one truly end. That makes sense: people, roles, systems and agreements keep changing. Standardisation is not an end state, but continuous maintenance." },
+      { title: "Automate", sub: "With AI", text: "AI agents can do more than follow the agreed process forward. Starting from a person or invoice, they can look back, find missing steps, verify what actually happened and help repair the foundation while work continues." },
       { title: "Learn", sub: "Keep improving", text: "Decisions and conversations remain findable. We measure, ask questions, acknowledge errors and adapt — not to be right, but to make every next step better." },
     ],
     modelExplainer: {
@@ -243,6 +256,19 @@ const content = {
       peopleMaintenance: "A NIMCO organisation chart is never finished in one pass. Only after conversations and several correction rounds does a map emerge in which the organisation recognises itself.",
       peoplePrivacy: "Both examples were completely redrawn. Names, contact details, locations and recognisable organisational details were removed; roles and structure were deliberately generalised.",
       peopleFullSize: "Open the full-size map",
+      automationOpen: "See how AI helps repair the foundation",
+      automationLab: "Automation by looking backwards",
+      automationLabel: "AI as process investigator",
+      automationTitle: "A sound foundation is not a destination. It is maintenance.",
+      automationIntro: "Processes may be documented, but people change roles, agreements disappear and documents become scattered. An agent can reconstruct what really happened — and reveal what is still missing.",
+      automationTracks: [
+        { number: "01", title: "Join · move · leave", anchor: "Person", note: "From the employee back to role, access, assets and agreements.", steps: [{ label: "Join", status: "found" }, { label: "Employment agreement", status: "found" }, { label: "Function & role", status: "check" }, { label: "Access & assets", status: "missing" }, { label: "Leave", status: "repair" }] },
+        { number: "02", title: "Procurement & contract management", anchor: "Invoice", note: "From the invoice back to delivery, contract, approval and quotation.", steps: [{ label: "Quotation", status: "missing" }, { label: "Request", status: "repair" }, { label: "Approval", status: "check" }, { label: "Contract", status: "found" }, { label: "Delivery", status: "found" }, { label: "Invoice", status: "evidence" }] },
+      ],
+      automationAgent: ["looks back", "connects evidence", "spots gaps", "helps repair"],
+      automationQuote: "AI does not only automate the ideal process. It helps the real organisation find and repair missing steps.",
+      automationAward: "Submitted for the Computable Awards 2026 · Digital Innovation",
+      automationAwardCta: "View The Contract Agent at Computable",
     },
     conditionLabel: "Human-centred rigour", conditionTitle: "A technically perfect solution without support is still a failed project.",
     conditionText: "In film production, a shooting date cannot move. By informing authorities, locations and neighbourhoods early, taking objections seriously and remembering that we are always guests, I prevent problems before they hit the deadline. The same radical honesty once turned customers who wanted to leave into committed partners.",
@@ -301,8 +327,8 @@ export default function Home() {
 
   useEffect(() => {
     const requestedModel = new URLSearchParams(window.location.search).get("model");
-    if (requestedModel === "metro" || requestedModel === "togaf" || requestedModel === "architecture" || requestedModel === "people") {
-      setActiveStep(requestedModel === "people" ? 0 : 1);
+    if (requestedModel === "metro" || requestedModel === "togaf" || requestedModel === "architecture" || requestedModel === "people" || requestedModel === "automation") {
+      setActiveStep(requestedModel === "people" ? 0 : requestedModel === "automation" ? 3 : 1);
       setModelPage(requestedModel);
       if (requestedModel === "people") setPeopleLayer("people");
       setModelExampleOpen(true);
@@ -404,12 +430,15 @@ export default function Home() {
             {activeStep === 1 && <button className="model-example-toggle" type="button" aria-expanded={modelExampleOpen} aria-controls="model-example" onClick={() => { if (!modelExampleOpen) setModelPage("metro"); setModelExampleOpen(!modelExampleOpen); }}>
               <span>{modelExampleOpen ? t.modelExplainer.close : t.modelExplainer.open}</span><b>{modelExampleOpen ? "×" : "↘"}</b>
             </button>}
+            {activeStep === 3 && <button className="model-example-toggle" type="button" aria-expanded={modelExampleOpen} aria-controls="model-example" onClick={() => { setModelPage("automation"); setModelExampleOpen(!modelExampleOpen); }}>
+              <span>{modelExampleOpen ? t.modelExplainer.close : t.modelExplainer.automationOpen}</span><b>{modelExampleOpen ? "×" : "↘"}</b>
+            </button>}
           </div>
         </div>
-        {(activeStep === 0 || activeStep === 1) && modelExampleOpen && <div className="model-overlay" id="model-example" role="dialog" aria-modal="true" aria-labelledby="model-example-title">
+        {(activeStep === 0 || activeStep === 1 || activeStep === 3) && modelExampleOpen && <div className="model-overlay" id="model-example" role="dialog" aria-modal="true" aria-labelledby="model-example-title">
           <header className="model-overlay-bar">
-            <p><span>{modelPage === "people" ? "LAB / REALITEIT 001" : "LAB / MODEL 002"}</span><b>{modelPage === "people" ? t.modelExplainer.peopleLab : t.modelExplainer.label}</b></p>
-            {modelPage === "people" ? <div className="model-page-context"><span>01</span>{t.modelExplainer.peopleMapLabel}</div> : <div className="model-page-tabs" role="tablist" aria-label={t.modelExplainer.label}>
+            <p><span>{modelPage === "people" ? "LAB / REALITEIT 001" : modelPage === "automation" ? "LAB / AGENT 003" : "LAB / MODEL 002"}</span><b>{modelPage === "people" ? t.modelExplainer.peopleLab : modelPage === "automation" ? t.modelExplainer.automationLab : t.modelExplainer.label}</b></p>
+            {modelPage === "people" ? <div className="model-page-context"><span>01</span>{t.modelExplainer.peopleMapLabel}</div> : modelPage === "automation" ? <div className="model-page-context"><span>04</span>{t.modelExplainer.automationLabel}</div> : <div className="model-page-tabs" role="tablist" aria-label={t.modelExplainer.label}>
               {t.modelExplainer.pages.map((page, index) => <button key={page.id} type="button" role="tab" aria-selected={modelPage === page.id} className={modelPage === page.id ? "active" : ""} onClick={() => setModelPage(page.id as ModelPage)}><span>0{index + 1}</span>{page.label}</button>)}
             </div>}
             <button className="model-overlay-close" type="button" onClick={() => setModelExampleOpen(false)} aria-label={t.modelExplainer.close}>{t.modelExplainer.close}<span>×</span></button>
@@ -481,6 +510,29 @@ export default function Home() {
               </section>
             </div>
             <div className="architecture-summary landscape-summary"><p><strong>{t.modelExplainer.architectureQuote}</strong> {t.modelExplainer.roadmap}</p><div className="landscape-legend">{t.modelExplainer.legend.map(item => <span key={item.tag}><b className={`app-meta meta-${item.tag.toLowerCase().replace(/[^a-z]/g, "")}`}>{item.tag}</b><small>{item.note}</small></span>)}</div></div>
+          </section> : modelPage === "automation" ? <section className="model-story automation-story" role="tabpanel">
+            <div className="model-story-heading automation-story-heading">
+              <p className="eyebrow">{t.modelExplainer.automationLabel}</p>
+              <h3 id="model-example-title">{t.modelExplainer.automationTitle}</h3>
+              <p>{t.modelExplainer.automationIntro}</p>
+            </div>
+            <div className="agent-process-map">
+              <aside className="agent-core" aria-label={t.modelExplainer.automationLabel}>
+                <span>AI</span><b>AGENT</b>
+                <div>{t.modelExplainer.automationAgent.map((action, index) => <p key={action}><i>0{index + 1}</i>{action}</p>)}</div>
+              </aside>
+              <div className="agent-tracks">
+                {t.modelExplainer.automationTracks.map((track) => <article className="agent-track" key={track.number}>
+                  <header><span>{track.number}</span><div><h4>{track.title}</h4><p>{track.note}</p></div><b>{track.anchor}</b></header>
+                  <div className="reverse-line"><span>←</span><small>{lang === "nl" ? "DE AGENT REDENEERT TERUG VANUIT HET BEWIJS" : "THE AGENT REASONS BACKWARDS FROM THE EVIDENCE"}</small></div>
+                  <div className="process-steps">{track.steps.map((step, index) => <div className={`process-step status-${step.status}`} key={step.label}><span>0{index + 1}</span><b>{step.label}</b><small>{step.status}</small></div>)}</div>
+                </article>)}
+              </div>
+            </div>
+            <div className="automation-summary">
+              <blockquote>{t.modelExplainer.automationQuote}</blockquote>
+              <a href="https://www.computable.nl/awards/2026/inzendingen/digitale-innovatie/nimco-de-contractagent-de-zelfhelende-administratie-die-inkooparchieven-he/" target="_blank" rel="noreferrer"><span>{t.modelExplainer.automationAward}</span><b>{t.modelExplainer.automationAwardCta} ↗</b></a>
+            </div>
           </section> : <section className="model-story people-story" role="tabpanel">
             <div className="model-story-heading people-story-heading">
               <p className="eyebrow">{t.modelExplainer.peopleMapLabel}</p>
