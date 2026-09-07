@@ -534,7 +534,7 @@ export default function Home() {
           <div className="timeline">
             {t.timeline.map(([year, title, text], i) => <article key={year + title}><span>{year}</span><i className={i === t.timeline.length - 1 ? "last" : ""} /><div><h3>{title}</h3><p>{text}</p></div></article>)}
           </div>
-          <div className="clients-block">
+          <div className="clients-block" id="opdrachtgevers">
             <p className="eyebrow">{t.clientsLabel}</p>
             <h3>{t.clientsTitle}</h3>
             <p>{t.clientsText}</p>
