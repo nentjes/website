@@ -475,7 +475,7 @@ export default function Home() {
               <div className="paper-departments">{paperDepartments.map(department => <div className="paper-node paper-department" key={department}>{department}</div>)}</div>
               <div className="paper-stage-caption"><span>01</span><p><b>{activePeopleLayer.title}</b><small>{activePeopleLayer.note}</small></p></div>
             </div> : <figure className="people-map-stage">
-              <div className="people-map-frame"><Image src={peopleMapImage} alt={activePeopleLayer.note} width={2729} height={1930} sizes="(max-width: 760px) 900px, 92vw" unoptimized /></div>
+              <div className="people-map-frame"><Image src={peopleMapImage} alt={activePeopleLayer.note} width={3200} height={2260} sizes="(max-width: 760px) 900px, 92vw" unoptimized /></div>
               <figcaption><span>0{peopleLayerIndex + 1}</span><p><b>{activePeopleLayer.title}</b><small>{activePeopleLayer.note}</small></p><a className="people-full-size" href={peopleMapImage} target="_blank" rel="noreferrer">{t.modelExplainer.peopleFullSize}<span>↗</span></a></figcaption>
             </figure>}
             <div className="people-summary"><p>{t.modelExplainer.peopleBody}</p><blockquote>{t.modelExplainer.peopleMaintenance}</blockquote><small>{t.modelExplainer.peoplePrivacy}</small></div>
