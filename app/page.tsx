@@ -277,6 +277,8 @@ export default function Home() {
   const [modelExampleOpen, setModelExampleOpen] = useState(false);
   const [modelPage, setModelPage] = useState<ModelPage>("metro");
   const [peopleLayer, setPeopleLayer] = useState<PeopleLayer>("people");
+  const [peopleZoomOpen, setPeopleZoomOpen] = useState(false);
+  const [peopleZoomScale, setPeopleZoomScale] = useState(1);
   const [menuOpen, setMenuOpen] = useState(false);
   const t = content[lang];
   const peopleLayerIndex = peopleLayer === "paper" ? 0 : 1;
@@ -310,6 +312,18 @@ export default function Home() {
       window.removeEventListener("keydown", closeOnEscape);
     };
   }, [modelExampleOpen]);
+
+  useEffect(() => {
+    if (!peopleZoomOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    const closeOnEscape = (event: KeyboardEvent) => event.key === "Escape" && setPeopleZoomOpen(false);
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", closeOnEscape);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [peopleZoomOpen]);
 
   return (
     <main>
@@ -474,10 +488,18 @@ export default function Home() {
               <div className="paper-managers">{paperManagers.map(manager => <div className="paper-node" key={manager}>{manager}</div>)}</div>
               <div className="paper-departments">{paperDepartments.map(department => <div className="paper-node paper-department" key={department}>{department}</div>)}</div>
               <div className="paper-stage-caption"><span>01</span><p><b>{activePeopleLayer.title}</b><small>{activePeopleLayer.note}</small></p></div>
-            </div> : <figure className="people-map-stage">
-              <div className="people-map-frame"><Image src={peopleMapImage} alt={activePeopleLayer.note} width={3200} height={2260} sizes="(max-width: 760px) 900px, 92vw" unoptimized /></div>
-              <figcaption><span>0{peopleLayerIndex + 1}</span><p><b>{activePeopleLayer.title}</b><small>{activePeopleLayer.note}</small></p><a className="people-full-size" href={peopleMapImage} target="_blank" rel="noreferrer">{t.modelExplainer.peopleFullSize}<span>↗</span></a></figcaption>
-            </figure>}
+            </div> : <>
+              <figure className="people-map-stage">
+                <div className="people-map-frame"><Image src={peopleMapImage} alt={activePeopleLayer.note} width={3200} height={2260} sizes="(max-width: 760px) 900px, 92vw" unoptimized /></div>
+                <figcaption><span>0{peopleLayerIndex + 1}</span><p><b>{activePeopleLayer.title}</b><small>{activePeopleLayer.note}</small></p><button className="people-full-size" type="button" onClick={() => { setPeopleZoomScale(1); setPeopleZoomOpen(true); }}>{t.modelExplainer.peopleFullSize}<span>↗</span></button></figcaption>
+              </figure>
+              {peopleZoomOpen && <div className="people-zoom" role="dialog" aria-modal="true" aria-labelledby="people-zoom-title" onClick={() => setPeopleZoomOpen(false)}>
+                <div className="people-zoom-shell" onClick={(event) => event.stopPropagation()}>
+                  <header className="people-zoom-bar"><div><span>02 / NIMCO</span><b id="people-zoom-title">{activePeopleLayer.title}</b></div><div className="people-zoom-actions"><button type="button" onClick={() => setPeopleZoomScale(Math.max(.75, peopleZoomScale - .25))}>−</button><span>{Math.round(peopleZoomScale * 100)}%</span><button type="button" onClick={() => setPeopleZoomScale(Math.min(2, peopleZoomScale + .25))}>+</button><button className="people-zoom-close" type="button" onClick={() => setPeopleZoomOpen(false)}>Sluiten ×</button></div></header>
+                  <div className="people-zoom-scroll"><Image src={peopleMapImage} alt={activePeopleLayer.note} width={3200} height={2260} unoptimized style={{ width: `${3200 * peopleZoomScale}px`, maxWidth: "none", height: "auto" }} /></div>
+                </div>
+              </div>}
+            </>}
             <div className="people-summary"><p>{t.modelExplainer.peopleBody}</p><blockquote>{t.modelExplainer.peopleMaintenance}</blockquote><small>{t.modelExplainer.peoplePrivacy}</small></div>
           </section>}
         </div>}
