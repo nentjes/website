@@ -139,6 +139,10 @@ const content = {
       ["2014+", "Zorgtechnologie", "Processen, HiX, patiëntportalen, interoperabiliteit, NEN 7510, cloud en continuïteit."],
       ["Nu", "Zelfstandig adviseur & maker", "Presenteren, onderzoeken, roadmaps maken, leiden en opnieuw zelf bouwen met AI."],
     ],
+    clientsLabel: "Opdrachtgevers en organisaties",
+    clientsTitle: "Veel organisaties gezien. Geen organisatie is hetzelfde.",
+    clientsText: "Een groot deel van mijn opdrachten deed ik gedetacheerd vanuit Yacht. Daardoor keek ik bij uiteenlopende organisaties mee achter de voordeur: van industrie en financiële instellingen tot zorg, overheid en maatschappelijke organisaties. Die breedte neem ik mee naar iedere nieuwe opdracht.",
+    clients: ["KPN", "Hoogovens / Tata Steel", "VNU", "Overheid", "NKI-AVL", "Mensen in Nood", "Memisa", "Tempo-Team", "Randstad", "UWV", "GAK", "Reade", "Unicum Huisartsenzorg", "De Nederlandsche Bank", "Merem", "Woonmij Zaanstad", "Parteon", "Cegeka-DSA"],
     aboutLabel: "Met wie ik graag werk",
     aboutTitle: "Vakmanschap boven politiek. Leren boven gelijk krijgen.",
     aboutText: "Ik werk graag met mensen die verstand van hun vak hebben, zich kwetsbaar durven opstellen, verantwoordelijkheid nemen en fouten kunnen erkennen. Niet omdat verandering altijd gezellig is, maar omdat eerlijkheid de snelste route naar beter werk is.",
@@ -261,6 +265,10 @@ const content = {
       ["2011+", "Account manager", "Rebuilding customer trust through attention, realistic expectations and honesty."], ["2014+", "Health technology", "Processes, EHR, patient portals, interoperability, security, cloud and continuity."],
       ["Now", "Independent adviser & maker", "Speaking, researching, creating roadmaps, leading and building again with AI."],
     ],
+    clientsLabel: "Clients and organisations",
+    clientsTitle: "Many organisations seen. No organisation is the same.",
+    clientsText: "A large part of my work was through Yacht. It gave me a view behind the front door of very different organisations: from industry and financial institutions to healthcare, government and social organisations. I carry that breadth into every new assignment.",
+    clients: ["KPN", "Hoogovens / Tata Steel", "VNU", "Government", "NKI-AVL", "Mensen in Nood", "Memisa", "Tempo-Team", "Randstad", "UWV", "GAK", "Reade", "Unicum Huisartsenzorg", "De Nederlandsche Bank", "Merem", "Woonmij Zaanstad", "Parteon", "Cegeka-DSA"],
     aboutLabel: "The people I work best with", aboutTitle: "Craft over politics. Learning over being right.",
     aboutText: "I like working with people who know their craft, dare to be vulnerable, take responsibility and can acknowledge mistakes. Not because change is always comfortable, but because honesty is the fastest route to better work.",
     values: ["Stay curious", "Say what is really happening", "Start small, deliver seriously", "Bring people along", "Touch the technology yourself", "Make results visible"],
@@ -522,8 +530,16 @@ export default function Home() {
 
       <section className="experience-section" id="ervaring">
         <div className="experience-heading"><p className="eyebrow">{t.experienceLabel}</p><h2>{t.experienceTitle}</h2></div>
-        <div className="timeline">
-          {t.timeline.map(([year, title, text], i) => <article key={year + title}><span>{year}</span><i className={i === t.timeline.length - 1 ? "last" : ""} /><div><h3>{title}</h3><p>{text}</p></div></article>)}
+        <div>
+          <div className="timeline">
+            {t.timeline.map(([year, title, text], i) => <article key={year + title}><span>{year}</span><i className={i === t.timeline.length - 1 ? "last" : ""} /><div><h3>{title}</h3><p>{text}</p></div></article>)}
+          </div>
+          <div className="clients-block">
+            <p className="eyebrow">{t.clientsLabel}</p>
+            <h3>{t.clientsTitle}</h3>
+            <p>{t.clientsText}</p>
+            <div className="client-list">{t.clients.map((client) => <span key={client}>{client}</span>)}</div>
+          </div>
         </div>
       </section>
 

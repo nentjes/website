@@ -317,6 +317,12 @@ h1 strong { font-weight: 700; }
 .timeline article > i.last { background: linear-gradient(var(--rule), transparent); }
 .timeline h3 { margin: 0 0 8px; font: 600 26px/1.1 Georgia, serif; }
 .timeline p { max-width: 630px; margin: 0; color: var(--muted); line-height: 1.55; }
+.clients-block { margin-top: 72px; padding-top: 28px; border-top: 1px solid var(--rule); }
+.clients-block .eyebrow { color: var(--orange); }
+.clients-block h3 { max-width: 640px; margin: 12px 0 14px; font: 600 clamp(28px, 3vw, 44px)/1.05 Georgia, serif; letter-spacing: -.03em; }
+.clients-block > p:not(.eyebrow) { max-width: 680px; margin: 0 0 26px; color: var(--muted); line-height: 1.6; }
+.client-list { display: flex; flex-wrap: wrap; gap: 8px; }
+.client-list span { padding: 9px 12px; border: 1px solid var(--rule); background: rgba(255,255,255,.35); color: var(--ink); font: 700 11px/1.1 sans-serif; letter-spacing: .02em; }
 
 .about-section { min-height: 800px; display: grid; grid-template-columns: 1fr 1fr; background: var(--paper-bright); }
 .about-image { position: relative; min-height: 690px; }
